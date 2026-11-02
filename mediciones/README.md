@@ -31,8 +31,9 @@ uv run python -m bench \
 ```
 
 - `--entradas`: imágenes o carpetas (de una carpeta se toman `.jpg`, `.jpeg` y `.png` en orden de nombre, sin
-  entrar a subcarpetas: por eso van las de cada secuencia). Se
-  recorren en ciclo hasta juntar las ejecuciones.
+  entrar a subcarpetas: por eso van las de cada secuencia). Un patrón como `datos/cuadros/S0*/` lo expande el
+  propio arnés si la terminal no lo hace (PowerShell, cmd), así que el comando es el mismo en Git Bash y en
+  PowerShell; si no coincide con nada, no se mide (salida 2). Se recorren en ciclo hasta juntar las ejecuciones.
 - `--detector falso` (el valor por omisión) usa el detector de prueba del arnés. No tiene archivo de pesos, así que
   **solo corre con `--prueba`**. El detector real (P5-05) se
   conecta con un módulo que expone `crear(**opciones)` y devuelve un objeto como el `Detector` de
