@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import glob
 import importlib
 import json
 import sys
@@ -73,10 +74,25 @@ COLUMNAS_EJECUCIONES = ["intento", "fase", "entrada_id", *ETAPAS, "detecciones",
 COLUMNAS_FALLOS = ["intento", "fase", "entrada_id", "etapa", "error", "mensaje"]
 
 
+def _expandir(entrada: Path) -> list[Path]:
+    """Un patrón como `datos/cuadros/S0*/`, en orden de nombre.
+
+    Bash expande el patrón antes de llamar al arnés; PowerShell y cmd lo pasan tal cual. Así el
+    mismo comando sirve en los tres.
+    """
+    texto = str(entrada)
+    if entrada.exists() or not any(c in texto for c in "*?["):  # NOSONAR (S8707)
+        return [entrada]
+    coincidencias = sorted(Path(r) for r in glob.glob(texto))  # NOSONAR (S8707)
+    if not coincidencias:
+        raise ErrorBench(f"--entradas {texto}: el patrón no coincide con ningún archivo")
+    return coincidencias
+
+
 def _rutas_de_entrada(entradas: Sequence[Path]) -> list[Path]:
     """Archivos tal cual, y de cada carpeta sus imágenes en orden de nombre."""
     rutas: list[Path] = []
-    for entrada in entradas:
+    for entrada in (r for e in entradas for r in _expandir(e)):
         if entrada.is_dir():  # NOSONAR (S8707)
             rutas += sorted(p for p in entrada.iterdir() if p.suffix.lower() in EXTENSIONES)
         else:
