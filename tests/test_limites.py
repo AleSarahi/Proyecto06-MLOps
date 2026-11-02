@@ -397,8 +397,9 @@ def test_varias_corridas_contrastan_la_peor_de_cada_una(tmp_path):
 
 
 def test_varias_corridas_piden_salida(tmp_path):
+    argumentos = [*map(str, tres_corridas(tmp_path))]
     with pytest.raises(SystemExit) as salida:
-        main([*map(str, tres_corridas(tmp_path))])
+        main(argumentos)
     assert salida.value.code == 2
 
 

@@ -167,12 +167,11 @@ def _entero_no_negativo(valor: Any) -> bool:
     return isinstance(valor, int) and not isinstance(valor, bool) and valor >= 0
 
 
-def _validar_resumen(resumen: Any, nombre: str) -> None:
-    """Revisa tipos y valores de lo que se usa; cualquier cosa rara es un error (salida 2)."""
-    if not isinstance(resumen, dict):
-        raise ErrorLimites(f"{nombre} debe ser un objeto JSON")
-    if resumen.get("estado") not in ("completo", "incompleto"):
-        raise ErrorLimites(f"{nombre}: estado debe ser 'completo' o 'incompleto'")
+def _tiene_estadisticos(valores: Any) -> bool:
+    return isinstance(valores, dict) and all(_numero_finito(valores.get(e)) for e in ESTADISTICOS)
+
+
+def _validar_etapas(resumen: dict[str, Any], nombre: str) -> None:
     etapas = resumen.get("etapas")
     if not isinstance(etapas, dict):
         raise ErrorLimites(f"{nombre} no tiene la sección etapas")
@@ -181,16 +180,11 @@ def _validar_resumen(resumen: Any, nombre: str) -> None:
         valores = etapas.get(etapa)
         if valores is None and resumen["estado"] == "incompleto":
             continue  # una corrida incompleta puede no tener mediciones: se advierte, no se rompe
-        if not isinstance(valores, dict) or not all(
-            _numero_finito(valores.get(e)) for e in ESTADISTICOS
-        ):
+        if not _tiene_estadisticos(valores):
             raise ErrorLimites(f"{nombre}: falta p50/p95/maximo finitos de {etapa}")
-    conteos = resumen.get("conteos", {})
-    if not isinstance(conteos, dict) or not all(
-        _entero_no_negativo(conteos[c]) for c in ("mediciones", "fallos") if c in conteos
-    ):
-        raise ErrorLimites(f"{nombre}: conteos debe tener mediciones y fallos enteros >= 0")
-    procedencia = resumen.get("procedencia", {})
+
+
+def _validar_procedencia(procedencia: Any, nombre: str) -> None:
     if not isinstance(procedencia, dict) or not isinstance(
         procedencia.get("config_b"), (dict, type(None))
     ):
@@ -198,6 +192,21 @@ def _validar_resumen(resumen: Any, nombre: str) -> None:
     if not isinstance(procedencia.get("detector", {}), dict):
         # El arnés siempre la escribe; sin ella no se sabe con qué detector se midió.
         raise ErrorLimites(f"{nombre}: procedencia.detector debe ser un objeto")
+
+
+def _validar_resumen(resumen: Any, nombre: str) -> None:
+    """Revisa tipos y valores de lo que se usa; cualquier cosa rara es un error (salida 2)."""
+    if not isinstance(resumen, dict):
+        raise ErrorLimites(f"{nombre} debe ser un objeto JSON")
+    if resumen.get("estado") not in ("completo", "incompleto"):
+        raise ErrorLimites(f"{nombre}: estado debe ser 'completo' o 'incompleto'")
+    _validar_etapas(resumen, nombre)
+    conteos = resumen.get("conteos", {})
+    if not isinstance(conteos, dict) or not all(
+        _entero_no_negativo(conteos[c]) for c in ("mediciones", "fallos") if c in conteos
+    ):
+        raise ErrorLimites(f"{nombre}: conteos debe tener mediciones y fallos enteros >= 0")
+    _validar_procedencia(resumen.get("procedencia", {}), nombre)
     advertencias = resumen.get("advertencias", [])
     if not isinstance(advertencias, list) or not all(isinstance(a, str) for a in advertencias):
         raise ErrorLimites(f"{nombre}: advertencias debe ser una lista de textos")
@@ -234,9 +243,7 @@ def peor_de(
     origen: dict[str, dict[str, str]] = {}
     for nombre, resumen in resumenes.items():
         for etapa, valores in resumen["etapas"].items():
-            if not isinstance(valores, dict) or not all(
-                _numero_finito(valores.get(e)) for e in ESTADISTICOS
-            ):
+            if not _tiene_estadisticos(valores):
                 continue
             for estadistico in ESTADISTICOS:
                 actual = etapas.setdefault(etapa, {}).get(estadistico)
@@ -315,6 +322,30 @@ def advertencias_entre_corridas(resumenes: dict[str, dict[str, Any]]) -> list[st
     return advertencias
 
 
+def _lo_medido(
+    presupuesto: dict[str, str],
+    etapas: dict[str, Any],
+    periodo_ms: float,
+    sobrecosto: dict[str, float] | None,
+) -> tuple[str, str, dict[str, float]] | None:
+    """Qué se compara con el plazo: nombre, razón y p50/p95/máximo; None si no se midió."""
+    medido, razon = presupuesto["medido"], presupuesto["razon"]
+    etapa = "total_ms" if medido == "intervalo" else medido
+    if sobrecosto is not None and presupuesto["id"] == "inferencia_vs_timeout":
+        etapa = medido = "total_ms"
+        razon = RAZON_TIMEOUT_SOLICITUD
+    if etapa not in etapas:
+        return None
+    medidos = {e: etapas[etapa][e] for e in ESTADISTICOS}
+    if sobrecosto is not None and etapa == "total_ms":
+        medidos = {e: v + sobrecosto[e] for e, v in medidos.items()}
+        if medido != "intervalo":
+            medido = f"{medido} + sobrecosto"
+    if presupuesto["medido"] == "intervalo":
+        medidos = {e: max(periodo_ms, v) for e, v in medidos.items()}
+    return medido, razon, medidos
+
+
 def contrastar(
     resumen: dict[str, Any],
     plazos: dict[str, Any],
@@ -330,21 +361,10 @@ def contrastar(
     limites = {**plazos, "periodo_entrada_ms": periodo_ms}
     filas = []
     for presupuesto in PRESUPUESTOS:
-        medido = presupuesto["medido"]
-        etapa = "total_ms" if medido == "intervalo" else medido
-        razon = presupuesto["razon"]
-        if sobrecosto is not None and presupuesto["id"] == "inferencia_vs_timeout":
-            etapa = medido = "total_ms"
-            razon = RAZON_TIMEOUT_SOLICITUD
-        if etapa not in etapas:
+        fila = _lo_medido(presupuesto, etapas, periodo_ms, sobrecosto)
+        if fila is None:
             continue
-        medidos = {e: etapas[etapa][e] for e in ESTADISTICOS}
-        if sobrecosto is not None and etapa == "total_ms":
-            medidos = {e: v + sobrecosto[e] for e, v in medidos.items()}
-            if medido != "intervalo":
-                medido = f"{medido} + sobrecosto"
-        if presupuesto["medido"] == "intervalo":
-            medidos = {e: max(periodo_ms, v) for e, v in medidos.items()}
+        medido, razon, medidos = fila
         plazo = limites[presupuesto["plazo"]]
         filas.append(
             {
@@ -571,56 +591,46 @@ def _nombres(carpetas: Sequence[Path]) -> list[str]:
     return nombres
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = _parser()
-    args = parser.parse_args(argv)
-    if len(args.corridas) > 1 and args.salida is None:
-        parser.error("con varias corridas hace falta --salida")
-    salida = args.salida or args.corridas[0]
-    if salida.exists() and not salida.is_dir():  # NOSONAR (S8707)
-        parser.error(f"{salida} no es una carpeta")
+def _advertencias(
+    args: argparse.Namespace,
+    carpetas: dict[str, Path],
+    resumenes: dict[str, dict[str, Any]],
+    sha_plazos: str,
+    sobrecosto: dict[str, Any] | None,
+) -> list[str]:
+    """Las de cada corrida (con su nombre si son varias), las de combinarlas y del sobrecosto."""
+    advertencias = []
+    for nombre, carpeta in carpetas.items():
+        propias = advertencias_de_corrida(resumenes[nombre], sha_plazos, carpeta, args.periodo_ms)
+        prefijo = f"{nombre}: " if len(carpetas) > 1 else ""
+        advertencias += [prefijo + a for a in propias]
+    advertencias += advertencias_entre_corridas(resumenes)
+    if sobrecosto is not None:
+        advertencias += advertencias_de_sobrecosto(sobrecosto, args.sobrecosto, resumenes)
+    return advertencias
 
+
+def _armar_contraste(args: argparse.Namespace) -> dict[str, Any]:
+    """Lee las corridas, el sobrecosto y los plazos, y arma `contraste.json`."""
     ruta_plazos = args.config_control / NOMBRE_PLAZOS
-    try:
-        _borrar_contraste_anterior(salida)
-        nombres = _nombres(args.corridas)
-        carpetas = dict(zip(nombres, args.corridas, strict=True))
-        resumenes = {n: cargar_resumen(c) for n, c in carpetas.items()}
-        plazos = cargar_plazos(ruta_plazos)
-        sha_plazos = sha256_archivo(ruta_plazos)
-        etapas, origen = peor_de(resumenes)
-        completas = all(r["estado"] == "completo" for r in resumenes.values())
-        combinado = {"estado": "completo" if completas else "incompleto", "etapas": etapas}
-        sobrecosto = cargar_sobrecosto(args.sobrecosto) if args.sobrecosto else None
-        diferencia = sobrecosto["resumen"][MEDIDA_SOBRECOSTO] if sobrecosto else None
-        filas = contrastar(combinado, plazos, args.periodo_ms, diferencia)
-        advertencias = []
-        for nombre, carpeta in carpetas.items():
-            propias = advertencias_de_corrida(
-                resumenes[nombre], sha_plazos, carpeta, args.periodo_ms
-            )
-            prefijo = f"{nombre}: " if len(carpetas) > 1 else ""
-            advertencias += [prefijo + a for a in propias]
-        advertencias += advertencias_entre_corridas(resumenes)
-        if sobrecosto is not None:
-            advertencias += advertencias_de_sobrecosto(sobrecosto, args.sobrecosto, resumenes)
-        corridas = [_corrida(resumenes[n], c) for n, c in carpetas.items()]
-        sha_sobrecosto = (
-            sha256_archivo(args.sobrecosto / ARCHIVO_SOBRECOSTO) if sobrecosto else None
-        )
-    except (OSError, ValueError, yaml.YAMLError) as exc:
-        print(f"no se contrasta: {exc}", file=sys.stderr)
-        return 2
-
-    contraste = {
+    carpetas = dict(zip(_nombres(args.corridas), args.corridas, strict=True))
+    resumenes = {n: cargar_resumen(c) for n, c in carpetas.items()}
+    plazos = cargar_plazos(ruta_plazos)
+    sha_plazos = sha256_archivo(ruta_plazos)
+    etapas, origen = peor_de(resumenes)
+    completas = all(r["estado"] == "completo" for r in resumenes.values())
+    combinado = {"estado": "completo" if completas else "incompleto", "etapas": etapas}
+    sobrecosto = cargar_sobrecosto(args.sobrecosto) if args.sobrecosto else None
+    diferencia = sobrecosto["resumen"][MEDIDA_SOBRECOSTO] if sobrecosto else None
+    return {
         "version": 2,
-        "corridas": corridas,
+        "corridas": [_corrida(resumenes[n], c) for n, c in carpetas.items()],
         "etapas": etapas,
         "peor_de": origen,
         "sobrecosto": (
             {
                 "carpeta": ruta_publicable(args.sobrecosto),
-                "sha256": sha_sobrecosto,
+                "sha256": sha256_archivo(args.sobrecosto / ARCHIVO_SOBRECOSTO),
                 MEDIDA_SOBRECOSTO: {e: diferencia[e] for e in ESTADISTICOS},
             }
             if diferencia is not None
@@ -639,10 +649,28 @@ def main(argv: Sequence[str] | None = None) -> int:
                 else f"--periodo-ms; PEND-09 declara {PERIODO_MS} ms"
             ),
         },
-        "contraste": filas,
+        "contraste": contrastar(combinado, plazos, args.periodo_ms, diferencia),
         "no_medido": [NO_MEDIDO_CON_SOBRECOSTO, *NO_MEDIDO[1:]] if sobrecosto else list(NO_MEDIDO),
-        "advertencias": advertencias,
+        "advertencias": _advertencias(args, carpetas, resumenes, sha_plazos, sobrecosto),
     }
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = _parser()
+    args = parser.parse_args(argv)
+    if len(args.corridas) > 1 and args.salida is None:
+        parser.error("con varias corridas hace falta --salida")
+    salida = args.salida or args.corridas[0]
+    if salida.exists() and not salida.is_dir():  # NOSONAR (S8707)
+        parser.error(f"{salida} no es una carpeta")
+
+    try:
+        _borrar_contraste_anterior(salida)
+        contraste = _armar_contraste(args)
+    except (OSError, ValueError, yaml.YAMLError) as exc:
+        print(f"no se contrasta: {exc}", file=sys.stderr)
+        return 2
+    filas, advertencias = contraste["contraste"], contraste["advertencias"]
 
     texto = json.dumps(contraste, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     salida.mkdir(parents=True, exist_ok=True)  # NOSONAR (S8707)
