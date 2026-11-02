@@ -8,7 +8,7 @@ motores** (`config/ejecucion.yaml`).
 - **Grupo B · Control y verificación:** política, supervisor, adaptador virtual y casos C1–C10 (issues `T01`–`T19`).
 - **Frontera entre grupos:** el contrato de percepción v1, en [config/contrato/CONTRATO.md](config/contrato/CONTRATO.md).
 
-Versión: `0.1.0` (`pyproject.toml`). Responsables y comandos del grupo A: se completan en P5-18. Grupo B: ver
+Versión: `0.1.0` (`pyproject.toml`). Responsables y comandos: [Grupo A · Percepción y datos](#grupo-a--percepción-y-datos) y
 [Grupo B · Control y verificación](#grupo-b--control-y-verificación).
 
 ## Instalación
@@ -58,6 +58,62 @@ mismo PR. Sin paquetes de GPU: una prueba de humo lo revisa.
 | `resultados/` | Detecciones, decisiones y comandos por cuadro; métricas (E6). |
 | `mediciones/` | Benchmark y límites (E7). |
 | `tests/` | Pruebas (`pytest`). |
+
+## Grupo A · Percepción y datos
+
+Detecta obstáculos en cuadros de la cámara del carro y entrega al grupo B eventos del contrato v1. Un cuadro
+sin objetos es `status=ok` con lista vacía; un error o la falta de cuadros nunca equivale a vía libre.
+
+### Integrantes
+
+| Rol | Nombre | Qué hace | Tickets |
+|---|---|---|---|
+| PM A | Karen Santana | Coordina al grupo, acuerda clases y contrato con el PM B y valida al cierre. | — |
+| A1 · Detector | Heriberto Vlaminck | Selección, inferencia, manejo de errores y paquete del detector; primer recorrido. | P5-04 a P5-08 |
+| A2 · Datos | Andrea Arevalo | Dominio, captura, anotaciones, manifiesto, congelamiento, casos de entrada y documentación. | P5-03, P5-09 a P5-12, P5-17, P5-18 |
+| A3 · Métricas | Alejandra Rayas | Métricas, trazabilidad, benchmark y límites. | P5-13 a P5-16 |
+
+El carro (P5-19) lo armaron y revisaron los tres. Los integrantes del grupo B están en
+[su sección](#grupo-b--control-y-verificación).
+
+### Traspasos
+
+| De | A | Qué se entrega | Dónde |
+|---|---|---|---|
+| A2 | A1 y A3 | Conjunto de evaluación congelado | `datos/`, tag `datos-evaluacion-v1` |
+| A1 | A3 | Detector y hashes para medir | `src/infer/`, `config/detector.json` |
+| A1 | B | Eventos por cuadro | [Contrato v1](config/contrato/CONTRATO.md) |
+| A2 | B | Secuencias, mapa de casos y entradas fallidas | `datos/MAPA_CASOS.md`, `datos/fixtures/` |
+| A2 | B | S9 y S10, solo para pruebas de B, fuera de la evaluación | `datos/pruebas-b/` |
+| B | A3 | Corrida de control para unirla con detecciones y anotaciones | `resultados/<run>/` |
+
+### Comandos
+
+Se corren desde la raíz del repo, después de `uv sync --locked`.
+
+| Para qué | Comando |
+|---|---|
+| Verificar el conjunto (`verify_dataset`) | `uv run --locked python -m conjunto verificar --sha256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
+| Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run>` |
+| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG (**PENDIENTE: confirmar con Heriberto que sale de `t_relativo_ms` del manifiesto**) |
+| Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>` |
+| Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=<yolo11n.pt> --model-sha256 <hash> --config-sha256 <hash>` |
+
+### Versión de entrega
+
+| Qué | Valor |
+|---|---|
+| Datos | Tag `datos-evaluacion-v1` |
+| SHA-256 de `datos/manifiesto.jsonl` | `8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
+| SHA-256 de `datos/anotaciones.jsonl` | `7e842784a9240e0e4244252117de010fc9037287eaf7e7045bf716e8c4f4a051` |
+| SHA-256 de los pesos (`model_sha256`) | `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1` |
+| `config_sha256` | `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` |
+| Tag de la configuración | `config-detector-v1` |
+| Pesos | **PENDIENTE: descarga de P5-07** |
+
+`verificar` comprueba el hash del manifiesto, que no cubre las coordenadas de las cajas: el de
+`datos/anotaciones.jsonl` se compara aparte. Procedencia, criterio de anotación y lo demás de los datos:
+[`datos/README.md`](datos/README.md).
 
 ## Grupo B · Control y verificación
 
