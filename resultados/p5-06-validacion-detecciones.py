@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
@@ -18,12 +19,18 @@ from infer.pesos import cargar_pesos
 from infer.rutas_seguras import abrir_exclusivo, directorio_evidencia, verificar_checkpoint
 from infer.trabajador import ejecutar_run_supervisado
 
-try:
-    from resultados.p5_06_comparacion import comparar_plataformas
-except ModuleNotFoundError as exc:
-    if exc.name != "resultados":
-        raise
-    from p5_06_comparacion import comparar_plataformas
+
+def _cargar_comparador():
+    ruta = Path(__file__).with_name("p5_06_comparacion.py")
+    spec = importlib.util.spec_from_file_location("p5_06_comparacion", ruta)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("no se pudo cargar el comparador de P5-06")
+    modulo = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(modulo)
+    return modulo.comparar_plataformas
+
+
+comparar_plataformas = _cargar_comparador()
 
 RAIZ = Path(__file__).resolve().parents[1]
 IMAGEN = RAIZ / "docs/carro/objeto_taza_centro_cerca.jpg"

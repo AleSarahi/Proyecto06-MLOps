@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import ctypes
 import hashlib
+import importlib.util
 import json
 import os
 import platform
@@ -27,12 +28,18 @@ from infer.plazos import cargar_plazos_infer_con_hash
 from infer.preflight import consultar_preflight, exigir_preflight, guardar_y_exigir_preflight
 from infer.trabajador import PredictorSupervisado
 
-try:
-    from resultados.p5_06_comparacion import comparar_plataformas
-except ModuleNotFoundError as exc:
-    if exc.name != "resultados":
-        raise
-    from p5_06_comparacion import comparar_plataformas
+
+def _cargar_comparador():
+    ruta = Path(__file__).with_name("p5_06_comparacion.py")
+    spec = importlib.util.spec_from_file_location("p5_06_comparacion", ruta)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("no se pudo cargar el comparador de P5-06")
+    modulo = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(modulo)
+    return modulo.comparar_plataformas
+
+
+comparar_plataformas = _cargar_comparador()
 
 RAIZ = Path(__file__).resolve().parents[1]
 IMAGEN = RAIZ / "docs/carro/objeto_taza_centro_cerca.jpg"

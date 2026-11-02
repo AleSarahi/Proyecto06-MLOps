@@ -5,6 +5,20 @@ from __future__ import annotations
 from collections import Counter
 
 
+def _comparar_orden(detecciones: list[dict], historicas: list[dict]) -> list[dict]:
+    clases = [d["class_id"] for d in detecciones]
+    clases_historicas = [d["class_id"] for d in historicas]
+    if clases != clases_historicas:
+        campo = "orden" if Counter(clases) == Counter(clases_historicas) else "clase"
+        return [{"campo": campo, "actual": clases, "referencia": clases_historicas}]
+    if detecciones != historicas:
+        firmas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in detecciones]
+        firmas_historicas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in historicas]
+        if Counter(firmas) == Counter(firmas_historicas):
+            return [{"campo": "orden", "actual": detecciones, "referencia": historicas}]
+    return []
+
+
 def comparar_plataformas(actual: dict, referencia: dict) -> dict:
     """Registra valores y deltas; no decide una tolerancia numérica."""
     detecciones = actual["detections"]
@@ -19,16 +33,7 @@ def comparar_plataformas(actual: dict, referencia: dict) -> dict:
         problemas.append(
             {"campo": "cantidad", "actual": len(detecciones), "referencia": len(historicas)}
         )
-    clases = [d["class_id"] for d in detecciones]
-    clases_historicas = [d["class_id"] for d in historicas]
-    if clases != clases_historicas:
-        campo = "orden" if Counter(clases) == Counter(clases_historicas) else "clase"
-        problemas.append({"campo": campo, "actual": clases, "referencia": clases_historicas})
-    elif detecciones != historicas:
-        firmas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in detecciones]
-        firmas_historicas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in historicas]
-        if firmas != firmas_historicas and Counter(firmas) == Counter(firmas_historicas):
-            problemas.append({"campo": "orden", "actual": detecciones, "referencia": historicas})
+    problemas.extend(_comparar_orden(detecciones, historicas))
 
     por_deteccion = []
     max_confianza = 0.0

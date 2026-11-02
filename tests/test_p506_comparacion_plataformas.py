@@ -11,7 +11,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from resultados.p5_06_comparacion import comparar_plataformas
 
 RAIZ = Path(__file__).resolve().parents[1]
 REFERENCIA = RAIZ / "resultados/p5-05-aceptacion-2h-a.jsonl"
@@ -19,10 +18,14 @@ REFERENCIA = RAIZ / "resultados/p5-05-aceptacion-2h-a.jsonl"
 
 def _modulo(nombre: str, archivo: str):
     spec = importlib.util.spec_from_file_location(nombre, RAIZ / "resultados" / archivo)
-    assert spec is not None and spec.loader is not None
+    assert spec is not None
+    assert spec.loader is not None
     modulo = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(modulo)
     return modulo
+
+
+comparar_plataformas = _modulo("p506_comparacion", "p5_06_comparacion.py").comparar_plataformas
 
 
 def _evento(clases=(41, 39)) -> dict:
