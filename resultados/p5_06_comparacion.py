@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-from collections import Counter
-
 
 def _comparar_orden(detecciones: list[dict], historicas: list[dict]) -> list[dict]:
     clases = [d["class_id"] for d in detecciones]
     clases_historicas = [d["class_id"] for d in historicas]
     if clases != clases_historicas:
-        campo = "orden" if Counter(clases) == Counter(clases_historicas) else "clase"
+        campo = "orden" if sorted(clases) == sorted(clases_historicas) else "clase"
         return [{"campo": campo, "actual": clases, "referencia": clases_historicas}]
     if detecciones != historicas:
         firmas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in detecciones]
         firmas_historicas = [(d["class_id"], d["confidence"], *d["bbox"]) for d in historicas]
-        if Counter(firmas) == Counter(firmas_historicas):
+        if sorted(firmas) == sorted(firmas_historicas):
             return [{"campo": "orden", "actual": detecciones, "referencia": historicas}]
     return []
 
