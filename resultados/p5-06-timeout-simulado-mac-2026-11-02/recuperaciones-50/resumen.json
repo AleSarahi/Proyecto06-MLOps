@@ -1,0 +1,10 @@
+{
+  "tipo": "validacion_timeout_simulado",
+  "intentos_solicitados": 50,
+  "intentos_completados": 50,
+  "recuperaciones_correctas": 50,
+  "publicaciones_500_600_ms": 50,
+  "funcional_valido": true,
+  "terminal": false,
+  "simulado": true
+}

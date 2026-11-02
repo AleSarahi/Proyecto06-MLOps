@@ -189,6 +189,123 @@ def test_timeout_real_reinicia_y_cuadro_viejo_no_se_infiere(tmp_path: Path) -> N
     assert [g["estado"] for g in manifiesto["generaciones"]] == ["ready", "timeout", "ready"]
 
 
+def test_timeout_se_publica_antes_del_reinicio_y_traza_el_flush(tmp_path: Path) -> None:
+    entrada = tmp_path / "a.jpg"
+    _jpeg(entrada)
+    estado = tmp_path / "estado.json"
+    estado.write_text(json.dumps({"bloquear": True, "demorar_reinicio": True}))
+    trazas: list[dict] = []
+    salida = tmp_path / "eventos.jsonl"
+    resultado = ejecutar_run_supervisado(
+        entrada,
+        salida,
+        run_id="antes-ready",
+        config_ruta=RUTA_CONFIG_DETECTOR,
+        pesos_ruta=estado,
+        fabrica=crear_predictor_falso,
+        inicio_guarda_s=10,
+        trazas=trazas,
+    )
+    assert resultado[1:] == (1, 1, False)
+    assert len(trazas) == 1
+    traza = trazas[0]
+    assert traza["status"] == "error" and traza["error_code"] == "detector_timeout"
+    assert traza["reinicio_ok"] is True
+    assert traza["publicado_monotonic_s"] >= traza["inicio_monotonic_s"]
+    assert 500 <= traza["duracion_publicacion_ms"] <= 600
+    assert _eventos(salida)[0]["error"]["code"] == "detector_timeout"
+    manifiesto = json.loads((tmp_path / "antes-ready.infer-run.json").read_text())
+    assert manifiesto["generaciones"][-1]["estado"] == "ready"
+    assert manifiesto["generaciones"][-2]["reinicio_ms"] >= 600
+
+
+@pytest.mark.parametrize("operacion", ["write", "flush"])
+def test_escritura_fallida_no_se_declara_publicacion_ni_inicia_reinicio(
+    tmp_path: Path, monkeypatch, operacion: str
+) -> None:
+    import infer.trabajador as modulo
+
+    entrada = tmp_path / "a.jpg"
+    _jpeg(entrada)
+    estado = tmp_path / "estado.json"
+    estado.write_text(json.dumps({"bloquear": True}))
+    trazas: list[dict] = []
+    abrir_original = modulo.abrir_exclusivo
+
+    class ArchivoConFallo:
+        def __init__(self, archivo):
+            self.archivo = archivo
+
+        def __enter__(self):
+            self.archivo.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self.archivo.__exit__(*args)
+
+        def write(self, texto):
+            if operacion == "write":
+                raise OSError("write simulado fallido")
+            return self.archivo.write(texto)
+
+        def flush(self):
+            if operacion == "flush":
+                raise OSError("flush simulado fallido")
+            return self.archivo.flush()
+
+    def abrir(ruta, *, lectura=False):
+        archivo = abrir_original(ruta, lectura=lectura)
+        return ArchivoConFallo(archivo) if lectura else archivo
+
+    monkeypatch.setattr(modulo, "abrir_exclusivo", abrir)
+    with pytest.raises(OSError, match=f"{operacion} simulado"):
+        ejecutar_run_supervisado(
+            entrada,
+            tmp_path / "eventos.jsonl",
+            run_id="flush-fallido",
+            config_ruta=RUTA_CONFIG_DETECTOR,
+            pesos_ruta=estado,
+            fabrica=crear_predictor_falso,
+            inicio_guarda_s=10,
+            trazas=trazas,
+        )
+    assert len(trazas) == 1 and trazas[0]["publicado_monotonic_s"] is None
+    assert estado.with_suffix(".contador").read_text() == "1"
+
+
+def test_trazas_opcionales_no_cambian_eventos(tmp_path: Path) -> None:
+    for nombre, trazas in (("sin", None), ("con", [])):
+        carpeta = tmp_path / nombre
+        carpeta.mkdir()
+        entrada = carpeta / "a.jpg"
+        _jpeg(entrada)
+        estado = carpeta / "estado.json"
+        estado.write_text("{}")
+        ejecutar_run_supervisado(
+            entrada,
+            carpeta / "eventos.jsonl",
+            run_id=nombre,
+            config_ruta=RUTA_CONFIG_DETECTOR,
+            pesos_ruta=estado,
+            fabrica=crear_predictor_falso,
+            inicio_guarda_s=10,
+            trazas=trazas,
+        )
+    a = _eventos(tmp_path / "sin" / "eventos.jsonl")[0]
+    b = _eventos(tmp_path / "con" / "eventos.jsonl")[0]
+    for campo in (
+        "status",
+        "detections",
+        "image_width",
+        "image_height",
+        "model_sha256",
+        "config_sha256",
+    ):
+        assert a[campo] == b[campo]
+    assert a["frame_id"] == b["frame_id"] == "a"
+    assert validar_evento(a) == validar_evento(b) == []
+
+
 def test_reinicio_fallido_publica_todos_los_pendientes(tmp_path: Path) -> None:
     resultado, eventos, estado = _run(
         tmp_path, ["a", "b", "c"], [0, 200, 400], {"bloquear": True, "fallar_reinicio": True}
@@ -339,6 +456,7 @@ def test_plazo_incluye_envio_y_respeta_limite_exacto(tmp_path: Path, envio_s: fl
     predictor.respuestas = Respuestas()
     predictor.proceso = None
     predictor.reloj = lambda: reloj[0]
+    predictor.trazas = []
     clase, evento, _ = predictor.solicitar(
         request_id=1,
         ruta=tmp_path / "a.jpg",
@@ -352,6 +470,8 @@ def test_plazo_incluye_envio_y_respeta_limite_exacto(tmp_path: Path, envio_s: fl
     )
     assert clase == estado
     assert (evento is not None) == (estado == "result")
+    assert predictor.trazas[0]["inicio_monotonic_s"] == 0.0
+    assert predictor.trazas[0]["publicado_monotonic_s"] is None
 
 
 def test_reinicio_exitoso_acepta_cuadro_nuevo_vigente(tmp_path: Path) -> None:

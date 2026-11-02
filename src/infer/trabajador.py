@@ -153,6 +153,7 @@ class PredictorSupervisado:
         fabrica: Callable[[Path, Path], DetectorJPEG] = crear_detector_real,
         inicio_guarda_s: float = INICIO_GUARDA_S,
         reloj: Callable[[], float] = time.monotonic,
+        trazas: list[dict[str, Any]] | None = None,
     ) -> None:
         self.contexto = mp.get_context("spawn")
         self.config_ruta = Path(config_ruta)
@@ -161,6 +162,7 @@ class PredictorSupervisado:
         self.fabrica = fabrica
         self.inicio_guarda_s = inicio_guarda_s
         self.reloj = reloj
+        self.trazas = trazas
         self.generacion = 0
         self.solicitudes: Any = None
         self.respuestas: Any = None
@@ -289,6 +291,18 @@ class PredictorSupervisado:
     ) -> tuple[str, dict[str, Any] | None, tuple[int, int] | None]:
         """Devuelve resultado, timeout o fallo. El plazo empieza antes de put_nowait."""
         inicio = self.reloj()
+        if getattr(self, "trazas", None) is not None:
+            self.trazas.append(
+                {
+                    "frame_id": frame_id,
+                    "request_id": request_id,
+                    "generacion": self.generacion,
+                    "inicio_monotonic_s": inicio,
+                    "publicado_monotonic_s": None,
+                    "duracion_publicacion_ms": None,
+                    "reinicio_ok": None,
+                }
+            )
         limite = inicio + plazos.detector_timeout_ms / 1000
         try:
             self.solicitudes.put_nowait(
@@ -358,6 +372,7 @@ def ejecutar_run_supervisado(
     capture_ms: Sequence[float] | None = None,
     fabrica: Callable[[Path, Path], DetectorJPEG] = crear_detector_real,
     inicio_guarda_s: float = INICIO_GUARDA_S,
+    trazas: list[dict[str, Any]] | None = None,
 ) -> tuple[Path, int, int, bool]:
     """Publica un evento v1 por JPEG aun si falla el reinicio; devuelve fallo fatal."""
     config = cargar_config_detector(config_ruta)
@@ -397,7 +412,12 @@ def ejecutar_run_supervisado(
         raise FileExistsError("el JSONL o manifiesto del run ya existe")
 
     supervisor = PredictorSupervisado(
-        config_ruta, pesos_ruta, config, fabrica=fabrica, inicio_guarda_s=inicio_guarda_s
+        config_ruta,
+        pesos_ruta,
+        config,
+        fabrica=fabrica,
+        inicio_guarda_s=inicio_guarda_s,
+        trazas=trazas,
     )
     falla_reinicio = False
     try:
@@ -418,6 +438,8 @@ def ejecutar_run_supervisado(
     ultima_captura: float | None = None
     with closing(supervisor), abrir_exclusivo(destino, lectura=True) as archivo:
         for indice, (ruta, frame_id) in enumerate(zip(archivos, frame_ids, strict=True), start=1):
+            recuperar = False
+            registro_recuperacion: dict[str, Any] | None = None
             if tiempos is None:
                 captura = transcurrido()
                 if ultima_captura is not None and captura <= ultima_captura:
@@ -454,6 +476,7 @@ def ejecutar_run_supervisado(
                     plazos=plazos,
                 )
                 if clase != "result":
+                    recuperar = True
                     codigo = "detector_timeout" if clase == "timeout" else "detector_exception"
                     evento = _evento_error(
                         meta,
@@ -475,19 +498,6 @@ def ejecutar_run_supervisado(
                         "t_fallo_ms": transcurrido(),
                     }
                     supervisor.cronologia.append(registro_recuperacion)
-                    inicio_recuperacion = time.monotonic()
-                    if not supervisor.detener():
-                        falla_reinicio = True
-                    else:
-                        try:
-                            supervisor.iniciar()
-                        except ErrorTrabajador as exc:
-                            print(f"infer: reinicio fallido: {exc}", file=sys.stderr)
-                            falla_reinicio = True
-                    registro_recuperacion["reinicio_ms"] = (
-                        time.monotonic() - inicio_recuperacion
-                    ) * 1000
-                    registro_recuperacion["reinicio_ok"] = not falla_reinicio
                 assert evento is not None
             evento["t_emit_ms"] = transcurrido()
             if evento["status"] == "ok" and evento["t_emit_ms"] - captura > plazos.max_frame_age_ms:
@@ -496,8 +506,34 @@ def ejecutar_run_supervisado(
             linea = _serializar_evento(evento, eventos)
             archivo.write(linea + "\n")
             archivo.flush()
+            if trazas is not None and not falla_reinicio:
+                publicado_s = time.monotonic()
+                traza = trazas[-1]
+                traza["publicado_monotonic_s"] = publicado_s
+                traza["duracion_publicacion_ms"] = (
+                    publicado_s - traza["inicio_monotonic_s"]
+                ) * 1000
+                traza["status"] = evento["status"]
+                traza["error_code"] = evento.get("error", {}).get("code")
             eventos.append(evento)
             ultima_captura = captura
+            if recuperar:
+                assert registro_recuperacion is not None
+                inicio_recuperacion = time.monotonic()
+                if not supervisor.detener():
+                    falla_reinicio = True
+                else:
+                    try:
+                        supervisor.iniciar()
+                    except ErrorTrabajador as exc:
+                        print(f"infer: reinicio fallido: {exc}", file=sys.stderr)
+                        falla_reinicio = True
+                registro_recuperacion["reinicio_ms"] = (
+                    time.monotonic() - inicio_recuperacion
+                ) * 1000
+                registro_recuperacion["reinicio_ok"] = not falla_reinicio
+                if trazas is not None:
+                    trazas[-1]["reinicio_ok"] = not falla_reinicio
         archivo.flush()
         archivo.buffer.seek(0)
         jsonl_sha256 = hashlib.file_digest(archivo.buffer, "sha256").hexdigest()

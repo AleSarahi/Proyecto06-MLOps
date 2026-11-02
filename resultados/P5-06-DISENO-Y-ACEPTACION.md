@@ -353,3 +353,30 @@ Windows se exige además OneDrive y VS Code cerrados. La validación decisiva se
 independiente de Andrea en Windows. Los umbrales anteriores sustituyen la nota previa de
 "decisión pendiente" solo para esta adenda; no se aplican retroactivamente para afirmar que la
 serie Mac en bloques cumple el nuevo procedimiento.
+
+## Evidencia posterior: publicación de timeout y recuperación simulada
+
+La corrección posterior a la regla de aceptación publica y vacía con `flush()` el evento
+`error/detector_timeout` **antes** de detener y reiniciar al trabajador. El siguiente cuadro
+espera READY verificado. Si la publicación falla durante `write` o `flush`, el run aborta y la
+traza no declara el evento publicado. El instante inicial de la traza es la misma lectura del
+reloj monotónico que fija el deadline inmediatamente antes del envío; la marca final se toma
+después del `flush`. La duración y el resultado de recuperación se guardan fuera del evento
+A→B v1. No se modificó el plazo de 500 ms ni la prioridad error > stale > ok.
+
+`resultados/p5-06-validacion-timeout.py` y `resultados/P5-06-VALIDACION-TIMEOUT.md` describen
+los comandos para Mac y Windows. La evidencia local original se conserva en
+`resultados/p5-06-timeout-simulado-mac-2026-11-02/`, con `SHA256SUMS`, muestras individuales,
+JSONL y manifiestos. En Mac se observaron 50/50 publicaciones entre 500 y 600 ms, 50/50
+recuperaciones con READY y duraciones de 503.0183750204742 a 525.7063750177622 ms. El fallo
+terminal simulado conservó el timeout y emitió dos errores para los cuadros pendientes; la
+política de salida del CLI devolvió 1 al recibir ese resultado mediante sustitución controlada
+de la llamada. Son **trabajadores simulados**, con hashes declarados: estos recorridos no
+demuestran carga ni hash criptográfico del checkpoint real. La validación previa con el modelo
+oficial y la futura repetición independiente de Andrea en Windows son evidencias separadas.
+
+`flush()` no equivale a `fsync()`: esta validación mide entrega al sistema operativo, no
+durabilidad tras una caída. Un error de escritura impide garantizar la publicación de los
+cuadros pendientes en ese mismo JSONL. La serie de latencia normal y los 50 reinicios directos
+del benchmark Mac histórico permanecen distintos de estos 50 reinicios provocados por timeout;
+sus datos brutos no se alteraron.
