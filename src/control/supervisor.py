@@ -325,7 +325,7 @@ class Supervisor:
             "motivo": motivo,
             "errores": errores,
         }
-        with self.ruta_errores.open("a", encoding="utf-8") as registro:
+        with self.ruta_errores.open("a", encoding="utf-8", newline="\n") as registro:
             registro.write(json.dumps(linea, ensure_ascii=False, allow_nan=False) + "\n")
 
     @staticmethod

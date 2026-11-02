@@ -183,6 +183,37 @@ uv run python casos/runner.py C8 --casos "$env:TEMP\casos-copia" --salida "$env:
 En la copia, `sha256sum -c expectativas.sha256` (dentro de la carpeta, en Git Bash) también marca
 `C8/expectativa.yaml: FAILED`. La prueba (a) funciona igual en todos lados.
 
+### 5. Recorrido con una secuencia real
+
+Una secuencia filmada con el carro (S09, en `datos/pruebas-b/S09/`) pasa por el detector de A (`infer`) y
+llega al adaptador virtual. Hacen falta los pesos `yolo11n.pt`, que no están en el repo (PEND-11). Se bajan
+una vez, **con red**, de la [release v8.3.0 de Ultralytics](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt),
+y deben dar el SHA-256 `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`
+(`sha256sum yolo11n.pt` en Git Bash, `Get-FileHash yolo11n.pt` en PowerShell). `infer` no carga otros
+pesos. Después, todo corre sin red:
+
+```bash
+# Un --capture-ms por JPEG: el t_capture_ms de cada línea de datos/pruebas-b/S09/captura.jsonl.
+uv run python -m infer --input datos/pruebas-b/S09 --weights <ruta local>/yolo11n.pt \
+  --output resultados/s09/detector.jsonl --run-id s09 --sequence-id S09 \
+  --capture-ms 0 --capture-ms 203 --capture-ms 484 --capture-ms 687 --capture-ms 906 --capture-ms 1140 \
+  --capture-ms 1390 --capture-ms 1593 --capture-ms 1812 --capture-ms 2031 --capture-ms 2297 --capture-ms 2531
+uv run python -m contrato resultados/s09/detector.jsonl
+# resultados/s09/detector.jsonl: OK (12 eventos)
+uv run python -m control --entrada resultados/s09/detector.jsonl --config config/control/ --salida resultados/s09/
+uv run python -m control.traza --salida resultados/s09/
+```
+
+La taza toca el centro, cargada a la izquierda: lo esperado es `GIRAR_DER` en los 12 cuadros. `infer`
+respeta los tiempos de captura, así que en una máquina lenta algunos cuadros pueden llegar con más de
+500 ms y terminar en STOP por `cuadro_viejo`: eso es lo correcto. `infer` no sobrescribe una salida que
+ya existe; para repetir, usa otra carpeta. Las secuencias que ya se corrieron y cómo leer la traza están
+en [`docs/recorrido-real.md`](docs/recorrido-real.md).
+
+Con los pesos a la mano, define `P5_05_YOLO11N_PT` con su ruta antes de `uv run pytest -q` (Git Bash:
+`export P5_05_YOLO11N_PT=<ruta local>/yolo11n.pt`; PowerShell: `$env:P5_05_YOLO11N_PT = "<ruta local>\yolo11n.pt"`).
+Sin esa variable, las pruebas que usan el detector real se saltan (salen como `skipped`), no fallan.
+
 ### Dónde quedan los resultados
 
 | Qué corriste | Dónde queda |
@@ -197,7 +228,8 @@ En la copia, `sha256sum -c expectativas.sha256` (dentro de la carpeta, en Git Ba
 uv run pytest -q tests/test_config_politica.py tests/test_zonas.py tests/test_decision.py \
   tests/test_umbral.py tests/test_histeresis.py tests/test_supervisor.py tests/test_watchdog.py \
   tests/test_fallas.py tests/test_emergencia.py tests/test_adaptador_virtual.py tests/test_comando.py \
-  tests/test_correr.py tests/test_expectativas.py tests/test_runner.py tests/test_readme_b.py
+  tests/test_correr.py tests/test_expectativas.py tests/test_runner.py tests/test_readme_b.py \
+  tests/test_copia_limpia.py
 ```
 
 ## Cómo contribuir
