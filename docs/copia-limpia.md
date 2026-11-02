@@ -42,7 +42,9 @@ Para que la instalación no aprovechara lo ya descargado en esta laptop, `uv syn
 
 ## Comandos y resultados
 
-Todos desde la raíz del clon. `<pesos>` es la ruta local de `yolo11n.pt`.
+Todos desde la raíz del clon. `<pesos>` es la ruta local de `yolo11n.pt`. Los comandos están en Git
+Bash. En PowerShell, `VARIABLE=valor comando` (paso 1b) no funciona: primero
+`$env:P5_05_YOLO11N_PT = "<pesos>"` y luego `uv run pytest -q -rs`.
 
 | # | Comando | Sale | Resultado |
 |---|---|---|---|
