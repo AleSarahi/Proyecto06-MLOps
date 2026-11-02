@@ -90,18 +90,29 @@ El percentil es lineal (posición `(n - 1) * q`, interpolando entre vecinos), ig
 
 ```bash
 uv run python -m bench.limites mediciones/<run>/ [--config-control config/control/] [--periodo-ms 200]
+# La del entregable: las 3 corridas finales, la peor de ellas, más lo que infer paga de más.
+uv run python -m bench.limites mediciones/final-1/ mediciones/final-2/ mediciones/final-3/ \
+  --sobrecosto mediciones/final-sobrecosto/ --salida mediciones/final-contraste/
 ```
 
-Lee el `resumen.json` de la corrida y `plazos.yaml` de B, y escribe junto a la corrida `contraste.json` y
-`contraste.md`: p50/p95/máximo contra cada plazo, con veredicto (**cumple**, **cumple en p95**, **no cumple**),
-margen y razón. `--periodo-ms` es el ritmo de entrada de PEND-09 (200 ms, provisional); con otro valor se
+Lee el `resumen.json` de cada corrida y `plazos.yaml` de B, y escribe `contraste.json` y `contraste.md` (junto
+a la corrida si es una; en `--salida` si son varias): p50/p95/máximo contra cada plazo, con veredicto
+(**cumple**, **cumple en p95**, **no cumple**), margen y razón. Con varias corridas contrasta la peor: por
+etapa, el mayor p50, p95 y máximo, y anota de cuál salió cada uno. `--sobrecosto` suma el p50, p95 y máximo de
+`bench.sobrecosto` a `total_ms`, y la fila del timeout compara entonces la solicitud completa de `infer`
+(`total_ms` + sobrecosto) en vez de `inferencia_ms`. `--periodo-ms` es el ritmo de entrada de PEND-09 (200 ms, provisional); con otro valor se
 contrasta igual, pero queda como advertencia. La fila de la edad tiene en cuenta la cola (ver
 [`LIMITES.md`](LIMITES.md#contraste-con-los-plazos)).
 
-**Código de salida:** `0` todo cumple hasta el máximo y la corrida es la del entregable · `1` algo no cumple
-del todo, o la corrida tiene advertencias o fallos, quedó incompleta, no midió B, usa otro periodo que el de
-PEND-09, o sus plazos o CSV cambiaron · `2` no se puede leer la corrida, los plazos o los argumentos (valores
-no finitos, tipos inválidos); no queda ningún `contraste.*`, ni siquiera uno anterior.
+**Código de salida:** `0` todo cumple hasta el máximo y las corridas son las del entregable · `1` algo no
+cumple del todo, o una corrida tiene advertencias o fallos, quedó incompleta, no midió B, usa otro periodo que
+el de PEND-09, o sus plazos o CSV cambiaron; las corridas son de otro detector o equipo; o el sobrecosto se
+midió en batería, sin hashes, con otro detector o su CSV cambió · `2` no se puede leer una corrida, el
+sobrecosto, los plazos o los argumentos (valores no finitos, tipos inválidos, la misma corrida dos veces, varias
+sin `--salida`); no queda ningún `contraste.*`, ni siquiera uno anterior.
+
+Resultado de la corrida final: [`final-contraste/contraste.md`](final-contraste/contraste.md) (los cinco
+plazos **cumplen**), explicado en [`LIMITES.md`](LIMITES.md#contraste-con-los-plazos).
 
 Qué acredita y qué no el control virtual, y lo que no se midió: [`LIMITES.md`](LIMITES.md).
 

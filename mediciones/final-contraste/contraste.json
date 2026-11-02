@@ -1,0 +1,185 @@
+{
+  "version": 2,
+  "corridas": [
+    {
+      "carpeta": "mediciones/final-1",
+      "resumen_sha256": "883ec36a0149f8d0cc79efdf1d33bedcfafb350c78d4b334dee6a445631a0ec8",
+      "equipo": "laptop de A3",
+      "energia": "corriente",
+      "estado": "completo",
+      "mediciones": 100,
+      "fallos": 0
+    },
+    {
+      "carpeta": "mediciones/final-2",
+      "resumen_sha256": "84c8f45a18468dbb8c7d64fa0b194f6c350dbdddd2f1517c25dd11298b851cdc",
+      "equipo": "laptop de A3",
+      "energia": "corriente",
+      "estado": "completo",
+      "mediciones": 100,
+      "fallos": 0
+    },
+    {
+      "carpeta": "mediciones/final-3",
+      "resumen_sha256": "520768a9fe976b4acf93d15d5098c9479e37e9d4e4f388116b64ead79b837f6d",
+      "equipo": "laptop de A3",
+      "energia": "corriente",
+      "estado": "completo",
+      "mediciones": 100,
+      "fallos": 0
+    }
+  ],
+  "etapas": {
+    "preprocesamiento_ms": {
+      "p50": 1.7572999999999999,
+      "p95": 2.4279249999999997,
+      "maximo": 3.3445
+    },
+    "inferencia_ms": {
+      "p50": 85.15155,
+      "p95": 107.694215,
+      "maximo": 138.4883
+    },
+    "posprocesamiento_ms": {
+      "p50": 5.09875,
+      "p95": 7.63221,
+      "maximo": 9.604
+    },
+    "evento_ms": {
+      "p50": 0.6351,
+      "p95": 0.8940600000000001,
+      "maximo": 1.1011
+    },
+    "politica_ms": {
+      "p50": 2.06925,
+      "p95": 2.64671,
+      "maximo": 3.6424
+    },
+    "total_ms": {
+      "p50": 94.87379999999999,
+      "p95": 118.629945,
+      "maximo": 154.379
+    }
+  },
+  "peor_de": {
+    "preprocesamiento_ms": {
+      "p50": "final-2",
+      "p95": "final-2",
+      "maximo": "final-2"
+    },
+    "inferencia_ms": {
+      "p50": "final-2",
+      "p95": "final-2",
+      "maximo": "final-2"
+    },
+    "posprocesamiento_ms": {
+      "p50": "final-2",
+      "p95": "final-2",
+      "maximo": "final-2"
+    },
+    "evento_ms": {
+      "p50": "final-2",
+      "p95": "final-2",
+      "maximo": "final-2"
+    },
+    "politica_ms": {
+      "p50": "final-2",
+      "p95": "final-3",
+      "maximo": "final-2"
+    },
+    "total_ms": {
+      "p50": "final-2",
+      "p95": "final-2",
+      "maximo": "final-2"
+    }
+  },
+  "sobrecosto": {
+    "carpeta": "mediciones/final-sobrecosto",
+    "sha256": "785dea0f270a2cdc970dd5c6165fc8ac515747213919d64e25e12188b8545712",
+    "diferencia_ms": {
+      "p50": 12.331949999999999,
+      "p95": 14.697960000000005,
+      "maximo": 16.48769999999999
+    }
+  },
+  "plazos": {
+    "archivo": "config/control/plazos.yaml",
+    "sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22",
+    "valores": {
+      "detector_timeout_ms": 500,
+      "max_frame_age_ms": 500,
+      "validez_orden_ms": 400,
+      "watchdog_ms": 600
+    },
+    "periodo_entrada_ms": 200,
+    "fuente_periodo": "PEND-09, provisional: ≈ 5 fps hasta que B lo declare"
+  },
+  "contraste": [
+    {
+      "id": "inferencia_vs_timeout",
+      "medido": "total_ms + sobrecosto",
+      "plazo": "detector_timeout_ms",
+      "razon": "Una inferencia más larga que el plazo hace que A emita status=error (detector_timeout) y B frene (C9).",
+      "p50": 107.20575,
+      "p95": 133.32790500000002,
+      "maximo": 170.86669999999998,
+      "plazo_ms": 500,
+      "margen_p95_ms": 366.672095,
+      "veredicto": "cumple"
+    },
+    {
+      "id": "total_vs_edad",
+      "medido": "total_ms + sobrecosto",
+      "plazo": "max_frame_age_ms",
+      "razon": "El comando sale cuando el cuadro ya tiene al menos total_ms de edad; pasado max_frame_age_ms, B lo rechaza por viejo y frena (C8).",
+      "p50": 107.20575,
+      "p95": 133.32790500000002,
+      "maximo": 170.86669999999998,
+      "plazo_ms": 500,
+      "margen_p95_ms": 366.672095,
+      "veredicto": "cumple"
+    },
+    {
+      "id": "total_vs_periodo",
+      "medido": "total_ms + sobrecosto",
+      "plazo": "periodo_entrada_ms",
+      "razon": "Si procesar un cuadro tarda más que el periodo de entrada, los cuadros se acumulan y cada uno llega más viejo que el anterior.",
+      "p50": 107.20575,
+      "p95": 133.32790500000002,
+      "maximo": 170.86669999999998,
+      "plazo_ms": 200,
+      "margen_p95_ms": 66.67209499999998,
+      "veredicto": "cumple"
+    },
+    {
+      "id": "intervalo_vs_validez",
+      "medido": "intervalo",
+      "plazo": "validez_orden_ms",
+      "razon": "Entre dos comandos pasa el periodo de entrada o lo que tarde procesar un cuadro; si eso pasa validez_orden_ms, el adaptador frena por su cuenta entre cuadros.",
+      "p50": 200,
+      "p95": 200,
+      "maximo": 200,
+      "plazo_ms": 400,
+      "margen_p95_ms": 200,
+      "veredicto": "cumple"
+    },
+    {
+      "id": "intervalo_vs_watchdog",
+      "medido": "intervalo",
+      "plazo": "watchdog_ms",
+      "razon": "Si entre dos eventos pasa más que watchdog_ms, B emite STOP por falta de percepción aunque el detector siga funcionando.",
+      "p50": 200,
+      "p95": 200,
+      "maximo": 200,
+      "plazo_ms": 600,
+      "margen_p95_ms": 400,
+      "veredicto": "cumple"
+    }
+  ],
+  "no_medido": [
+    "Captura en la ESP32-CAM y transmisión por WiFi, ni el costo de comunicación de P5-06 si el detector corre en otro proceso: la edad real del cuadro es mayor que la de la tabla. La lectura y decodificación del JPEG sí entran, con el sobrecosto de infer.",
+    "Carga y calentamiento del modelo: el benchmark los deja fuera. En infer también deben quedar fuera del reloj del run; si no, el primer cuadro ya llega viejo (lo encontró T16).",
+    "Frenado mecánico, distancia de frenado y movimiento del carro: el control es virtual y los comandos solo se registran."
+  ],
+  "advertencias": []
+}

@@ -1,13 +1,13 @@
 # Límites del sistema (P5-16, E7)
 
 Qué acredita este proyecto y qué no, y cómo se contrastan los tiempos medidos con los plazos de B. Los números
-salen de la corrida final de P5-15 (`python -m bench`) y de `python -m bench.limites`, que escribe
-`contraste.md` junto a ella. Aquí no se copian a mano: se enlaza la corrida.
+salen de las 3 corridas finales de P5-15 (`python -m bench`, #82), de lo que `infer` paga de más
+(`python -m bench.sobrecosto`) y de `python -m bench.limites`, que escribe
+[`final-contraste/contraste.md`](final-contraste/contraste.md). Aquí no se copian a mano los veredictos: se
+enlaza el contraste.
 
-> **Estado:** la medición final espera al paso 2 del congelamiento (#13): fusionar P5-05 (#75, aprobado en
-> `8d86f44` con `torch_threads: 2` y `config_sha256` `6428a259…`) y registrar ese hash en #13. Hasta entonces
-> nadie corre el detector sobre S01–S08.
-> Las secciones marcadas *Pendiente* se completan con esa corrida.
+> **Estado:** medición final hecha el 2026-11-01 con `config-detector-v1` (paso 2 de #13, `config_sha256`
+> `6428a259…`) sobre S01–S08 de `datos-evaluacion-v1`. Los cinco plazos **cumplen hasta el máximo**.
 
 ## Qué acredita el control virtual
 
@@ -25,24 +25,35 @@ salen de la corrida final de P5-15 (`python -m bench`) y de `python -m bench.lim
   declara ninguna distancia.
 - **Un FPS universal:** los tiempos valen para el equipo de PEND-05, conectado a la corriente, con el runtime
   y los hilos registrados en `resumen.json`. En otra máquina, o en batería, cambian (ver *Lo que ya se vio*).
-- **La cadena completa de la cámara:** el benchmark parte de la imagen en memoria. No mide la captura en la
-  ESP32-CAM, la transmisión por WiFi ni la decodificación del JPEG, así que la edad real de un cuadro al llegar
-  a B es mayor que `total_ms`.
+- **La cadena completa de la cámara:** el benchmark parte de la imagen en memoria. La lectura y
+  decodificación del JPEG se suman aparte (`bench.sobrecosto`), pero no se mide la captura en la ESP32-CAM, la
+  transmisión por WiFi ni el costo de comunicación de P5-06 si el detector corre en otro proceso, así que la
+  edad real de un cuadro al llegar a B es mayor que la de la tabla.
 - **Escenas fuera del dominio:** el detector solo se probó con los objetos, la escena y la luz de PEND-04.
 
 ## Contraste con los plazos
 
-`python -m bench.limites mediciones/<run>/` compara la corrida con `config/control/plazos.yaml`:
+```bash
+uv run python -m bench.limites mediciones/final-1/ mediciones/final-2/ mediciones/final-3/ \
+  --sobrecosto mediciones/final-sobrecosto/ --salida mediciones/final-contraste/
+```
+
+compara las corridas con `config/control/plazos.yaml`. Sigue la regla fijada antes de medir
+([`README.md`](README.md#corrida-final-regla-fija-antes-de-medir)): se reportan las 3 y se contrasta **la
+peor**, es decir, por etapa, el mayor p50, p95 y máximo de las tres (queda anotado de qué corrida salió cada
+uno). A eso se suma lo que `infer` paga y el arnés no mide: leer el JPEG y la preparación de Ultralytics
+(`final-sobrecosto`). Sumar los máximos da una cota superior del máximo de la suma, y sumar los p95 es la misma
+aproximación del lado seguro.
 
 | Medido | Plazo | Por qué importa |
 |---|---|---|
-| `inferencia_ms` | `detector_timeout_ms` (500) | Si una inferencia tarda más, A emite `detector_timeout` y B frena (C9). |
-| `total_ms` | `max_frame_age_ms` (500) | El comando sale cuando el cuadro ya tiene al menos esa edad; si pasa el plazo, B lo rechaza (C8). |
-| `total_ms` | periodo de entrada (200, PEND-09) | Si procesar tarda más que el periodo, los cuadros se acumulan y llegan cada vez más viejos. |
+| `total_ms` + sobrecosto (la solicitud completa de `infer`) | `detector_timeout_ms` (500) | El timeout de P5-06 cubre la solicitud entera; si tarda más, A emite `detector_timeout` y B frena (C9). Sin `--sobrecosto` se compara `inferencia_ms`. |
+| `total_ms` + sobrecosto | `max_frame_age_ms` (500) | El comando sale cuando el cuadro ya tiene al menos esa edad; si pasa el plazo, B lo rechaza (C8). |
+| `total_ms` + sobrecosto | periodo de entrada (200, PEND-09) | Si procesar tarda más que el periodo, los cuadros se acumulan y llegan cada vez más viejos. |
 | intervalo entre comandos | `validez_orden_ms` (400) | Si entre dos comandos pasa más, el adaptador frena por su cuenta. |
 | intervalo entre eventos | `watchdog_ms` (600) | Si entre dos eventos pasa más, B frena por falta de percepción. |
 
-El intervalo es el mayor entre el periodo de entrada y `total_ms`. Cada fila lleva un veredicto: **cumple**
+El intervalo es el mayor entre el periodo de entrada y `total_ms` (+ sobrecosto). Cada fila lleva un veredicto: **cumple**
 (hasta el máximo queda dentro), **cumple en p95** (el máximo lo pasa: algún cuadro se pierde o llega tarde) o
 **no cumple** (el p95 lo pasa).
 
@@ -60,7 +71,32 @@ tabla lo hace (con su margen), pero B decide cuadro por cuadro: un solo cuadro q
 `detector_timeout_ms` ya es un STOP. Un **cumple en p95** se reporta tal cual, con salida `1`, para que se vea
 y se explique en vez de esconderlo en un percentil.
 
-**Resultado:** *Pendiente* — enlazar `mediciones/<run>/contraste.md` de la corrida final.
+**Resultado** ([`final-contraste/contraste.md`](final-contraste/contraste.md), salida `0`, sin advertencias):
+
+| Medido | p50 | p95 | Máximo | Plazo | Margen p95 | Veredicto |
+|---|---|---|---|---|---|---|
+| `total_ms` + sobrecosto | 107.21 | 133.33 | 170.87 | `detector_timeout_ms` = 500 | 366.67 | **cumple** |
+| `total_ms` + sobrecosto | 107.21 | 133.33 | 170.87 | `max_frame_age_ms` = 500 | 366.67 | **cumple** |
+| `total_ms` + sobrecosto | 107.21 | 133.33 | 170.87 | periodo de entrada = 200 | 66.67 | **cumple** |
+| intervalo | 200.00 | 200.00 | 200.00 | `validez_orden_ms` = 400 | 200.00 | **cumple** |
+| intervalo | 200.00 | 200.00 | 200.00 | `watchdog_ms` = 600 | 400.00 | **cumple** |
+
+En ms. Casi todos los números de la peor salen de `final-2` (`total_ms` p95 118.63 y máximo 154.38); solo el
+p95 de `politica_ms` sale de `final-3`. El sobrecosto suma p50 12.33, p95 14.70 y máximo 16.49 ms. Lo más
+ajustado es el **periodo de entrada**: el peor cuadro queda a 29 ms de los 200 ms, y el p95 a 67 ms. La edad
+y el timeout quedan a más de 300 ms.
+
+Las tres corridas, por separado:
+
+| Corrida | `total_ms` p50 / p95 / máx |
+|---|---|
+| [`final-1`](final-1/resumen.json) | 92.78 / 101.71 / 111.05 |
+| [`final-2`](final-2/resumen.json) | 94.87 / 118.63 / 154.38 |
+| [`final-3`](final-3/resumen.json) | 92.42 / 99.04 / 106.90 |
+
+**Condiciones, tal cual:** conectada, VS Code cerrado y OneDrive en pausa; el registro de procesos al empezar
+todavía mostró procesos de `chrome`, `msedge` y `OneDrive`, posiblemente en segundo plano. No se repitió
+ninguna corrida.
 
 ## Declarado y reproducido
 
@@ -68,12 +104,15 @@ y se explique en vez de esconderlo en un percentil.
 |---|---|---|
 | **Declarado** | Plazos de B y ritmo de entrada (≈ 5 fps, provisional hasta que B cierre PEND-09). | `config/control/plazos.yaml` (su SHA-256 queda en `contraste.json`) |
 | **Declarado** | Equipo de PEND-05. | [`README.md`](README.md#equipo-declarado-pend-05) |
-| **Reproducido** | p50/p95/máximo por etapa, fallos aparte, hardware y energía de la corrida. | `mediciones/<run>/resumen.json`, `ejecuciones.csv`, `fallos.csv` |
-| **Reproducido** | Veredicto de cada plazo. | `mediciones/<run>/contraste.md` y `contraste.json` |
+| **Reproducido** | p50/p95/máximo por etapa, fallos aparte, hardware y energía de cada corrida. | `mediciones/final-1/`, `final-2/` y `final-3/`: `resumen.json`, `ejecuciones.csv`, `fallos.csv` |
+| **Reproducido** | Lo que `infer` paga de más (leer el JPEG, preparación de Ultralytics). | `mediciones/final-sobrecosto/sobrecosto.json` y `sobrecosto.csv` |
+| **Reproducido** | La peor de las tres, el veredicto de cada plazo y de qué corrida salió cada número. | `mediciones/final-contraste/contraste.md` y `contraste.json` |
 
-`bench.limites` avisa (y no sale con `0`) si la corrida tiene advertencias, quedó incompleta, tuvo fallos
+`bench.limites` avisa (y no sale con `0`) si una corrida tiene advertencias, quedó incompleta, tuvo fallos
 (aunque no entren en p50/p95), no midió la etapa de B, se contrasta con otro periodo que el de PEND-09, o si
-`plazos.yaml` o los CSV cambiaron desde que se midió.
+`plazos.yaml` o los CSV cambiaron desde que se midió. Con varias corridas también avisa si no son del mismo
+detector o equipo, y con `--sobrecosto`, si se midió en batería, sin comprobar los hashes, con otro detector o
+si su CSV cambió.
 
 ## Lo que ya se vio (antes de la medición final)
 
@@ -124,8 +163,14 @@ procedimiento, conectada, con el plan de energía Equilibrado y OneDrive y VS Co
 
 1 hilo vuelve a fallar el p95, así que la regla sigue dando 2. Pero en 3 de las 4 series de 2 hilos con la
 configuración tal cual, el p95 o el máximo pasaron la regla: las colas dependen de lo que más corra en el
-equipo. Por eso la corrida final se hace con las demás aplicaciones cerradas, y si el máximo sale cerca de
-algún plazo se repite y se reportan todas las corridas, no la mejor.
+equipo. Por eso la corrida final se hizo con las demás aplicaciones cerradas y con una regla fija antes de
+medir (siempre 3 corridas, todas reportadas, se contrasta la peor), en vez de "si sale cerca, se repite", que
+dejaría la decisión para después de ver el número (revisión de Karen en #82).
+
+**Lo que confirmó la medición final.** Con 2 hilos, las 3 corridas del arnés dieron `inferencia_ms` p95 de
+89.67 a 107.69 ms y máximo de 98.20 a 138.49 ms: dentro de la regla de hilos en las tres. No se comparan uno a
+uno con la tabla de arriba: aquella mide `detector_total_ms` de `infer` sobre una sola foto, y el arnés,
+`inferencia_ms` sobre los 107 cuadros de S01–S08.
 
 Los hilos no cambian las detecciones (7 contra 1 hilo: Δconf ≤ 1.3e-6), pero sí el `config_sha256`, por eso
 se decidió antes del paso 2.
@@ -154,8 +199,8 @@ se decidió antes del paso 2.
   fallida de S01 y la primera S02, que después se repitió.
 - **Umbrales:** `conf` 0.25 e `iou` 0.70, propuestos en P5-04 (`modelo/configuracion.p5-04.propuesta.json`),
   fijados antes de correr sobre los cuadros. Con 2 hilos, `config_sha256` es
-  `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` (#75); *pendiente* que quede registrado
-  en el paso 2 (#13).
+  `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` (#75), registrado en el paso 2 de #13
+  con el tag `config-detector-v1`.
 - **Objetos y escena (PEND-04):** botella (39) y taza (41), según P5-03; interior, piso plano, buena luz.
 - **Iluminación:** solo luz de interior. No se probó con poca luz, contraluz ni exteriores.
 
@@ -164,4 +209,4 @@ se decidió antes del paso 2.
 - La cadena en vivo ESP32-CAM → detector → B con tiempos medidos de punta a punta.
 - El carro moviéndose con los comandos de B.
 - Otros equipos distintos al de PEND-05.
-- *Pendiente:* lo que salga al filmar y al hacer la medición final.
+- *Pendiente:* lo que salga al filmar.

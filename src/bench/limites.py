@@ -2,11 +2,24 @@
 
 Uso:
     python -m bench.limites mediciones/<run>/ [--config-control config/control/] [--periodo-ms 200]
+    python -m bench.limites mediciones/final-1/ mediciones/final-2/ mediciones/final-3/ \
+        --sobrecosto mediciones/final-sobrecosto/ --salida mediciones/final-contraste/
 
-Lee `resumen.json` de una corrida de `python -m bench` y `plazos.yaml` de B, y escribe en la
-misma carpeta `contraste.json` y `contraste.md`: p50/p95/máximo frente a cada presupuesto, con
-veredicto y razón. Lo declarado (los plazos de B y el ritmo de entrada de PEND-09) y lo
-reproducido (lo que midió el benchmark) quedan en secciones aparte.
+Lee `resumen.json` de una o varias corridas de `python -m bench` y `plazos.yaml` de B, y escribe
+`contraste.json` y `contraste.md`: p50/p95/máximo frente a cada presupuesto, con veredicto y
+razón. Lo declarado (los plazos de B y el ritmo de entrada de PEND-09) y lo reproducido (lo que
+midió el benchmark) quedan en secciones aparte. Con una corrida se escriben junto a ella; con
+varias, en `--salida`.
+
+Con varias corridas se contrasta **la peor**: por etapa, el mayor p50, el mayor p95 y el mayor
+máximo de todas (cada uno puede venir de una corrida distinta; queda anotado de cuál).
+
+`--sobrecosto` es la carpeta de `python -m bench.sobrecosto`: lo que `infer` paga y el arnés no
+mide (leer el JPEG y la preparación de Ultralytics). Su p50, p95 y máximo se suman a los de
+`total_ms` en todas las filas, y la del timeout compara la solicitud completa (`total_ms` +
+sobrecosto) en vez de `inferencia_ms`: el `detector_timeout_ms` de P5-06 cubre la solicitud
+entera. Sumar máximos da una cota superior del máximo de la suma; sumar p95 es la misma
+aproximación conservadora.
 
 Veredicto de cada presupuesto:
 - `cumple`: hasta el máximo observado queda dentro del plazo.
@@ -20,10 +33,12 @@ Para salir con 0 hace falta que **el máximo** cumpla, no solo el p95: B decide 
 y un solo cuadro que pasa `max_frame_age_ms` o `detector_timeout_ms` ya es un STOP. El p95 queda
 en la tabla, con su margen, como pide `plazos.yaml`.
 
-Salida: 0 si todo cumple y la corrida es la del entregable (completa, sin fallos ni advertencias,
-con el periodo declarado, los mismos plazos con que se midió y sus CSV intactos); 1 si algo no
-cumple del todo o hay advertencias; 2 si no se puede leer la corrida, los plazos o los argumentos.
-Con 2 no queda ningún `contraste.*` en la carpeta, ni siquiera el de una corrida anterior.
+Salida: 0 si todo cumple y las corridas son las del entregable (completas, sin fallos ni
+advertencias, con el periodo declarado, los mismos plazos con que se midieron, sus CSV intactos,
+el mismo detector y, si se da, un sobrecosto medido conectado con ese detector); 1 si algo no
+cumple del todo o hay advertencias; 2 si no se puede leer una corrida, el sobrecosto, los plazos
+o los argumentos. Con 2 no queda ningún `contraste.*` en la carpeta de salida, ni siquiera el de
+una ejecución anterior.
 
 Las rutas las elige quien corre el comando. Por eso las lecturas y escrituras con esas rutas
 llevan `NOSONAR (S8707)`, como en `python -m bench`.
@@ -51,6 +66,8 @@ NO_CUMPLE = "no cumple"
 GRAVEDAD = {CUMPLE: 0, CUMPLE_EN_P95: 1, NO_CUMPLE: 2}
 ESTADISTICOS = ("p50", "p95", "maximo")
 ARCHIVOS_CONTRASTE = ("contraste.json", "contraste.md")
+ARCHIVO_SOBRECOSTO = "sobrecosto.json"
+MEDIDA_SOBRECOSTO = "diferencia_ms"
 FUENTE_PERIODO = "PEND-09, provisional: ≈ 5 fps hasta que B lo declare"
 
 # Cada presupuesto: qué tiempo medido se compara, contra qué plazo y por qué importa.
@@ -125,6 +142,11 @@ NO_MEDIDO = (
     "Frenado mecánico, distancia de frenado y movimiento del carro: el control es virtual y los "
     "comandos solo se registran.",
 )
+NO_MEDIDO_CON_SOBRECOSTO = (
+    "Captura en la ESP32-CAM y transmisión por WiFi, ni el costo de comunicación de P5-06 si el "
+    "detector corre en otro proceso: la edad real del cuadro es mayor que la de la tabla. La "
+    "lectura y decodificación del JPEG sí entran, con el sobrecosto de infer."
+)
 
 
 class ErrorLimites(ValueError):
@@ -195,24 +217,128 @@ def veredicto(p95: float, maximo: float, plazo: float) -> str:
     return NO_CUMPLE
 
 
+def peor_de(
+    resumenes: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, float]], dict[str, dict[str, str]]]:
+    """Por etapa, el mayor de cada estadístico entre las corridas, y de qué corrida salió."""
+    etapas: dict[str, dict[str, float]] = {}
+    origen: dict[str, dict[str, str]] = {}
+    for nombre, resumen in resumenes.items():
+        for etapa, valores in resumen["etapas"].items():
+            if not isinstance(valores, dict) or not all(
+                _numero_finito(valores.get(e)) for e in ESTADISTICOS
+            ):
+                continue
+            for estadistico in ESTADISTICOS:
+                actual = etapas.setdefault(etapa, {}).get(estadistico)
+                if actual is None or valores[estadistico] > actual:
+                    etapas[etapa][estadistico] = valores[estadistico]
+                    origen.setdefault(etapa, {})[estadistico] = nombre
+    return etapas, origen
+
+
+def cargar_sobrecosto(carpeta: Path) -> dict[str, Any]:
+    """Lee `sobrecosto.json` de `python -m bench.sobrecosto` y revisa lo que se suma."""
+    ruta = carpeta / ARCHIVO_SOBRECOSTO
+    nombre = ruta_publicable(ruta)
+    try:
+        datos = json.loads(ruta.read_text(encoding="utf-8"))  # NOSONAR (S8707)
+    except FileNotFoundError as exc:
+        raise ErrorLimites(f"no hay {nombre}: corre antes python -m bench.sobrecosto") from exc
+    except json.JSONDecodeError as exc:
+        raise ErrorLimites(f"{nombre} no es JSON válido: {exc}") from exc
+    if not isinstance(datos, dict) or not isinstance(datos.get("resumen"), dict):
+        raise ErrorLimites(f"{nombre} no tiene la sección resumen")
+    diferencia = datos["resumen"].get(MEDIDA_SOBRECOSTO)
+    if not isinstance(diferencia, dict) or not all(
+        _numero_finito(diferencia.get(e)) for e in ESTADISTICOS
+    ):
+        raise ErrorLimites(f"{nombre}: falta p50/p95/maximo finitos de {MEDIDA_SOBRECOSTO}")
+    advertencias = datos.get("advertencias", [])
+    if not isinstance(advertencias, list) or not all(isinstance(a, str) for a in advertencias):
+        raise ErrorLimites(f"{nombre}: advertencias debe ser una lista de textos")
+    if not isinstance(datos.get("archivos", {}), dict):
+        raise ErrorLimites(f"{nombre}: archivos debe ser un objeto")
+    return datos
+
+
+def _del_detector(resumenes: dict[str, dict[str, Any]], clave: str) -> set[Any]:
+    return {r.get("procedencia", {}).get("detector", {}).get(clave) for r in resumenes.values()}
+
+
+def advertencias_de_sobrecosto(
+    sobrecosto: dict[str, Any], carpeta: Path, resumenes: dict[str, dict[str, Any]]
+) -> list[str]:
+    """Por qué el sobrecosto no sirve para estas corridas, si es el caso."""
+    advertencias = []
+    if sobrecosto.get("energia") != "corriente":
+        advertencias.append(f"sobrecosto: energía {sobrecosto.get('energia')}, no conectada")
+    if sobrecosto.get("hashes_comprobados") is not True:
+        advertencias.append("sobrecosto: no comprobó los hashes del detector")
+    if sobrecosto.get("advertencias"):
+        advertencias.append("sobrecosto con advertencias: " + "; ".join(sobrecosto["advertencias"]))
+    for clave in ("model_sha256", "config_sha256"):
+        if _del_detector(resumenes, clave) != {sobrecosto.get(clave)}:
+            advertencias.append(f"sobrecosto: su {clave} no es el de las corridas")
+    archivos = sobrecosto.get("archivos") or {}
+    if not archivos:
+        advertencias.append("sobrecosto.json no registra el SHA-256 de su CSV")
+    for nombre, esperado in sorted(archivos.items()):
+        ruta = carpeta / nombre
+        if not ruta.is_file():  # NOSONAR (S8707)
+            advertencias.append(f"sobrecosto: falta {nombre}")
+        elif sha256_archivo(ruta) != esperado:
+            advertencias.append(f"sobrecosto: {nombre} cambió, su SHA-256 no coincide")
+    return advertencias
+
+
+def advertencias_entre_corridas(resumenes: dict[str, dict[str, Any]]) -> list[str]:
+    """Varias corridas solo se combinan si son del mismo detector y del mismo equipo."""
+    if len(resumenes) < 2:
+        return []
+    advertencias = [
+        f"las corridas no tienen el mismo {clave}"
+        for clave in ("model_sha256", "config_sha256")
+        if len(_del_detector(resumenes, clave)) > 1
+    ]
+    if len({r.get("equipo") for r in resumenes.values()}) > 1:
+        advertencias.append("las corridas no son del mismo equipo")
+    return advertencias
+
+
 def contrastar(
-    resumen: dict[str, Any], plazos: dict[str, Any], periodo_ms: float
+    resumen: dict[str, Any],
+    plazos: dict[str, Any],
+    periodo_ms: float,
+    sobrecosto: dict[str, float] | None = None,
 ) -> list[dict[str, Any]]:
-    """Una fila por presupuesto con datos: estadísticos, plazo, veredicto y margen del p95."""
+    """Una fila por presupuesto con datos: estadísticos, plazo, veredicto y margen del p95.
+
+    Con `sobrecosto` (p50/p95/máximo de lo que `infer` paga de más), se suma a `total_ms`, y el
+    timeout compara la solicitud completa (`total_ms` + sobrecosto) en vez de `inferencia_ms`.
+    """
     etapas = resumen["etapas"]
     limites = {**plazos, "periodo_entrada_ms": periodo_ms}
     filas = []
     for presupuesto in PRESUPUESTOS:
-        etapa = "total_ms" if presupuesto["medido"] == "intervalo" else presupuesto["medido"]
+        medido = presupuesto["medido"]
+        etapa = "total_ms" if medido == "intervalo" else medido
+        if sobrecosto is not None and presupuesto["id"] == "inferencia_vs_timeout":
+            etapa = medido = "total_ms"
         if etapa not in etapas:
             continue
         medidos = {e: etapas[etapa][e] for e in ESTADISTICOS}
+        if sobrecosto is not None and etapa == "total_ms":
+            medidos = {e: v + sobrecosto[e] for e, v in medidos.items()}
+            if medido != "intervalo":
+                medido = f"{medido} + sobrecosto"
         if presupuesto["medido"] == "intervalo":
             medidos = {e: max(periodo_ms, v) for e, v in medidos.items()}
         plazo = limites[presupuesto["plazo"]]
         filas.append(
             {
                 **presupuesto,
+                "medido": medido,
                 **medidos,
                 "plazo_ms": plazo,
                 "margen_p95_ms": plazo - medidos["p95"],
@@ -288,7 +414,7 @@ def _fmt(valor: float) -> str:
 
 
 def reporte_md(contraste: dict[str, Any]) -> str:
-    corrida, plazos = contraste["corrida"], contraste["plazos"]
+    plazos = contraste["plazos"]
     lineas = [
         "# Contraste con los plazos de B (P5-16)",
         "",
@@ -296,11 +422,39 @@ def reporte_md(contraste: dict[str, Any]) -> str:
         "",
         "## Reproducido (benchmark)",
         "",
-        f"- Corrida: `{corrida['carpeta']}` (`resumen.json` SHA-256 `{corrida['resumen_sha256']}`)",
-        f"- Equipo: {corrida['equipo']} · energía: {corrida['energia']} · estado: "
-        f"{corrida['estado']}",
-        f"- Mediciones: {corrida['mediciones']} (sin calentamientos) · fallos aparte: "
-        f"{corrida['fallos']}",
+    ]
+    for corrida in contraste["corridas"]:
+        lineas += [
+            f"- Corrida: `{corrida['carpeta']}` (`resumen.json` SHA-256 "
+            f"`{corrida['resumen_sha256']}`)",
+            f"  - Equipo: {corrida['equipo']} · energía: {corrida['energia']} · estado: "
+            f"{corrida['estado']} · mediciones: {corrida['mediciones']} (sin calentamientos) · "
+            f"fallos aparte: {corrida['fallos']}",
+        ]
+    if len(contraste["corridas"]) > 1:
+        lineas += [
+            "",
+            "Se contrasta **la peor**: por etapa, el mayor p50, p95 y máximo de las "
+            f"{len(contraste['corridas'])} corridas.",
+            "",
+            "| Etapa | p50 | p95 | Máximo |",
+            "|---|---|---|---|",
+        ]
+        for etapa, origen in contraste["peor_de"].items():
+            valores = contraste["etapas"][etapa]
+            celdas = " | ".join(f"{_fmt(valores[e])} (`{origen[e]}`)" for e in ESTADISTICOS)
+            lineas.append(f"| `{etapa}` | {celdas} |")
+    sobrecosto = contraste.get("sobrecosto")
+    if sobrecosto:
+        diferencia = sobrecosto[MEDIDA_SOBRECOSTO]
+        lineas += [
+            "",
+            f"- Sobrecosto de `infer`: `{sobrecosto['carpeta']}` (`sobrecosto.json` SHA-256 "
+            f"`{sobrecosto['sha256']}`): p50 {_fmt(diferencia['p50'])}, p95 "
+            f"{_fmt(diferencia['p95'])}, máximo {_fmt(diferencia['maximo'])} ms. Se suma a "
+            "`total_ms`, y la fila del timeout compara la solicitud completa.",
+        ]
+    lineas += [
         "",
         "## Declarado (plazos de B y ritmo de entrada)",
         "",
@@ -350,7 +504,17 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m bench.limites", description="Contrasta un benchmark con los plazos de B."
     )
-    parser.add_argument("corrida", type=Path, help="carpeta de salida de python -m bench")
+    parser.add_argument(
+        "corridas", type=Path, nargs="+", help="carpetas de salida de python -m bench"
+    )
+    parser.add_argument(
+        "--sobrecosto", type=Path, help="carpeta de python -m bench.sobrecosto (se suma)"
+    )
+    parser.add_argument(
+        "--salida",
+        type=Path,
+        help="dónde escribir el contraste (por omisión, la corrida; obligatoria con varias)",
+    )
     parser.add_argument(
         "--config-control",
         type=Path,
@@ -372,33 +536,84 @@ def _borrar_contraste_anterior(carpeta: Path) -> None:
         (carpeta / nombre).unlink(missing_ok=True)  # NOSONAR (S8707)
 
 
+def _corrida(resumen: dict[str, Any], carpeta: Path) -> dict[str, Any]:
+    conteos = resumen.get("conteos", {})
+    return {
+        "carpeta": ruta_publicable(carpeta),
+        "resumen_sha256": sha256_archivo(carpeta / "resumen.json"),
+        "equipo": resumen.get("equipo"),
+        "energia": resumen.get("energia"),
+        "estado": resumen["estado"],
+        "mediciones": conteos.get("mediciones"),
+        "fallos": conteos.get("fallos"),
+    }
+
+
+def _nombres(carpetas: Sequence[Path]) -> list[str]:
+    """Cómo se llama cada corrida en el contraste: su carpeta, o la ruta si se repite."""
+    if len({c.resolve() for c in carpetas}) != len(carpetas):
+        raise ErrorLimites("la misma corrida aparece dos veces")
+    nombres = [c.resolve().name for c in carpetas]
+    if len(set(nombres)) != len(nombres):
+        nombres = [c.resolve().as_posix() for c in carpetas]
+    return nombres
+
+
 def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
+    parser = _parser()
+    args = parser.parse_args(argv)
+    if len(args.corridas) > 1 and args.salida is None:
+        parser.error("con varias corridas hace falta --salida")
+    salida = args.salida or args.corridas[0]
+    if salida.exists() and not salida.is_dir():  # NOSONAR (S8707)
+        parser.error(f"{salida} no es una carpeta")
 
     ruta_plazos = args.config_control / NOMBRE_PLAZOS
     try:
-        _borrar_contraste_anterior(args.corrida)
-        resumen = cargar_resumen(args.corrida)
+        _borrar_contraste_anterior(salida)
+        nombres = _nombres(args.corridas)
+        carpetas = dict(zip(nombres, args.corridas, strict=True))
+        resumenes = {n: cargar_resumen(c) for n, c in carpetas.items()}
         plazos = cargar_plazos(ruta_plazos)
         sha_plazos = sha256_archivo(ruta_plazos)
-        filas = contrastar(resumen, plazos, args.periodo_ms)
-        advertencias = advertencias_de_corrida(resumen, sha_plazos, args.corrida, args.periodo_ms)
+        etapas, origen = peor_de(resumenes)
+        completas = all(r["estado"] == "completo" for r in resumenes.values())
+        combinado = {"estado": "completo" if completas else "incompleto", "etapas": etapas}
+        sobrecosto = cargar_sobrecosto(args.sobrecosto) if args.sobrecosto else None
+        diferencia = sobrecosto["resumen"][MEDIDA_SOBRECOSTO] if sobrecosto else None
+        filas = contrastar(combinado, plazos, args.periodo_ms, diferencia)
+        advertencias = []
+        for nombre, carpeta in carpetas.items():
+            propias = advertencias_de_corrida(
+                resumenes[nombre], sha_plazos, carpeta, args.periodo_ms
+            )
+            prefijo = f"{nombre}: " if len(carpetas) > 1 else ""
+            advertencias += [prefijo + a for a in propias]
+        advertencias += advertencias_entre_corridas(resumenes)
+        if sobrecosto is not None:
+            advertencias += advertencias_de_sobrecosto(sobrecosto, args.sobrecosto, resumenes)
+        corridas = [_corrida(resumenes[n], c) for n, c in carpetas.items()]
+        sha_sobrecosto = (
+            sha256_archivo(args.sobrecosto / ARCHIVO_SOBRECOSTO) if sobrecosto else None
+        )
     except (OSError, ValueError, yaml.YAMLError) as exc:
         print(f"no se contrasta: {exc}", file=sys.stderr)
         return 2
 
-    conteos = resumen.get("conteos", {})
     contraste = {
-        "version": 1,
-        "corrida": {
-            "carpeta": ruta_publicable(args.corrida),
-            "resumen_sha256": sha256_archivo(args.corrida / "resumen.json"),
-            "equipo": resumen.get("equipo"),
-            "energia": resumen.get("energia"),
-            "estado": resumen["estado"],
-            "mediciones": conteos.get("mediciones"),
-            "fallos": conteos.get("fallos"),
-        },
+        "version": 2,
+        "corridas": corridas,
+        "etapas": etapas,
+        "peor_de": origen,
+        "sobrecosto": (
+            {
+                "carpeta": ruta_publicable(args.sobrecosto),
+                "sha256": sha_sobrecosto,
+                MEDIDA_SOBRECOSTO: {e: diferencia[e] for e in ESTADISTICOS},
+            }
+            if diferencia is not None
+            else None
+        ),
         "plazos": {
             "archivo": ruta_publicable(ruta_plazos),
             "sha256": sha_plazos,
@@ -413,14 +628,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             ),
         },
         "contraste": filas,
-        "no_medido": list(NO_MEDIDO),
+        "no_medido": [NO_MEDIDO_CON_SOBRECOSTO, *NO_MEDIDO[1:]] if sobrecosto else list(NO_MEDIDO),
         "advertencias": advertencias,
     }
 
     texto = json.dumps(contraste, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
-    (args.corrida / "contraste.json").write_text(texto, encoding="utf-8")  # NOSONAR (S8707)
-    (args.corrida / "contraste.md").write_text(  # NOSONAR (S8707)
-        reporte_md(contraste), encoding="utf-8"
+    salida.mkdir(parents=True, exist_ok=True)  # NOSONAR (S8707)
+    (salida / "contraste.json").write_text(  # NOSONAR (S8707)
+        texto, encoding="utf-8", newline="\n"
+    )
+    (salida / "contraste.md").write_text(  # NOSONAR (S8707)
+        reporte_md(contraste), encoding="utf-8", newline="\n"
     )
 
     for fila in filas:
@@ -430,7 +648,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     for advertencia in advertencias:
         print(f"advertencia: {advertencia}", file=sys.stderr)
-    print(f"contraste en {args.corrida.as_posix()}/contraste.md")
+    print(f"contraste en {salida.as_posix()}/contraste.md")
     todo_cumple = len(filas) == len(PRESUPUESTOS) and all(f["veredicto"] == CUMPLE for f in filas)
     return 0 if todo_cumple and not advertencias else 1
 

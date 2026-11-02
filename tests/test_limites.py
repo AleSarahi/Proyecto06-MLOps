@@ -319,7 +319,7 @@ def test_sobre_una_corrida_real_del_arnes(tmp_path, monkeypatch):
     contraste = leer(salida)
     assert {f["veredicto"] for f in contraste["contraste"]} == {CUMPLE}
     assert any("modo de prueba" in a for a in contraste["advertencias"])
-    assert contraste["corrida"]["resumen_sha256"] == sha256_archivo(salida / "resumen.json")
+    assert contraste["corridas"][0]["resumen_sha256"] == sha256_archivo(salida / "resumen.json")
 
 
 def test_la_consola_de_windows_puede_imprimir_el_resumen(corrida):
@@ -332,3 +332,156 @@ def test_la_consola_de_windows_puede_imprimir_el_resumen(corrida):
         check=False,
     )
     assert resultado.returncode == 0, resultado.stderr.decode("cp1252", "replace")
+
+
+def escribir_corrida(carpeta, resumen):
+    carpeta.mkdir(parents=True, exist_ok=True)
+    for nombre in ("ejecuciones.csv", "fallos.csv"):
+        (carpeta / nombre).write_text(nombre, encoding="utf-8")
+    resumen["archivos"] = {
+        n: sha256_archivo(carpeta / n) for n in ("ejecuciones.csv", "fallos.csv")
+    }
+    (carpeta / "resumen.json").write_text(json.dumps(resumen), encoding="utf-8")
+    return carpeta
+
+
+def con_hashes(resumen, model="a" * 64, config="b" * 64):
+    resumen["procedencia"]["detector"].update(model_sha256=model, config_sha256=config)
+    return resumen
+
+
+def escribir_sobrecosto(carpeta, p50, p95, maximo, **cambios):
+    carpeta.mkdir(parents=True, exist_ok=True)
+    (carpeta / "sobrecosto.csv").write_text("csv", encoding="utf-8")
+    datos = {
+        "energia": "corriente",
+        "hashes_comprobados": True,
+        "model_sha256": "a" * 64,
+        "config_sha256": "b" * 64,
+        "resumen": {"diferencia_ms": etapa(p50, p95, maximo)},
+        "archivos": {"sobrecosto.csv": sha256_archivo(carpeta / "sobrecosto.csv")},
+        "advertencias": [],
+        **cambios,
+    }
+    (carpeta / "sobrecosto.json").write_text(json.dumps(datos), encoding="utf-8")
+    return carpeta
+
+
+def tres_corridas(tmp_path):
+    tiempos = {
+        "final-1": ((80, 90, 100), (90, 100, 110)),
+        "final-2": ((85, 108, 138), (95, 119, 154)),
+        "final-3": ((83, 89, 98), (96, 99, 107)),
+    }
+    return [
+        escribir_corrida(tmp_path / nombre, con_hashes(resumen_de(inferencia, total)))
+        for nombre, (inferencia, total) in tiempos.items()
+    ]
+
+
+def test_varias_corridas_contrastan_la_peor_de_cada_una(tmp_path):
+    salida = tmp_path / "contraste"
+    assert main([*map(str, tres_corridas(tmp_path)), "--salida", str(salida)]) == 0
+    contraste = leer(salida)
+    assert [c["carpeta"] for c in contraste["corridas"]] == ["final-1", "final-2", "final-3"]
+    # Cada estadístico es el mayor de las tres, aunque venga de corridas distintas.
+    assert contraste["etapas"]["total_ms"] == {"p50": 96, "p95": 119, "maximo": 154}
+    assert contraste["peor_de"]["total_ms"] == {
+        "p50": "final-3",
+        "p95": "final-2",
+        "maximo": "final-2",
+    }
+    edad = next(f for f in contraste["contraste"] if f["id"] == "total_vs_edad")
+    assert (edad["p95"], edad["maximo"]) == (119, 154)
+    assert "final-2" in (salida / "contraste.md").read_text(encoding="utf-8")
+
+
+def test_varias_corridas_piden_salida(tmp_path):
+    with pytest.raises(SystemExit) as salida:
+        main([*map(str, tres_corridas(tmp_path))])
+    assert salida.value.code == 2
+
+
+def test_la_misma_corrida_dos_veces(tmp_path):
+    carpeta = tres_corridas(tmp_path)[0]
+    assert main([str(carpeta), str(carpeta), "--salida", str(tmp_path / "c")]) == 2
+
+
+def test_corridas_de_otro_detector_se_advierten(tmp_path):
+    corridas = tres_corridas(tmp_path)
+    resumen = json.loads((corridas[2] / "resumen.json").read_text(encoding="utf-8"))
+    escribir_corrida(corridas[2], con_hashes(resumen, config="c" * 64))
+    assert main([*map(str, corridas), "--salida", str(tmp_path / "c")]) == 1
+    assert "las corridas no tienen el mismo config_sha256" in leer(tmp_path / "c")["advertencias"]
+
+
+def test_una_corrida_con_advertencias_lleva_su_nombre(tmp_path):
+    corridas = tres_corridas(tmp_path)
+    resumen = json.loads((corridas[1] / "resumen.json").read_text(encoding="utf-8"))
+    resumen["energia"] = "bateria"
+    resumen["advertencias"] = ["el equipo está en batería"]
+    del resumen["archivos"]
+    escribir_corrida(corridas[1], resumen)
+    assert main([*map(str, corridas), "--salida", str(tmp_path / "c")]) == 1
+    assert any(a.startswith("final-2: ") for a in leer(tmp_path / "c")["advertencias"])
+
+
+def test_el_sobrecosto_se_suma_al_total_y_al_timeout(tmp_path):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 12, 15, 17)
+    salida = tmp_path / "contraste"
+    argumentos = [*map(str, tres_corridas(tmp_path)), "--sobrecosto", str(sobrecosto)]
+    assert main([*argumentos, "--salida", str(salida)]) == 0
+    contraste = leer(salida)
+    filas = {f["id"]: f for f in contraste["contraste"]}
+    # El timeout cubre la solicitud entera de infer: total + lo que infer paga de más.
+    assert filas["inferencia_vs_timeout"]["medido"] == "total_ms + sobrecosto"
+    assert (filas["inferencia_vs_timeout"]["p95"], filas["inferencia_vs_timeout"]["maximo"]) == (
+        119 + 15,
+        154 + 17,
+    )
+    assert filas["total_vs_edad"]["maximo"] == 154 + 17
+    assert filas["intervalo_vs_watchdog"]["maximo"] == 200  # el periodo sigue siendo mayor
+    assert contraste["sobrecosto"]["diferencia_ms"] == {"p50": 12, "p95": 15, "maximo": 17}
+
+
+def test_el_sobrecosto_puede_hacer_que_no_cumpla(tmp_path):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 40, 60, 60)
+    corridas = tres_corridas(tmp_path)
+    argumentos = [*map(str, corridas), "--sobrecosto", str(sobrecosto)]
+    # 154 + 60 = 214 pasa el periodo de 200 ms: cumple en p95, no hasta el máximo.
+    assert main([*argumentos, "--salida", str(tmp_path / "c")]) == 1
+    filas = {f["id"]: f for f in leer(tmp_path / "c")["contraste"]}
+    assert filas["total_vs_periodo"]["veredicto"] == CUMPLE_EN_P95
+
+
+@pytest.mark.parametrize(
+    ("cambios", "aviso"),
+    [
+        ({"energia": "bateria"}, "sobrecosto: energía bateria"),
+        ({"hashes_comprobados": False}, "no comprobó los hashes"),
+        ({"config_sha256": "c" * 64}, "su config_sha256 no es el de las corridas"),
+        ({"archivos": {"sobrecosto.csv": "0" * 64}}, "sobrecosto.csv cambió"),
+    ],
+)
+def test_un_sobrecosto_que_no_es_el_de_las_corridas(tmp_path, cambios, aviso):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 12, 15, 17, **cambios)
+    argumentos = [*map(str, tres_corridas(tmp_path)), "--sobrecosto", str(sobrecosto)]
+    assert main([*argumentos, "--salida", str(tmp_path / "c")]) == 1
+    assert any(aviso in a for a in leer(tmp_path / "c")["advertencias"])
+
+
+def test_sobrecosto_ilegible_sale_con_dos(tmp_path):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 12, 15, 17)
+    (sobrecosto / "sobrecosto.json").write_text('{"resumen": {}}', encoding="utf-8")
+    argumentos = [*map(str, tres_corridas(tmp_path)), "--sobrecosto", str(sobrecosto)]
+    assert main([*argumentos, "--salida", str(tmp_path / "c")]) == 2
+    assert not (tmp_path / "c" / "contraste.json").exists()
+
+
+def test_con_sobrecosto_la_lectura_del_jpeg_ya_no_es_no_medido(tmp_path):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 12, 15, 17)
+    argumentos = [*map(str, tres_corridas(tmp_path)), "--sobrecosto", str(sobrecosto)]
+    assert main([*argumentos, "--salida", str(tmp_path / "c")]) == 0
+    assert "sí entran" in leer(tmp_path / "c")["no_medido"][0]
+    assert main([*map(str, tres_corridas(tmp_path / "otra")), "--salida", str(tmp_path / "d")]) == 0
+    assert "lectura y decodificación del JPEG:" in leer(tmp_path / "d")["no_medido"][0]
