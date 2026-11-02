@@ -110,6 +110,13 @@ El arnés parte de la imagen ya decodificada y llama a `preprocesar`, `inferir` 
 por `predictor(...)` de Ultralytics, que **prepara cada llamada** alrededor de esas tres etapas. El plazo de
 500 ms de P5-06 cubre la solicitud completa, así que P5-16 suma esa diferencia.
 
+**Alcance (Heri en #82):** todo lo de esta carpeta se mide **en un solo proceso**, con el detector local de
+`bench.yolo` y `DetectorJPEG`. P5-06 (#86) corre el predictor supervisado en otro proceso: ni el arnés ni
+`bench.sobrecosto` miden la comunicación entre procesos, la supervisión ni la publicación del evento. Por eso
+sumar sus percentiles da una **estimación del lado local**, no el p95 medido de la ruta completa de P5-06 (el
+p95 de una suma no es la suma de los p95). Comprobar que la ruta supervisada cumple los plazos queda a cargo
+de P5-06.
+
 ```bash
 uv run python -m bench.sobrecosto --pesos <ruta>/yolo11n.pt --salida mediciones/final-sobrecosto/ \
   --equipo "laptop de A3" --model-sha256 <hash> --config-sha256 <hash>
@@ -145,7 +152,8 @@ fallos ni advertencias y con la procedencia comprobada. Se suben las tres corrid
 
 [`final-sobrecosto`](final-sobrecosto/sobrecosto.json), medido justo antes: `diferencia_ms` p50 12.33, p95 14.70,
 máximo 16.49 ms (`fuera_del_predictor_ms` máx 15.65; `preparacion_ms` máx 1.18). El contraste con los plazos lo
-hace P5-16 (#73) con la peor corrida más esta diferencia.
+hace P5-16 (#73) con la peor corrida más esta diferencia. Son cifras del arnés local, en un solo proceso; la
+ruta supervisada de P5-06 la valida P5-06 (ver "Alcance" arriba).
 
 **Condiciones, tal cual:** VS Code cerrado y OneDrive en pausa. El registro de procesos al empezar todavía mostró
 procesos de `chrome`, `msedge` y `OneDrive`, posiblemente en segundo plano. Se reporta así; no se repitió ninguna
