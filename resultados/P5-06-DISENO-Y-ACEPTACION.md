@@ -21,6 +21,56 @@ corridas `p5-05-aceptacion-2h-a.jsonl` y `p5-05-aceptacion-2h-b.jsonl`, y las se
   `config.plazos.yaml`. A registrará sus propios plazos en un manifiesto separado y no escribirá
   ni alterará el `run.json` de B.
 
+## Modelo de confianza de rutas locales y revisión manual S8707
+
+**Alcance actual.** Un operador local de confianza ejecuta `python -m infer` y selecciona
+`--input`, `--weights` y `--output`. En los dos scripts de validación P5-06, el operador selecciona
+`--weights` y `--output`; los JPEG de prueba se generan o se toman de rutas fijas del proyecto.
+La posibilidad de escribir evidencias fuera del repositorio es deliberada y está documentada en
+P5-05. Los argumentos CLI no son confiables por el mero hecho de ser argumentos: este modelo
+depende de **quién los proporciona**. No se encontró en el repositorio una ruta desde JSONL,
+peticiones de red o código de Grupo B que construya esos argumentos. Una automatización externa
+podría invocar el CLI con valores de otra procedencia; antes de hacerlo debe revisar este límite.
+
+El proceso principal y el trabajador `spawn` operan con los permisos de la cuenta que los
+ejecuta; el código no eleva privilegios. El CLI **no debe utilizarse como servicio privilegiado**
+que procese rutas aportadas por terceros. El operador debe elegir directorios de salida bajo su
+control y protegerlos, incluidos sus directorios padres, contra modificaciones concurrentes de
+usuarios no confiables. Si otro actor puede sustituir archivos o enlaces mientras corre el
+script, las comprobaciones por ruta no aseguran que una lectura posterior alcance el mismo
+archivo. La creación exclusiva impide sobrescribir el nombre final existente; `O_NOFOLLOW` se
+usa donde existe, pero no protege todos los componentes padres ni la lectura posterior de los
+JSONL. Los JPEG sintéticos tienen nombres fijos y `cv2.imwrite` no ofrece creación exclusiva.
+
+**Integraciones futuras.** Si un invocador recibe rutas de una fuente externa no confiable,
+deberá imponer una raíz de salida obligatoria y realizar las operaciones respecto a directorios
+abiertos o con un mecanismo equivalente resistente al reemplazo de enlaces simbólicos. La
+opción `raiz_restringida` actual hace una comprobación de pertenencia al resolver la ruta, pero
+es opcional y por sí sola no cierra una carrera si un atacante puede cambiar componentes padres.
+La protección nueva y sus pruebas de enlaces, carreras y permisos deberán verificarse en macOS
+y Windows antes de conectar tal invocador. Esto no cambia la interfaz local ni obliga a guardar
+las evidencias actuales dentro del repositorio.
+
+Las cuatro observaciones siguientes son **vulnerabilidades abiertas reportadas por SonarCloud**,
+no *security hotspots*. Su flujo señalado parte de `--output` de
+`resultados/p5-06-validacion-real.py`; la descripción genérica de SonarCloud menciona HTTP, pero
+ese script usa `argparse` y no recibe una petición HTTP. Esta justificación prepara una revisión
+manual, **sin marcar ninguna observación como falso positivo o aceptada**. En cada revisión se
+debe confirmar quién invoca el CLI, cómo obtiene la ruta y con qué permisos corre.
+
+| Observación S8707 | Origen real y operación | Controles actuales y riesgo condicionado | Riesgo residual para revisión |
+|---|---|---|---|
+| [`validacion-real.py:38`](https://sonarcloud.io/project/issues?pullRequest=86&open=AaGavGW9NBQiGCnbuTlJ&id=karenelizabg_Proyecto05-MLOPS) | `--output` pasa por `directorio_evidencia` y `ejecutar_run`; `_leer_jsonl` lee la ruta devuelta del JSONL generado. Su contenido no se utiliza como ruta. | La salida nace en un directorio nuevo y el JSONL se crea de forma exclusiva. Bajo el uso local, la ruta base la elige el operador. Un tercero que imponga `--output` podría elegir dónde se genera la evidencia, pero la lectura normal sigue sobre ese JSONL recién creado. | Un actor que pueda modificar el directorio podría sustituir el JSONL antes de `read_text`; no hay una verificación de identidad del archivo para esa lectura. |
+| [`validacion-real.py:42`](https://sonarcloud.io/project/issues?pullRequest=86&open=AaGavGW9NBQiGCnbuTlK&id=karenelizabg_Proyecto05-MLOPS) | `--output` forma `salida / "jpeg_sinteticos"`; `_crear_jpeg` ejecuta `carpeta.mkdir()` y después escribe JPEG de nombres fijos. | `salida` se crea con `exist_ok=False`; la subcarpeta también debe ser nueva. Un argumento impuesto por un tercero podría crearla fuera de la ubicación prevista, dentro de los permisos del proceso. | Un enlace en un directorio padre o una sustitución concurrente de los archivos nuevos podría desviar las escrituras de `cv2.imwrite`. |
+| [`rutas_seguras.py:21`](https://sonarcloud.io/project/issues?pullRequest=86&open=AaGavGMHNBQiGCnbuTlG&id=karenelizabg_Proyecto05-MLOPS) | `args.output` llega a `directorio_evidencia`; `Path(ruta)` llega a `mkdir(parents=True, exist_ok=False)`. Ambos scripts llaman sin `raiz_restringida`. | No sobrescribe el directorio final existente. Una raíz opcional rechaza un escape observado al resolver la ruta, pero el uso local permite deliberadamente destinos externos. | Sin raíz obligatoria, un invocador no confiable puede elegir cualquier destino escribible. La comprobación de raíz, cuando se usa, no evita cambios concurrentes de enlaces padres. |
+| [`rutas_seguras.py:29`](https://sonarcloud.io/project/issues?pullRequest=86&open=AaGavGMHNBQiGCnbuTlH&id=karenelizabg_Proyecto05-MLOPS) | Una ruta derivada de `--output` llega a `abrir_exclusivo` desde los scripts o el principal de A; `os.open` crea JSONL, manifiesto o resumen. | `O_CREAT|O_EXCL` impide reemplazar el nombre final existente; `O_NOFOLLOW` se añade donde el SO lo ofrece. El proceso solo puede escribir donde su cuenta tenga permiso. | No se restringen directorios padres; enlaces o cambios concurrentes en ellos pueden redirigir la creación. Una automatización con más privilegios que el proveedor de la ruta ampliaría el impacto. |
+
+**Criterio para la revisión:** si se comprueba que una fuente menos confiable controla `--output`
+en un uso actual, la observación correspondiente requiere protección de código y pruebas de la
+integración. Si el uso queda limitado al operador local y a sus permisos, documentar esa
+evidencia y evaluar cada flujo individualmente antes de decidir su estado en SonarCloud. No se
+desactivan reglas ni se excluyen archivos para obtener una calificación.
+
 ## Arquitectura propuesta
 
 1. **Principal de A.** Enumera los JPEG y sus `capture_ms`, valida IDs y plazos, mantiene un
