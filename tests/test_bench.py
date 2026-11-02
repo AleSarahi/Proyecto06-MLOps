@@ -506,3 +506,21 @@ def test_sobrecosto_no_mezcla_con_una_carpeta_usada(tmp_path):
     with pytest.raises(SystemExit) as salida:
         sobrecosto.main(["--pesos", "no-importa.pt", "--salida", str(tmp_path)])
     assert salida.value.code == 2
+
+
+def test_un_patron_se_expande_aunque_la_terminal_no_lo_haga(tmp_path):
+    # PowerShell y cmd no expanden `S0*/`: el arnés recibe el asterisco y lo expande él.
+    from bench.__main__ import _rutas_de_entrada
+
+    for secuencia in ("S02", "S01", "S10"):
+        (tmp_path / secuencia).mkdir()
+        (tmp_path / secuencia / f"{secuencia}_f0001.jpg").write_bytes(b"\xff\xd8\xff\xd9")
+    rutas = _rutas_de_entrada([tmp_path / "S0*"])
+    assert [r.name for r in rutas] == ["S01_f0001.jpg", "S02_f0001.jpg"]
+
+
+def test_un_patron_sin_coincidencias_no_mide(tmp_path):
+    salida = tmp_path / "run"
+    argumentos = ["--entradas", str(tmp_path / "S0*"), "--salida", str(salida), "--prueba"]
+    assert main(argumentos) == 2
+    assert not salida.exists()
