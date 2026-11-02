@@ -69,7 +69,7 @@ El README de `main` no tenía cómo correr una secuencia real (pasos 5 a 8): sol
 tabla, que remite a `config/DETECTOR.md`. Los `--capture-ms` salen de `datos/pruebas-b/S09/captura.jsonl`,
 como dice `config/DETECTOR.md`. Esta rama agrega esos pasos al README (sección 5 del grupo B).
 
-También se buscó en todo lo versionado: rutas de una máquina (`C:\Users\…`, `/home/…`, `/Users/…`),
+También se buscó en todo lo versionado: rutas de una máquina (carpetas de usuario de Windows, macOS o Linux),
 llaves (`.env`, `.pem`, `.key`, tokens) y enlaces relativos rotos en los 30 `.md`. Solo aparecieron las
 rutas del problema 1. Las credenciales de `tests/test_captura.py` son datos falsos de una prueba que
 comprueba que no se impriman.
