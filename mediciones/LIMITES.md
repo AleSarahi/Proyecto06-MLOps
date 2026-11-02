@@ -30,8 +30,9 @@ enlaza el contraste.
   y los hilos registrados en `resumen.json`. En otra máquina, o en batería, cambian (ver *Lo que ya se vio*).
 - **La cadena completa de la cámara:** el benchmark parte de la imagen en memoria. La lectura y
   decodificación del JPEG se suman aparte (`bench.sobrecosto`), pero no se mide la captura en la ESP32-CAM, la
-  transmisión por WiFi ni el costo de comunicación de P5-06 si el detector corre en otro proceso, así que la
-  edad real de un cuadro al llegar a B es mayor que la de la tabla.
+  transmisión por WiFi ni lo que agrega P5-06 (#86) al correr el predictor supervisado en otro proceso
+  (comunicación entre procesos, supervisión y publicación del evento), así que la edad real de un cuadro al
+  llegar a B es mayor que la de la tabla.
 - **Escenas fuera del dominio:** el detector solo se probó con los objetos, la escena y la luz de PEND-04.
 
 ## Contraste con los plazos
@@ -45,8 +46,14 @@ compara las corridas con `config/control/plazos.yaml`. Sigue la regla fijada ant
 ([`README.md`](README.md#corrida-final-regla-fija-antes-de-medir)): se reportan las 3 y se contrasta **la
 peor**, es decir, por etapa, el mayor p50, p95 y máximo de las tres (queda anotado de qué corrida salió cada
 uno). A eso se suma lo que `infer` paga y el arnés no mide: leer el JPEG y la preparación de Ultralytics
-(`final-sobrecosto`). Sumar los máximos da una cota superior del máximo de la suma, y sumar los p95 es la misma
-aproximación del lado seguro.
+(`final-sobrecosto`). Son dos mediciones distintas, así que la suma de sus p95 o de sus máximos es una
+**estimación** del lado local, no un p95 medido de la solicitud (el p95 de una suma no es la suma de los p95).
+
+**Alcance (Heri en #82):** todo se midió en un solo proceso, con el detector local de `bench.yolo` y
+`DetectorJPEG`. P5-06 (#86) corre el predictor supervisado en otro proceso, y ni el arnés ni
+`bench.sobrecosto` miden la comunicación entre procesos, la supervisión ni la publicación del evento. Por eso
+este contraste dice cuánto margen deja el lado local; comprobar que la ruta supervisada cumple los plazos queda
+a cargo de P5-06.
 
 El sobrecosto **se midió con las 11 fotos de `docs/carro/`, no con S01–S08**: se decidió antes del paso 2 de
 #13, cuando aún no se podía correr el detector sobre el conjunto. Son de celular (~1200×1600) y los cuadros del
@@ -220,3 +227,4 @@ se decidió antes del paso 2.
 - El carro moviéndose con los comandos de B.
 - Otros equipos distintos al de PEND-05.
 - Que `infer` emita `detector_timeout` cuando una solicitud pasa el plazo: llega con P5-06.
+- El p95 de la ruta completa con el predictor supervisado en otro proceso: lo valida P5-06.

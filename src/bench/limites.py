@@ -18,8 +18,8 @@ máximo de todas (cada uno puede venir de una corrida distinta; queda anotado de
 mide (leer el JPEG y la preparación de Ultralytics). Su p50, p95 y máximo se suman a los de
 `total_ms` en todas las filas, y la del timeout compara la solicitud completa (`total_ms` +
 sobrecosto) en vez de `inferencia_ms`: el `detector_timeout_ms` de P5-06 cubre la solicitud
-entera. Sumar máximos da una cota superior del máximo de la suma; sumar p95 es la misma
-aproximación conservadora.
+entera. Son mediciones distintas: la suma es una estimación del lado local, no un p95 medido
+de la solicitud, y no incluye el proceso supervisado de P5-06, que valida esa ruta.
 
 Veredicto de cada presupuesto:
 - `cumple`: hasta el máximo observado queda dentro del plazo.
