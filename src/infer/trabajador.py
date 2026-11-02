@@ -30,9 +30,12 @@ from .eventos import (
 )
 from .pesos import cargar_pesos
 from .plazos import RUTA_PLAZOS, PlazosInfer, cargar_plazos_infer_con_hash
+from .rutas_seguras import abrir_exclusivo, verificar_checkpoint
 
 INICIO_GUARDA_S = 120.0  # Guarda operativa de arranque, no umbral de aceptación de latencia.
 CIERRE_GUARDA_S = 1.0
+PESO_OFICIAL_SHA256 = "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+PESO_OFICIAL_BYTES = 5_613_764
 
 
 class ErrorTrabajador(RuntimeError):
@@ -361,12 +364,17 @@ def ejecutar_run_supervisado(
     plazos, plazos_sha256 = cargar_plazos_infer_con_hash(RUTA_PLAZOS)
     if fabrica is crear_detector_real:
         try:
-            with Path(pesos_ruta).open("rb") as pesos:
-                hash_previo = hashlib.file_digest(pesos, "sha256").hexdigest()
-        except OSError as exc:
-            raise ErrorRunInfer(f"no se pudo abrir el checkpoint local: {exc}") from exc
-        if hash_previo != config.expected_model_sha256:
-            raise ErrorRunInfer("SHA-256 del checkpoint no coincide con la configuración")
+            verificar_checkpoint(
+                pesos_ruta,
+                config.expected_model_sha256,
+                bytes_esperados=(
+                    PESO_OFICIAL_BYTES
+                    if config.expected_model_sha256 == PESO_OFICIAL_SHA256
+                    else None
+                ),
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            raise ErrorRunInfer(f"checkpoint local inválido: {exc}") from exc
     if not isinstance(run_id, str) or _ID.fullmatch(run_id) is None:
         raise ErrorRunInfer("run_id debe cumplir [A-Za-z0-9._-]{1,64}")
     archivos, directorio = _archivos(Path(entrada))
@@ -383,7 +391,9 @@ def ejecutar_run_supervisado(
     if destino.suffix.lower() != ".jsonl":
         destino /= f"{run_id}.jsonl"
     manifiesto = destino.parent / f"{run_id}.infer-run.json"
-    if destino.exists() or manifiesto.exists():
+    if destino == manifiesto:
+        raise ErrorRunInfer("el JSONL y el manifiesto deben tener nombres distintos")
+    if destino.exists() or manifiesto.exists() or destino.is_symlink() or manifiesto.is_symlink():
         raise FileExistsError("el JSONL o manifiesto del run ya existe")
 
     supervisor = PredictorSupervisado(
@@ -406,7 +416,7 @@ def ejecutar_run_supervisado(
     )
     eventos: list[dict[str, Any]] = []
     ultima_captura: float | None = None
-    with destino.open("x", encoding="utf-8", newline="\n") as archivo, closing(supervisor):
+    with closing(supervisor), abrir_exclusivo(destino, lectura=True) as archivo:
         for indice, (ruta, frame_id) in enumerate(zip(archivos, frame_ids, strict=True), start=1):
             if tiempos is None:
                 captura = transcurrido()
@@ -488,37 +498,40 @@ def ejecutar_run_supervisado(
             archivo.flush()
             eventos.append(evento)
             ultima_captura = captura
+        archivo.flush()
+        archivo.buffer.seek(0)
+        jsonl_sha256 = hashlib.file_digest(archivo.buffer, "sha256").hexdigest()
     if supervisor.cierre_limpio is False:
         falla_reinicio = True
-    manifiesto.write_text(
-        json.dumps(
-            {
-                "run_id": run_id,
-                "percepcion": {
-                    "archivo": destino.name,
-                    "sha256": hashlib.sha256(destino.read_bytes()).hexdigest(),
+    with abrir_exclusivo(manifiesto) as archivo_manifiesto:
+        archivo_manifiesto.write(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "percepcion": {
+                        "archivo": destino.name,
+                        "sha256": jsonl_sha256,
+                    },
+                    "plazos": {
+                        "detector_timeout_ms": plazos.detector_timeout_ms,
+                        "max_frame_age_ms": plazos.max_frame_age_ms,
+                        "plazos_sha256": plazos_sha256,
+                    },
+                    "model_sha256": config.expected_model_sha256,
+                    "config_sha256": config.config_sha256,
+                    "generaciones": supervisor.cronologia,
+                    "conteos": {
+                        "eventos": len(eventos),
+                        "errores": sum(e["status"] == "error" for e in eventos),
+                        "stale": sum(e["status"] == "stale" for e in eventos),
+                    },
+                    "fallo_reinicio": falla_reinicio,
+                    "cierre_limpio": supervisor.cierre_limpio,
                 },
-                "plazos": {
-                    "detector_timeout_ms": plazos.detector_timeout_ms,
-                    "max_frame_age_ms": plazos.max_frame_age_ms,
-                    "plazos_sha256": plazos_sha256,
-                },
-                "model_sha256": config.expected_model_sha256,
-                "config_sha256": config.config_sha256,
-                "generaciones": supervisor.cronologia,
-                "conteos": {
-                    "eventos": len(eventos),
-                    "errores": sum(e["status"] == "error" for e in eventos),
-                    "stale": sum(e["status"] == "stale" for e in eventos),
-                },
-                "fallo_reinicio": falla_reinicio,
-                "cierre_limpio": supervisor.cierre_limpio,
-            },
-            ensure_ascii=False,
-            indent=2,
-            allow_nan=False,
+                ensure_ascii=False,
+                indent=2,
+                allow_nan=False,
+            )
+            + "\n"
         )
-        + "\n",
-        encoding="utf-8",
-    )
     return destino, len(eventos), sum(e["status"] == "error" for e in eventos), falla_reinicio

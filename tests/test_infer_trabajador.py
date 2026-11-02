@@ -139,6 +139,10 @@ def test_inferencia_normal_y_manifiesto_de_plazos(tmp_path: Path) -> None:
         "plazos_sha256": hashlib.sha256(plazos).hexdigest(),
     }
     assert manifiesto["config_sha256"] == cargar_config_detector().config_sha256
+    assert (
+        manifiesto["percepcion"]["sha256"]
+        == hashlib.sha256((tmp_path / "eventos.jsonl").read_bytes()).hexdigest()
+    )
     assert manifiesto["generaciones"][0]["estado"] == "ready"
     assert (
         manifiesto["generaciones"][0]["model_sha256"]
@@ -147,6 +151,27 @@ def test_inferencia_normal_y_manifiesto_de_plazos(tmp_path: Path) -> None:
     assert manifiesto["generaciones"][0]["config_sha256"] == cargar_config_detector().config_sha256
     assert manifiesto["generaciones"][0]["torch_threads"] == 2
     assert manifiesto["cierre_limpio"] is True
+
+
+def test_salida_existente_no_se_sobrescribe(tmp_path: Path) -> None:
+    _, _, estado = _run(tmp_path, ["a"], [0], {})
+    jsonl = tmp_path / "eventos.jsonl"
+    manifiesto = tmp_path / "worker-test.infer-run.json"
+    contenido_jsonl = jsonl.read_bytes()
+    contenido_manifiesto = manifiesto.read_bytes()
+    with pytest.raises(FileExistsError):
+        ejecutar_run_supervisado(
+            tmp_path / "entrada",
+            jsonl,
+            run_id="worker-test",
+            config_ruta=RUTA_CONFIG_DETECTOR,
+            pesos_ruta=estado,
+            sequence_id="sintetica",
+            capture_ms=[0],
+            fabrica=crear_predictor_falso,
+        )
+    assert jsonl.read_bytes() == contenido_jsonl
+    assert manifiesto.read_bytes() == contenido_manifiesto
 
 
 def test_timeout_real_reinicia_y_cuadro_viejo_no_se_infiere(tmp_path: Path) -> None:

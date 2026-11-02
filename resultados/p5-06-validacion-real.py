@@ -21,6 +21,7 @@ from infer.config import RUTA_CONFIG_DETECTOR, cargar_config_detector
 from infer.detector import DetectorJPEG
 from infer.eventos import ejecutar_run
 from infer.pesos import cargar_pesos
+from infer.rutas_seguras import abrir_exclusivo, directorio_evidencia, verificar_checkpoint
 from infer.trabajador import ejecutar_run_supervisado
 
 PESO_BYTES = 5_613_764
@@ -59,18 +60,16 @@ def main() -> None:
     args = parser.parse_args()
 
     pesos = args.weights.absolute()
-    if pesos.is_symlink() or not pesos.is_file():
-        raise RuntimeError("se requiere un checkpoint regular, sin enlace simbólico final")
     config = cargar_config_detector()
-    if pesos.stat().st_size != PESO_BYTES or _sha256(pesos) != PESO_SHA256:
-        raise RuntimeError("checkpoint distinto al aprobado: tamaño o SHA-256")
+    verificar_checkpoint(pesos, PESO_SHA256, bytes_esperados=PESO_BYTES)
     if config.expected_model_sha256 != PESO_SHA256 or config.config_sha256 != CONFIG_SHA256:
         raise RuntimeError("configuración efectiva distinta a P5-05 de dos hilos")
     if config.torch_threads != 2:
         raise RuntimeError("se requieren dos hilos efectivos")
 
-    salida = args.output
-    salida.mkdir(parents=True, exist_ok=False)
+    # --output lo elige el operador local; integraciones con entrada no confiable
+    # deben llamar directorio_evidencia con raiz_restringida.
+    salida = directorio_evidencia(args.output)
     rutas = _crear_jpeg(salida / "jpeg_sinteticos")
     imagenes_sha = {ruta.stem: _sha256(ruta) for ruta in rutas}
 
@@ -141,8 +140,8 @@ def main() -> None:
         "tipo": "validacion_funcional_sin_benchmark",
         "checkpoint": {
             "archivo": pesos.name,
-            "bytes": pesos.stat().st_size,
-            "sha256": _sha256(pesos),
+            "bytes": PESO_BYTES,
+            "sha256": PESO_SHA256,
         },
         "config_sha256": config.config_sha256,
         "torch_threads_un_proceso": torch.get_num_threads(),
@@ -153,10 +152,8 @@ def main() -> None:
         "comparacion": comparacion,
         "contrato_v1_valido": True,
     }
-    (salida / "validacion.json").write_text(
-        json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
-        encoding="utf-8",
-    )
+    with abrir_exclusivo(salida / "validacion.json") as evidencia:
+        evidencia.write(json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
     print(json.dumps({"ready": ready[0], "comparacion": comparacion}, ensure_ascii=False))
 
 

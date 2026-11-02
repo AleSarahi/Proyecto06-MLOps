@@ -15,6 +15,7 @@ from infer.config import RUTA_CONFIG_DETECTOR, cargar_config_detector
 from infer.detector import DetectorJPEG
 from infer.eventos import ejecutar_run
 from infer.pesos import cargar_pesos
+from infer.rutas_seguras import abrir_exclusivo, directorio_evidencia, verificar_checkpoint
 from infer.trabajador import ejecutar_run_supervisado
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -55,15 +56,15 @@ def main() -> None:
 
     pesos = args.weights.absolute()
     config = cargar_config_detector()
-    if pesos.is_symlink() or pesos.stat().st_size != 5_613_764 or _sha256(pesos) != MODELO_SHA256:
-        raise RuntimeError("checkpoint distinto al aprobado en P5-05")
+    verificar_checkpoint(pesos, MODELO_SHA256, bytes_esperados=5_613_764)
     if config.config_sha256 != CONFIG_SHA256 or config.expected_model_sha256 != MODELO_SHA256:
         raise RuntimeError("configuración distinta a P5-05 de dos hilos")
     if config.torch_threads != 2 or _sha256(IMAGEN) != IMAGEN_SHA256:
         raise RuntimeError("hilos o bytes del JPEG distintos a P5-05")
 
-    salida = args.output.absolute()
-    salida.mkdir(parents=True, exist_ok=False)
+    # --output lo elige el operador local; integraciones con entrada no confiable
+    # deben llamar directorio_evidencia con raiz_restringida.
+    salida = directorio_evidencia(args.output.absolute())
     detector = DetectorJPEG(cargar_pesos(pesos, config), config)
     ruta_control, n_control, e_control = ejecutar_run(
         detector, IMAGEN, salida / "un_proceso.jsonl", run_id="p506-taza-un-proceso"
@@ -134,9 +135,8 @@ def main() -> None:
         "diferencias": diferencias,
         "contrato_v1_valido": True,
     }
-    (salida / "comparacion.json").write_text(
-        json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8"
-    )
+    with abrir_exclusivo(salida / "comparacion.json") as evidencia:
+        evidencia.write(json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
     if any(diferencias.values()):
         raise RuntimeError("las detecciones difieren; revisar comparacion.json")
     print(json.dumps({"detecciones": len(control[0]["detections"]), "diferencias": diferencias}))
