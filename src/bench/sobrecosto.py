@@ -177,6 +177,40 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _crear_detector(args: argparse.Namespace, esperados: dict[str, str | None]) -> Any:
+    """El detector de `bench.yolo`; falla si sus hashes no son los indicados."""
+    from .yolo import crear
+
+    detector = crear(str(args.pesos))
+    for nombre, esperado in esperados.items():
+        if esperado is not None and getattr(detector, nombre) != esperado:
+            raise ValueError(f"{nombre} del detector no es el indicado")
+    return detector
+
+
+def _advertencias(
+    args: argparse.Namespace, corriente: str, esperados: dict[str, str | None]
+) -> list[str]:
+    advertencias = []
+    if corriente != "corriente":
+        advertencias.append(f"energía: {corriente}; la medición final va conectada")
+    if None in esperados.values():
+        advertencias.append("sin --model-sha256 o --config-sha256: los hashes no se comprobaron")
+    if not args.equipo:
+        advertencias.append("no se declaró el equipo (--equipo, PEND-05)")
+    return advertencias
+
+
+def _escribir_csv(ruta: Path, filas: Sequence[dict[str, Any]]) -> None:
+    with ruta.open("w", encoding="utf-8", newline="") as archivo:  # NOSONAR (S8707)
+        escritor = csv.DictWriter(archivo, fieldnames=COLUMNAS, lineterminator="\n")
+        escritor.writeheader()
+        for fila in filas:
+            escritor.writerow(
+                {k: f"{v:.4f}" if isinstance(v, float) else v for k, v in fila.items()}
+            )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
@@ -186,38 +220,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     if salida.exists() and (not salida.is_dir() or any(salida.iterdir())):  # NOSONAR (S8707)
         parser.error(f"{salida} no está vacía: usa una carpeta nueva")
 
+    esperados = {"model_sha256": args.model_sha256, "config_sha256": args.config_sha256}
     try:
-        from .yolo import crear
-
         fotos = _fotos(args.fotos)
-        detector = crear(str(args.pesos))
-        esperados = {"model_sha256": args.model_sha256, "config_sha256": args.config_sha256}
-        for nombre, esperado in esperados.items():
-            if esperado is not None and getattr(detector, nombre) != esperado:
-                raise ValueError(f"{nombre} del detector no es el indicado")
+        detector = _crear_detector(args, esperados)
         filas = medir(detector, fotos, CALENTAMIENTOS, args.repeticiones)
     except (OSError, ValueError) as exc:
         print(f"no se mide: {exc}", file=sys.stderr)
         return 2
 
     corriente = energia()
-    advertencias = []
-    if corriente != "corriente":
-        advertencias.append(f"energía: {corriente}; la medición final va conectada")
-    if None in esperados.values():
-        advertencias.append("sin --model-sha256 o --config-sha256: los hashes no se comprobaron")
-    if not args.equipo:
-        advertencias.append("no se declaró el equipo (--equipo, PEND-05)")
-
+    advertencias = _advertencias(args, corriente, esperados)
     salida.mkdir(parents=True, exist_ok=True)  # NOSONAR (S8707)
     ruta_csv = salida / "sobrecosto.csv"
-    with ruta_csv.open("w", encoding="utf-8", newline="") as archivo:  # NOSONAR (S8707)
-        escritor = csv.DictWriter(archivo, fieldnames=COLUMNAS, lineterminator="\n")
-        escritor.writeheader()
-        for fila in filas:
-            escritor.writerow(
-                {k: f"{v:.4f}" if isinstance(v, float) else v for k, v in fila.items()}
-            )
+    _escribir_csv(ruta_csv, filas)
 
     resumen = resumir(filas)
     salida_json = {

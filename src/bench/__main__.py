@@ -83,7 +83,7 @@ def _expandir(entrada: Path) -> list[Path]:
     texto = str(entrada)
     if entrada.exists() or not any(c in texto for c in "*?["):  # NOSONAR (S8707)
         return [entrada]
-    coincidencias = sorted(Path(r) for r in glob.glob(texto))
+    coincidencias = sorted(Path(r) for r in glob.glob(texto))  # NOSONAR (S8707)
     if not coincidencias:
         raise ErrorBench(f"--entradas {texto}: el patrón no coincide con ningún archivo")
     return coincidencias
