@@ -15,7 +15,7 @@ salen del detector, con la configuración de `config-detector-v1`.
 | C3 · Obstáculo izquierdo | S3 | `S03_f0001`–`f0012` | `bottle` solo a la izquierda |
 | C4 · Obstáculo derecho | S4 | `S04_f0001`–`f0012` | `bottle` solo a la derecha |
 | C5 · Sin zona libre | S5 | `S05_f0001`–`f0012` | Dos `bottle` y una `cup` en las tres zonas |
-| C6 · Confianza | S7 | Ver [C6](#c6-scores-de-s7) | `cup` al centro, bajo y sobre el umbral de 0.50 |
+| C6 · Confianza | S7 | Ver [C6](#c6-scores-de-s7) | `cup` al centro, bajo y sobre el umbral de 0.50; de `f0007` a `f0015` también toca la derecha |
 | C7 · Libre → bloqueo → libre | S6 | Ver [C7](#c7-tramos-de-s6) | `cup` que entra y sale del centro |
 
 S1–S8 son evaluación. S9 y S10 no entran en este mapa: son solo para las pruebas del grupo B.
