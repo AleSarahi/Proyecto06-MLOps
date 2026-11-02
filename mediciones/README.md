@@ -128,3 +128,24 @@ puede medir.
 En el ensayo en batería (2026-11-01, 10 repeticiones, no cuenta) dio `diferencia_ms` p50 14.5, p95 28.9 y
 máximo 34.1 ms: casi todo es leer el JPEG; la preparación de Ultralytics, p95 6 ms. Las fotos de `docs/carro/`
 son de celular (~1200×1600) y los cuadros del conjunto de 640×480, así que la lectura queda del lado alto.
+
+## Resultado de la corrida final (2026-11-01, 22:57–22:59 hora local)
+
+Con `config-detector-v1` (`config_sha256 6428a259…`, `model_sha256 0ebbc80d…`, 2 hilos) sobre S01–S08 de
+`datos-evaluacion-v1`, en la laptop de A3 conectada a la corriente. Las cuatro salieron con `0`: completas, sin
+fallos ni advertencias y con la procedencia comprobada. Se suben las tres corridas, como dice la regla.
+
+| Corrida | `inferencia_ms` p50 / p95 / máx | `total_ms` p50 / p95 / máx |
+|---|---|---|
+| [`final-1`](final-1/resumen.json) | 83.20 / 91.84 / 102.03 | 92.78 / 101.71 / 111.05 |
+| [`final-2`](final-2/resumen.json) | 85.15 / 107.69 / 138.49 | 94.87 / 118.63 / 154.38 |
+| [`final-3`](final-3/resumen.json) | 82.99 / 89.67 / 98.20 | 92.42 / 99.04 / 106.90 |
+| **Peor de las tres** | 107.69 / 138.49 (`final-2`) | 118.63 / 154.38 (`final-2`) |
+
+[`final-sobrecosto`](final-sobrecosto/sobrecosto.json), medido justo antes: `diferencia_ms` p50 12.33, p95 14.70,
+máximo 16.49 ms (`fuera_del_predictor_ms` máx 15.65; `preparacion_ms` máx 1.18). El contraste con los plazos lo
+hace P5-16 (#73) con la peor corrida más esta diferencia.
+
+**Condiciones, tal cual:** VS Code cerrado y OneDrive en pausa. El registro de procesos al empezar todavía mostró
+procesos de `chrome`, `msedge` y `OneDrive`, posiblemente en segundo plano. Se reporta así; no se repitió ninguna
+corrida.
