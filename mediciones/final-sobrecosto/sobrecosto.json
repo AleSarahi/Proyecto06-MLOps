@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "equipo": "laptop de A3",
+  "hardware": {
+    "so": "Windows-11-10.0.26200-SP0",
+    "arquitectura": "AMD64",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz",
+    "nucleos_logicos": 8,
+    "ram_bytes": 8254660608
+  },
+  "energia": "corriente",
+  "runtime": {
+    "python": "3.12.14",
+    "implementacion": "CPython",
+    "detector": {
+      "detector": "YOLO11n (P5-05, infer.detector.DetectorJPEG)",
+      "config": "detector.json",
+      "versiones": {
+        "ultralytics": "8.3.0",
+        "torch": "2.9.0",
+        "torchvision": "0.24.0",
+        "opencv-python": "4.11.0.86",
+        "numpy": "1.26.4"
+      },
+      "hilos_torch": 2,
+      "hilos_configurados": 2,
+      "dispositivo": "cpu"
+    },
+    "variables_de_hilos": {
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null
+    }
+  },
+  "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "hashes_comprobados": true,
+  "protocolo": {
+    "calentamientos": 3,
+    "repeticiones": 20,
+    "reloj": "time.perf_counter_ns",
+    "diferencia": "infer_ms - etapas_ms en la misma llamada: leer el JPEG, sus revisiones y la preparación de Ultralytics (más _extraer_detecciones, que el arnés sí mide)"
+  },
+  "fotos": {
+    "docs/carro/atras.jpg": "c76649c0eebbdb1dd1ca4cfe81f8bffb377c77d07f67d4b1e99f2f22d9bec01c",
+    "docs/carro/frente_camara.jpg": "c39392131c19f5d46cba3a99a0da5ea1221c24c9655c26ea88ef5965f70e90f7",
+    "docs/carro/lado.jpg": "00f424cc9bba77151d42b820cc86d71728158170f4c2ac0a7e0dc5274cc0c2b9",
+    "docs/carro/medida_altura_libre.jpg": "2e571eba424d5c1254881c5c4287d0af646b795d80bb08981afe6271d50eb5cf",
+    "docs/carro/medida_camara.jpg": "15aa1630024c53ea61a6507113b73d9b2d6dfed5a2193b3678218a98a1ecc0bf",
+    "docs/carro/medida_llanta.jpg": "842d72009f6b439261491fd5dc17158ae327f1b1a515c7df46291b6aaf74c095",
+    "docs/carro/objeto_botella_der.jpg": "8e360d41326126ea58b781a071f583a9e8b7f5a841af0539e2c0ba19322a4e07",
+    "docs/carro/objeto_botella_izq.jpg": "b30d6f5b4e01c262527ca480ac32540bf065bdf2b0bec85ab4e8f409d224f7e1",
+    "docs/carro/objeto_taza_centro_cerca.jpg": "670fec5473ceda61b5a6283711596d610d75577dfb1bc9d5ffc8de52c1e9cbcc",
+    "docs/carro/video_mac_safari.jpg": "92d460dd0fac0e74cdd62f88a45871343400a5ddb1175ce00f5fad554dd838be",
+    "docs/carro/video_transmitiendo.jpg": "cd31e515448139f89702eca5ee03ffa6a3b9e6a487c72ed7e696a58aaa9ad01b"
+  },
+  "resumen": {
+    "infer_ms": {
+      "n": 220,
+      "p50": 106.2653,
+      "p95": 135.37343999999996,
+      "maximo": 169.1343,
+      "minimo": 82.2607,
+      "media": 107.45964681818181
+    },
+    "predictor_ms": {
+      "n": 220,
+      "p50": 95.21330002462491,
+      "p95": 125.54701995395585,
+      "maximo": 155.69500002311543,
+      "minimo": 75.11430000886321,
+      "media": 98.93996227236295
+    },
+    "etapas_ms": {
+      "n": 220,
+      "p50": 94.39195000000001,
+      "p95": 124.78785499999998,
+      "maximo": 154.7083,
+      "minimo": 74.9021,
+      "media": 98.29352318181817
+    },
+    "diferencia_ms": {
+      "n": 220,
+      "p50": 12.331949999999999,
+      "p95": 14.697960000000005,
+      "maximo": 16.48769999999999,
+      "minimo": 2.0049999999999955,
+      "media": 9.166123636363636
+    },
+    "fuera_del_predictor_ms": {
+      "n": 220,
+      "p50": 11.56889998203814,
+      "p95": 13.828830050172643,
+      "maximo": 15.654999972333002,
+      "minimo": 1.7837000043362394,
+      "media": 8.519684545818865
+    },
+    "preparacion_ms": {
+      "n": 220,
+      "p50": 0.7513499972019346,
+      "p95": 1.0155850353719629,
+      "maximo": 1.1821000242762238,
+      "minimo": 0.2040000069543737,
+      "media": 0.6464390905447711
+    }
+  },
+  "por_foto": {
+    "atras.jpg": 13.53224999999999,
+    "frente_camara.jpg": 12.915300000000002,
+    "lado.jpg": 13.8311,
+    "medida_altura_libre.jpg": 13.687850000000005,
+    "medida_camara.jpg": 14.272550000000003,
+    "medida_llanta.jpg": 13.784199999999991,
+    "objeto_botella_der.jpg": 2.7503500000000045,
+    "objeto_botella_izq.jpg": 2.0942499999999953,
+    "objeto_taza_centro_cerca.jpg": 2.0759000000000043,
+    "video_mac_safari.jpg": 7.562999999999995,
+    "video_transmitiendo.jpg": 4.473099999999995
+  },
+  "archivos": {
+    "sobrecosto.csv": "13afd16970f8e77aa8611108d0e3ff7a2a695c7aa9aaa2147a7e99a6dcd785ce"
+  },
+  "advertencias": []
+}

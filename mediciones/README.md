@@ -23,14 +23,15 @@ versiones, así que se puede comprobar que se midió aquí.
 
 ```bash
 uv run python -m bench \
-  --entradas datos/cuadros/ \
+  --entradas datos/cuadros/S0*/ \
   --salida mediciones/<run>/ \
   --equipo "laptop de A3" \
   --detector <módulo del detector> \
   --model-sha256 <hash de los pesos congelados> --config-sha256 <hash de la configuración congelada>
 ```
 
-- `--entradas`: imágenes o carpetas (de una carpeta se toman `.jpg`, `.jpeg` y `.png` en orden de nombre). Se
+- `--entradas`: imágenes o carpetas (de una carpeta se toman `.jpg`, `.jpeg` y `.png` en orden de nombre, sin
+  entrar a subcarpetas: por eso van las de cada secuencia). Se
   recorren en ciclo hasta juntar las ejecuciones.
 - `--detector falso` (el valor por omisión) usa el detector de prueba del arnés. No tiene archivo de pesos, así que
   **solo corre con `--prueba`**. El detector real (P5-05) se
@@ -54,7 +55,8 @@ uv run python -m bench \
 | `total_ms` | **Tiempo de pared** de toda la ejecución, desde que empieza el preprocesamiento hasta que B registra el comando. Incluye las etapas y lo que pasa entre ellas, así que nunca es menor que su suma. |
 
 **No se mide** leer y decodificar la imagen, cargar el modelo ni las pausas de reproducción: un cuadro sale en
-cuanto termina el anterior.
+cuanto termina el anterior. Lo que `infer` paga de más (leer el JPEG y la preparación de Ultralytics) lo mide
+`python -m bench.sobrecosto` aparte (abajo).
 
 **Qué escribe.** La carpeta de `--salida` debe no existir o estar **vacía**: con cualquier archivo adentro no se
 mide, para no mezclar corridas.
@@ -102,3 +104,66 @@ PEND-09, o sus plazos o CSV cambiaron · `2` no se puede leer la corrida, los pl
 no finitos, tipos inválidos); no queda ningún `contraste.*`, ni siquiera uno anterior.
 
 Qué acredita y qué no el control virtual, y lo que no se midió: [`LIMITES.md`](LIMITES.md).
+
+## Corrida final: regla fija antes de medir
+
+Se decidió antes de ver ningún número (revisión de #82):
+
+1. **Siempre 3 corridas** del benchmark, seguidas, con la laptop **conectada** y las demás aplicaciones
+   cerradas (OneDrive, VS Code, navegador). Van en `mediciones/final-1/`, `final-2/` y `final-3/`.
+2. Antes de las tres, **una vez** y en las mismas condiciones, `python -m bench.sobrecosto` (abajo), en
+   `mediciones/final-sobrecosto/`.
+3. **Se suben y se reportan las tres**, salgan como salgan. No se repite ninguna por su resultado.
+4. P5-16 contrasta con los plazos **la peor**: por cada etapa, el mayor p95 y el mayor máximo de las tres, más
+   la diferencia de `bench.sobrecosto` donde aplique.
+5. Una corrida solo se invalida por una condición que el arnés registra y no depende del tiempo medido
+   (salida distinta de `0`: en batería, hashes, fallos). Entonces se sube igual, se anota por qué y se repiten
+   **las tres**.
+
+## Lo que el arnés no mide y `infer` sí paga (`python -m bench.sobrecosto`)
+
+El arnés parte de la imagen ya decodificada y llama a `preprocesar`, `inferir` y `posprocesar` de
+`bench.yolo` por separado. `infer` (P5-05) llama a `DetectorJPEG.inferir`, que además **lee el JPEG** y pasa
+por `predictor(...)` de Ultralytics, que **prepara cada llamada** alrededor de esas tres etapas. El plazo de
+500 ms de P5-06 cubre la solicitud completa, así que P5-16 suma esa diferencia.
+
+```bash
+uv run python -m bench.sobrecosto --pesos <ruta>/yolo11n.pt --salida mediciones/final-sobrecosto/ \
+  --equipo "laptop de A3" --model-sha256 <hash> --config-sha256 <hash>
+```
+
+Con las fotos de `docs/carro/` (no las de S01–S08), 3 vueltas de calentamiento y 20 repeticiones de cada foto.
+En cada llamada a `DetectorJPEG.inferir` mide el tiempo de pared (`infer_ms`) y, dentro de la misma llamada,
+las tres etapas del predictor (`etapas_ms`, con `perf_counter_ns`; el `speed` de Ultralytics usa `time.time()`,
+que en Windows avanza a saltos de ~15 ms). `diferencia_ms = infer_ms - etapas_ms` se parte en
+`fuera_del_predictor_ms` (leer el JPEG, sus revisiones, `_extraer_detecciones`) y `preparacion_ms`. Cuenta
+`_extraer_detecciones` dos veces (también está en el `posprocesar` del arnés): queda del lado seguro.
+
+Escribe `sobrecosto.csv` (una fila por llamada) y `sobrecosto.json` (p50/p95/máximo, hardware, energía, hashes
+y SHA-256 de cada foto). Sale con `0` conectada y con los hashes comprobados, `1` con advertencias y `2` si no
+puede medir.
+
+En el ensayo en batería (2026-11-01, 10 repeticiones, no cuenta) dio `diferencia_ms` p50 14.5, p95 28.9 y
+máximo 34.1 ms: casi todo es leer el JPEG; la preparación de Ultralytics, p95 6 ms. Las fotos de `docs/carro/`
+son de celular (~1200×1600) y los cuadros del conjunto de 640×480, así que la lectura queda del lado alto.
+
+## Resultado de la corrida final (2026-11-01, 22:57–22:59 hora local)
+
+Con `config-detector-v1` (`config_sha256 6428a259…`, `model_sha256 0ebbc80d…`, 2 hilos) sobre S01–S08 de
+`datos-evaluacion-v1`, en la laptop de A3 conectada a la corriente. Las cuatro salieron con `0`: completas, sin
+fallos ni advertencias y con la procedencia comprobada. Se suben las tres corridas, como dice la regla.
+
+| Corrida | `inferencia_ms` p50 / p95 / máx | `total_ms` p50 / p95 / máx |
+|---|---|---|
+| [`final-1`](final-1/resumen.json) | 83.20 / 91.84 / 102.03 | 92.78 / 101.71 / 111.05 |
+| [`final-2`](final-2/resumen.json) | 85.15 / 107.69 / 138.49 | 94.87 / 118.63 / 154.38 |
+| [`final-3`](final-3/resumen.json) | 82.99 / 89.67 / 98.20 | 92.42 / 99.04 / 106.90 |
+| **Peor de las tres** | 107.69 / 138.49 (`final-2`) | 118.63 / 154.38 (`final-2`) |
+
+[`final-sobrecosto`](final-sobrecosto/sobrecosto.json), medido justo antes: `diferencia_ms` p50 12.33, p95 14.70,
+máximo 16.49 ms (`fuera_del_predictor_ms` máx 15.65; `preparacion_ms` máx 1.18). El contraste con los plazos lo
+hace P5-16 (#73) con la peor corrida más esta diferencia.
+
+**Condiciones, tal cual:** VS Code cerrado y OneDrive en pausa. El registro de procesos al empezar todavía mostró
+procesos de `chrome`, `msedge` y `OneDrive`, posiblemente en segundo plano. Se reporta así; no se repitió ninguna
+corrida.

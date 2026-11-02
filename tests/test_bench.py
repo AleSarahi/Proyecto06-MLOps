@@ -497,3 +497,12 @@ def test_el_resumen_declara_lo_que_no_se_mide(imagenes, tmp_path):
     protocolo = json.loads((salida / "resumen.json").read_text(encoding="utf-8"))["protocolo"]
     assert "pausas de reproducción" in protocolo["excluye"]
     assert protocolo["calentamientos"] == 10
+
+
+def test_sobrecosto_no_mezcla_con_una_carpeta_usada(tmp_path):
+    from bench import sobrecosto
+
+    (tmp_path / "otra.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit) as salida:
+        sobrecosto.main(["--pesos", "no-importa.pt", "--salida", str(tmp_path)])
+    assert salida.value.code == 2
