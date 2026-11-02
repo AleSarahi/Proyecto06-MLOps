@@ -15,6 +15,9 @@ enlaza el contraste.
   plazos de B, con p50, p95 y máximo medidos sobre 100 ejecuciones después de 10 calentamientos.
 - Que cada cuadro de las secuencias produce un evento del contrato v1 y que B responde con el comando que
   dicta su política, incluidos los casos de cuadro viejo, timeout del detector y ausencia de cuadros (C8, C9).
+  Del timeout, solo **el lado de B**: responde a un evento `status=error` con `detector_timeout` armado en el
+  caso. Que `infer` lo emita cuando la solicitud pasa `detector_timeout_ms` es de P5-06, que todavía no se
+  fusiona; *pendiente* comprobarlo entonces.
 - Que todo lo anterior se reproduce desde los archivos del repositorio con los hashes registrados:
   `bench.limites` comprueba que los CSV de la corrida tengan el SHA-256 que registró `resumen.json`.
 
@@ -45,17 +48,22 @@ uno). A eso se suma lo que `infer` paga y el arnés no mide: leer el JPEG y la p
 (`final-sobrecosto`). Sumar los máximos da una cota superior del máximo de la suma, y sumar los p95 es la misma
 aproximación del lado seguro.
 
+El sobrecosto **se midió con las 11 fotos de `docs/carro/`, no con S01–S08**: se decidió antes del paso 2 de
+#13, cuando aún no se podía correr el detector sobre el conjunto. Son de celular (~1200×1600) y los cuadros del
+conjunto, de 640×480; como casi todo el sobrecosto es leer el JPEG, con los cuadros del conjunto debería salir
+menor. No cambia ningún veredicto.
+
 | Medido | Plazo | Por qué importa |
 |---|---|---|
-| `total_ms` + sobrecosto (la solicitud completa de `infer`) | `detector_timeout_ms` (500) | El timeout de P5-06 cubre la solicitud entera; si tarda más, A emite `detector_timeout` y B frena (C9). Sin `--sobrecosto` se compara `inferencia_ms`. |
+| `total_ms` + sobrecosto (la solicitud completa de `infer`) | `detector_timeout_ms` (500) | Según lo planeado para P5-06 (Heri en #13), el timeout de A cubrirá la solicitud entera; si la pasa, A debe emitir `detector_timeout` y B frena (C9). Hoy `infer` no lo aplica: *pendiente* de P5-06. Sin `--sobrecosto` se compara `inferencia_ms`. |
 | `total_ms` + sobrecosto | `max_frame_age_ms` (500) | El comando sale cuando el cuadro ya tiene al menos esa edad; si pasa el plazo, B lo rechaza (C8). |
 | `total_ms` + sobrecosto | periodo de entrada (200, PEND-09) | Si procesar tarda más que el periodo, los cuadros se acumulan y llegan cada vez más viejos. |
 | intervalo entre comandos | `validez_orden_ms` (400) | Si entre dos comandos pasa más, el adaptador frena por su cuenta. |
 | intervalo entre eventos | `watchdog_ms` (600) | Si entre dos eventos pasa más, B frena por falta de percepción. |
 
-El intervalo es el mayor entre el periodo de entrada y `total_ms` (+ sobrecosto). Cada fila lleva un veredicto: **cumple**
-(hasta el máximo queda dentro), **cumple en p95** (el máximo lo pasa: algún cuadro se pierde o llega tarde) o
-**no cumple** (el p95 lo pasa).
+El intervalo es el mayor entre el periodo de entrada y `total_ms` (+ sobrecosto). Cada fila lleva un
+veredicto: **cumple** (hasta el máximo queda dentro), **cumple en p95** (el máximo lo pasa: algún cuadro se
+pierde o llega tarde) o **no cumple** (el p95 lo pasa).
 
 Las filas no son independientes:
 
@@ -84,7 +92,8 @@ y se explique en vez de esconderlo en un percentil.
 En ms. Casi todos los números de la peor salen de `final-2` (`total_ms` p95 118.63 y máximo 154.38); solo el
 p95 de `politica_ms` sale de `final-3`. El sobrecosto suma p50 12.33, p95 14.70 y máximo 16.49 ms. Lo más
 ajustado es el **periodo de entrada**: el peor cuadro queda a 29 ms de los 200 ms, y el p95 a 67 ms. La edad
-y el timeout quedan a más de 300 ms.
+y el timeout quedan a más de 300 ms. La fila del timeout dice que el tiempo medido cabe en los 500 ms de
+`plazos.yaml`, no que `infer` ya los aplique (pendiente de P5-06).
 
 Las tres corridas, por separado:
 
@@ -202,11 +211,12 @@ se decidió antes del paso 2.
   `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` (#75), registrado en el paso 2 de #13
   con el tag `config-detector-v1`.
 - **Objetos y escena (PEND-04):** botella (39) y taza (41), según P5-03; interior, piso plano, buena luz.
-- **Iluminación:** solo luz de interior. No se probó con poca luz, contraluz ni exteriores.
+- **Iluminación:** luz de día por ventana, sin luz directa del sol sobre el piso (`datos/DOMINIO.md`); S8, en
+  otro cuarto con otra luz. No se probó con poca luz, contraluz ni exteriores.
 
 ## Lo que el equipo no pudo probar
 
 - La cadena en vivo ESP32-CAM → detector → B con tiempos medidos de punta a punta.
 - El carro moviéndose con los comandos de B.
 - Otros equipos distintos al de PEND-05.
-- *Pendiente:* lo que salga al filmar.
+- Que `infer` emita `detector_timeout` cuando una solicitud pasa el plazo: llega con P5-06.

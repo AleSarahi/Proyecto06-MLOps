@@ -485,3 +485,21 @@ def test_con_sobrecosto_la_lectura_del_jpeg_ya_no_es_no_medido(tmp_path):
     assert "sí entran" in leer(tmp_path / "c")["no_medido"][0]
     assert main([*map(str, tres_corridas(tmp_path / "otra")), "--salida", str(tmp_path / "d")]) == 0
     assert "lectura y decodificación del JPEG:" in leer(tmp_path / "d")["no_medido"][0]
+
+
+def test_con_sobrecosto_la_razon_del_timeout_habla_de_la_solicitud(tmp_path):
+    sobrecosto = escribir_sobrecosto(tmp_path / "sobrecosto", 12, 15, 17)
+    argumentos = [*map(str, tres_corridas(tmp_path)), "--sobrecosto", str(sobrecosto)]
+    assert main([*argumentos, "--salida", str(tmp_path / "c")]) == 0
+    fila = next(f for f in leer(tmp_path / "c")["contraste"] if f["id"] == "inferencia_vs_timeout")
+    assert "solicitud completa" in fila["razon"]
+    assert "Una inferencia" not in fila["razon"]
+
+
+def test_procedencia_del_detector_nula_sale_con_dos(tmp_path, capsys):
+    corridas = tres_corridas(tmp_path)
+    resumen = json.loads((corridas[0] / "resumen.json").read_text(encoding="utf-8"))
+    resumen["procedencia"]["detector"] = None
+    (corridas[0] / "resumen.json").write_text(json.dumps(resumen), encoding="utf-8")
+    assert main([*map(str, corridas), "--salida", str(tmp_path / "c")]) == 2
+    assert "procedencia.detector" in capsys.readouterr().err

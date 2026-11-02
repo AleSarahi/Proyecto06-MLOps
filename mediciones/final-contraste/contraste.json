@@ -119,7 +119,7 @@
       "id": "inferencia_vs_timeout",
       "medido": "total_ms + sobrecosto",
       "plazo": "detector_timeout_ms",
-      "razon": "Una inferencia más larga que el plazo hace que A emita status=error (detector_timeout) y B frene (C9).",
+      "razon": "El timeout de A cubre la solicitud completa de infer (total_ms + sobrecosto): si la pasa, A debe emitir status=error (detector_timeout) y B frena (C9). Hoy infer no lo aplica (P5-06): la respuesta de B sí está probada.",
       "p50": 107.20575,
       "p95": 133.32790500000002,
       "maximo": 170.86669999999998,

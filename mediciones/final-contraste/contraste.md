@@ -37,7 +37,7 @@ Se contrasta **la peor**: por etapa, el mayor p50, p95 y máximo de las 3 corrid
 
 | Medido | p50 | p95 | Máximo | Plazo | Margen p95 | Veredicto | Razón |
 |---|---|---|---|---|---|---|---|
-| `total_ms + sobrecosto` | 107.21 | 133.33 | 170.87 | `detector_timeout_ms` = 500 | 366.67 | **cumple** | Una inferencia más larga que el plazo hace que A emita status=error (detector_timeout) y B frene (C9). |
+| `total_ms + sobrecosto` | 107.21 | 133.33 | 170.87 | `detector_timeout_ms` = 500 | 366.67 | **cumple** | El timeout de A cubre la solicitud completa de infer (total_ms + sobrecosto): si la pasa, A debe emitir status=error (detector_timeout) y B frena (C9). Hoy infer no lo aplica (P5-06): la respuesta de B sí está probada. |
 | `total_ms + sobrecosto` | 107.21 | 133.33 | 170.87 | `max_frame_age_ms` = 500 | 366.67 | **cumple** | El comando sale cuando el cuadro ya tiene al menos total_ms de edad; pasado max_frame_age_ms, B lo rechaza por viejo y frena (C8). |
 | `total_ms + sobrecosto` | 107.21 | 133.33 | 170.87 | `periodo_entrada_ms` = 200 | 66.67 | **cumple** | Si procesar un cuadro tarda más que el periodo de entrada, los cuadros se acumulan y cada uno llega más viejo que el anterior. |
 | `intervalo` | 200.00 | 200.00 | 200.00 | `validez_orden_ms` = 400 | 200.00 | **cumple** | Entre dos comandos pasa el periodo de entrada o lo que tarde procesar un cuadro; si eso pasa validez_orden_ms, el adaptador frena por su cuenta entre cuadros. |

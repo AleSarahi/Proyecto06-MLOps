@@ -122,6 +122,12 @@ PRESUPUESTOS = (
     },
 )
 
+RAZON_TIMEOUT_SOLICITUD = (
+    "El timeout de A cubre la solicitud completa de infer (total_ms + sobrecosto): si la pasa, A "
+    "debe emitir status=error (detector_timeout) y B frena (C9). Hoy infer no lo aplica (P5-06): "
+    "la respuesta de B sí está probada."
+)
+
 NOTA_COLA = {
     NO_CUMPLE: (
         "Limitado por la cola: con el p95 de total_ms arriba del periodo de entrada, los cuadros "
@@ -189,6 +195,9 @@ def _validar_resumen(resumen: Any, nombre: str) -> None:
         procedencia.get("config_b"), (dict, type(None))
     ):
         raise ErrorLimites(f"{nombre}: procedencia.config_b debe ser un objeto o null")
+    if not isinstance(procedencia.get("detector", {}), dict):
+        # El arnés siempre la escribe; sin ella no se sabe con qué detector se midió.
+        raise ErrorLimites(f"{nombre}: procedencia.detector debe ser un objeto")
     advertencias = resumen.get("advertencias", [])
     if not isinstance(advertencias, list) or not all(isinstance(a, str) for a in advertencias):
         raise ErrorLimites(f"{nombre}: advertencias debe ser una lista de textos")
@@ -323,8 +332,10 @@ def contrastar(
     for presupuesto in PRESUPUESTOS:
         medido = presupuesto["medido"]
         etapa = "total_ms" if medido == "intervalo" else medido
+        razon = presupuesto["razon"]
         if sobrecosto is not None and presupuesto["id"] == "inferencia_vs_timeout":
             etapa = medido = "total_ms"
+            razon = RAZON_TIMEOUT_SOLICITUD
         if etapa not in etapas:
             continue
         medidos = {e: etapas[etapa][e] for e in ESTADISTICOS}
@@ -339,6 +350,7 @@ def contrastar(
             {
                 **presupuesto,
                 "medido": medido,
+                "razon": razon,
                 **medidos,
                 "plazo_ms": plazo,
                 "margen_p95_ms": plazo - medidos["p95"],
