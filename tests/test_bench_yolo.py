@@ -97,3 +97,35 @@ def test_medicion_oficial_con_el_detector_real(tmp_path, monkeypatch, yolo):
     assert resumen["conteos"] == {"calentamientos": 10, "mediciones": 100, "fallos": 0}
     assert resumen["runtime"]["detector"]["hilos_torch"] == yolo._detector.config.torch_threads
     assert resumen["advertencias"] == []
+
+
+def test_sobrecosto_de_infer_frente_al_arnes(tmp_path, monkeypatch, yolo):
+    from bench import sobrecosto
+
+    monkeypatch.setattr(sobrecosto, "energia", lambda: "corriente")
+    monkeypatch.setattr(sobrecosto, "CALENTAMIENTOS", 1)
+    salida = tmp_path / "sobrecosto"
+    argumentos = [
+        "--pesos", PESOS, "--salida", str(salida), "--fotos", *map(str, CUADROS[:2]),
+        "--repeticiones", "2", "--equipo", "pruebas",
+        "--model-sha256", yolo.model_sha256, "--config-sha256", yolo.config_sha256,
+    ]  # fmt: skip
+    assert sobrecosto.main(argumentos) == 0
+    datos = json.loads((salida / "sobrecosto.json").read_text(encoding="utf-8"))
+    assert datos["hashes_comprobados"] is True
+    assert datos["resumen"]["diferencia_ms"]["n"] == 4
+    # Leer el JPEG cuesta algo, así que infer nunca sale más barato que sus etapas.
+    assert datos["resumen"]["diferencia_ms"]["minimo"] > 0
+    assert datos["advertencias"] == []
+
+
+def test_sobrecosto_rechaza_otro_hash_sin_escribir(tmp_path, yolo):
+    from bench import sobrecosto
+
+    salida = tmp_path / "sobrecosto"
+    argumentos = [
+        "--pesos", PESOS, "--salida", str(salida), "--fotos", str(CUADROS[0]),
+        "--repeticiones", "1", "--config-sha256", "0" * 64,
+    ]  # fmt: skip
+    assert sobrecosto.main(argumentos) == 2
+    assert not salida.exists()
