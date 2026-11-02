@@ -1,0 +1,58 @@
+# Evidencias previstas para el PR en borrador de P5-06
+
+Lista exacta preparada antes de publicar. No se ha creado el PR ni se han hecho commits.
+La serie Mac original queda intacta; las correcciones de interpretación están en la auditoría.
+
+- `resultados/P5-06-AUDITORIA-PREFLIGHT.md`
+- `resultados/P5-06-DISENO-Y-ACEPTACION.md`
+- `resultados/P5-06-EVIDENCIAS-PR.md`
+- `resultados/p5-06-benchmark-mac-2026-11-01/README.md`
+- `resultados/p5-06-benchmark-mac-2026-11-01/benchmark.json`
+- `resultados/p5-06-benchmark-mac-2026-11-01/entorno-posterior.json`
+- `resultados/p5-06-benchmark-mac-2026-11-01/entorno-previo.json`
+- `resultados/p5-06-benchmark-mac-2026-11-01/observaciones.json`
+- `resultados/p5-06-benchmark-mac-2026-11-01/resumen.json`
+- `resultados/p5-06-benchmark.py`
+- `resultados/p5-06-integracion/README.md`
+- `resultados/p5-06-integracion/detector_exception/comandos.jsonl`
+- `resultados/p5-06-integracion/detector_exception/errores.jsonl`
+- `resultados/p5-06-integracion/detector_exception/percepcion.jsonl`
+- `resultados/p5-06-integracion/detector_exception/resultado.json`
+- `resultados/p5-06-integracion/invalid_output/comandos.jsonl`
+- `resultados/p5-06-integracion/invalid_output/errores.jsonl`
+- `resultados/p5-06-integracion/invalid_output/percepcion.jsonl`
+- `resultados/p5-06-integracion/invalid_output/resultado.json`
+- `resultados/p5-06-integracion/ok_envejecido_en_transporte/comandos.jsonl`
+- `resultados/p5-06-integracion/ok_envejecido_en_transporte/errores.jsonl`
+- `resultados/p5-06-integracion/ok_envejecido_en_transporte/percepcion.jsonl`
+- `resultados/p5-06-integracion/ok_envejecido_en_transporte/resultado.json`
+- `resultados/p5-06-integracion/sin_cuadro/comandos.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro/errores.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro/percepcion.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro/resultado.json`
+- `resultados/p5-06-integracion/sin_cuadro_tics_periodicos/comandos.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro_tics_periodicos/errores.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro_tics_periodicos/percepcion.jsonl`
+- `resultados/p5-06-integracion/sin_cuadro_tics_periodicos/resultado.json`
+- `resultados/p5-06-integracion/stale/comandos.jsonl`
+- `resultados/p5-06-integracion/stale/errores.jsonl`
+- `resultados/p5-06-integracion/stale/percepcion.jsonl`
+- `resultados/p5-06-integracion/stale/resultado.json`
+- `resultados/p5-06-integracion/unreadable_image/comandos.jsonl`
+- `resultados/p5-06-integracion/unreadable_image/errores.jsonl`
+- `resultados/p5-06-integracion/unreadable_image/percepcion.jsonl`
+- `resultados/p5-06-integracion/unreadable_image/resultado.json`
+- `resultados/p5-06-validacion-detecciones/README.md`
+- `resultados/p5-06-validacion-detecciones/comparacion.json`
+- `resultados/p5-06-validacion-detecciones/p506-taza-supervisado.infer-run.json`
+- `resultados/p5-06-validacion-detecciones/supervisado.jsonl`
+- `resultados/p5-06-validacion-detecciones/un_proceso.jsonl`
+- `resultados/p5-06-validacion-detecciones.py`
+- `resultados/p5-06-validacion-real/README.md`
+- `resultados/p5-06-validacion-real/jpeg_sinteticos/sintetico_geometria.jpg`
+- `resultados/p5-06-validacion-real/jpeg_sinteticos/sintetico_negro.jpg`
+- `resultados/p5-06-validacion-real/p506-real-supervisado.infer-run.json`
+- `resultados/p5-06-validacion-real/supervisado.jsonl`
+- `resultados/p5-06-validacion-real/un_proceso.jsonl`
+- `resultados/p5-06-validacion-real/validacion.json`
+- `resultados/p5-06-validacion-real.py`

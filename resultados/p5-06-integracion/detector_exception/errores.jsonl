@@ -1,0 +1,1 @@
+{"run_id": "p506-detector_exception", "frame_id": "b_fallo", "t_ms": 200.0, "motivo": "error_detector:detector_exception", "errores": ["error.code: 'detector_exception'", "error.message: 'falló la ejecución del detector'"]}

@@ -164,14 +164,15 @@ class DetectorJPEG:
             if len(resultados) != 1:
                 raise ErrorSalidaInvalida("el calentamiento no devolvió exactamente un cuadro")
 
-    def inferir(self, ruta: str | Path) -> ResultadoJPEG:
-        """Decodifica el JPEG local y ejecuta la ruta nativa de predicción."""
+    @staticmethod
+    def leer_imagen(ruta: str | Path) -> np.ndarray:
+        """Decodifica una sola vez y distingue fallos de lectura de los del predictor."""
         archivo = Path(ruta)
         if archivo.suffix.lower() not in {".jpg", ".jpeg"}:
             raise ErrorImagenJPEG("se requiere un archivo JPEG local")
         try:
             imagen = cv2.imread(str(archivo), cv2.IMREAD_COLOR)
-        except cv2.error as exc:
+        except (cv2.error, OSError) as exc:
             raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}") from exc
         if (
             imagen is None
@@ -183,6 +184,12 @@ class DetectorJPEG:
             or imagen.shape[1] < 1
         ):
             raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
+        return imagen
+
+    def inferir(self, ruta: str | Path, *, imagen: np.ndarray | None = None) -> ResultadoJPEG:
+        """Ejecuta la predicción; acepta una imagen ya decodificada por el publicador."""
+        if imagen is None:
+            imagen = self.leer_imagen(ruta)
         height, width = imagen.shape[:2]
         with self._lock:
             self.predictor.tensor_shape = None

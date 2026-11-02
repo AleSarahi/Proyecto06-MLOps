@@ -47,11 +47,11 @@ class DetectorFalso:
     def calentar(self):
         pass
 
-    def inferir(self, ruta):
+    def inferir(self, ruta, *, imagen=None):
         self.rutas.append(ruta)
         if self.error:
             raise self.error
-        if cv2.imread(str(ruta), cv2.IMREAD_COLOR) is None:
+        if imagen is None and cv2.imread(str(ruta), cv2.IMREAD_COLOR) is None:
             raise ErrorImagenJPEG("JPEG ilegible")
         return ResultadoJPEG(
             80,
@@ -89,18 +89,18 @@ def test_un_jpeg_vacio_usa_recepcion_monotonica(tmp_path):
 
 @pytest.mark.parametrize("directorio", [False, True])
 def test_calentamiento_de_35_segundos_no_envejece_primer_cuadro(tmp_path, directorio):
-    tiempo = [100.0]
+    tiempo_ms = [0]
 
     class DetectorLento(DetectorFalso):
         calentamientos = 0
 
         def calentar(self):
             self.calentamientos += 1
-            tiempo[0] += 35.0
+            tiempo_ms[0] += 35_000
 
-        def inferir(self, ruta):
-            tiempo[0] += 0.01
-            return super().inferir(ruta)
+        def inferir(self, ruta, *, imagen=None):
+            tiempo_ms[0] += 10
+            return super().inferir(ruta, imagen=imagen)
 
     detector = DetectorLento()
     entrada = tmp_path / "entrada" if directorio else _jpeg(tmp_path / "S01_f0001.jpg")
@@ -110,10 +110,10 @@ def test_calentamiento_de_35_segundos_no_envejece_primer_cuadro(tmp_path, direct
         _jpeg(entrada / "S01_f0002.jpg")
 
     def reloj():
-        return tiempo[0]
+        return tiempo_ms[0] / 1000
 
     def dormir(segundos):
-        tiempo[0] += segundos
+        tiempo_ms[0] += max(1, round(segundos * 1000))
 
     eventos, errores = _run(
         tmp_path,
@@ -255,7 +255,6 @@ def test_infer_no_abre_anotaciones_ni_manifiesto(tmp_path, monkeypatch):
 @pytest.mark.parametrize(
     ("error", "codigo"),
     [
-        (ErrorImagenJPEG("no se pudo leer"), "unreadable_image"),
         (ErrorSalidaInvalida("NaN"), "invalid_output"),
         (RuntimeError("falló el predictor"), "detector_exception"),
     ],
@@ -265,9 +264,7 @@ def test_errores_no_son_ok_vacio(tmp_path, error, codigo):
     ev = eventos[0]
     assert errores == 1 and ev["status"] == "error" and ev["detections"] == []
     assert ev["error"]["code"] == codigo
-    assert (ev["image_width"], ev["image_height"]) == (
-        (None, None) if codigo == "unreadable_image" else (80, 60)
-    )
+    assert (ev["image_width"], ev["image_height"]) == (80, 60)
 
 
 def test_jpeg_corrupto_emite_unreadable_image(tmp_path):
@@ -277,7 +274,342 @@ def test_jpeg_corrupto_emite_unreadable_image(tmp_path):
     assert errores == 1 and eventos[0]["error"]["code"] == "unreadable_image"
 
 
-def test_cli_continua_despues_de_jpeg_vacio_con_cv2_error(tmp_path, monkeypatch):
+@pytest.mark.parametrize("contenido", [None, b"", b"\xff\xd8\xff"])
+def test_jpeg_ausente_vacio_o_truncado_publica_error_v1(tmp_path, contenido):
+    ruta = tmp_path / "fallido.jpg"
+    if contenido is not None:
+        ruta.write_bytes(contenido)
+    eventos, errores = _run(tmp_path, entrada=ruta)
+    [evento] = eventos
+    assert errores == 1
+    assert evento["status"] == "error"
+    assert evento["error"]["code"] == "unreadable_image"
+    assert evento["error"]["message"]
+    assert evento["detections"] == []
+    assert (evento["image_width"], evento["image_height"]) == (None, None)
+
+
+def test_cli_jpeg_individual_inexistente_publica_evento(tmp_path, monkeypatch):
+    detector = DetectorFalso()
+    monkeypatch.setattr(
+        modulo_cli,
+        "ejecutar_run_supervisado",
+        lambda entrada, salida, **opciones: (
+            *ejecutar_run(
+                detector,
+                entrada,
+                salida,
+                run_id=opciones["run_id"],
+                sequence_id=opciones["sequence_id"],
+                capture_ms=opciones["capture_ms"],
+            ),
+            False,
+        ),
+    )
+    salida = tmp_path / "salida.jsonl"
+    codigo = main(
+        [
+            "--input",
+            str(tmp_path / "ausente.jpg"),
+            "--weights",
+            str(tmp_path / "pesos.pt"),
+            "--output",
+            str(salida),
+            "--run-id",
+            "ausente",
+        ]
+    )
+    [evento] = leer_eventos(salida)
+    assert codigo == 1
+    assert validar_evento(evento) == []
+    assert evento["status"] == "error"
+    assert evento["error"]["code"] == "unreadable_image"
+    assert evento["detections"] == []
+    assert (evento["image_width"], evento["image_height"]) == (None, None)
+
+
+def test_error_de_lectura_no_interrumpe_los_cuadros_siguientes(tmp_path):
+    carpeta = tmp_path / "entrada"
+    carpeta.mkdir()
+    (carpeta / "a_vacio.jpg").write_bytes(b"")
+    (carpeta / "b_truncado.jpg").write_bytes(b"\xff\xd8\xff")
+    _jpeg(carpeta / "c_valido.jpg")
+    eventos, errores = _run(tmp_path, entrada=carpeta, capturas=[0, 200, 400], sequence_id="S01")
+    assert errores == 2
+    assert [e["status"] for e in eventos] == ["error", "error", "ok"]
+    assert [e.get("error", {}).get("code") for e in eventos] == [
+        "unreadable_image",
+        "unreadable_image",
+        None,
+    ]
+    assert eventos[-1]["detections"] == []
+
+
+def test_sleep_temprano_espera_hasta_cada_captura(tmp_path):
+    carpeta = tmp_path / "entrada"
+    carpeta.mkdir()
+    _jpeg(carpeta / "a.jpg")
+    _jpeg(carpeta / "b.jpg")
+    _jpeg(carpeta / "c.jpg")
+    ahora_ms = [0]
+    llamadas = []
+
+    def reloj():
+        return ahora_ms[0] / 1000
+
+    def dormir(segundos):
+        llamadas.append(segundos)
+        ahora_ms[0] += min(max(1, round(segundos * 1000)), 30)
+        # Avanza en ms enteros; casi todos los sleeps despiertan temprano.
+
+    eventos, errores = _run(
+        tmp_path,
+        entrada=carpeta,
+        capturas=[0, 100, 200],
+        sequence_id="S01",
+        reloj=reloj,
+        dormir=dormir,
+    )
+    assert errores == 0
+    assert len(llamadas) > 2
+    assert [e["t_capture_ms"] for e in eventos] == [0, 100, 200]
+    assert [e["t_emit_ms"] for e in eventos] == pytest.approx([0, 100, 200])
+    assert all(e["t_emit_ms"] >= e["t_capture_ms"] for e in eventos)
+
+
+@pytest.mark.parametrize(("edad_ms", "estado"), [(499, "ok"), (500, "ok"), (501, "stale")])
+def test_edad_del_cuadro_en_el_limite_compartido(tmp_path, edad_ms, estado):
+    ahora_ms = [0]
+
+    class DetectorLento(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            ahora_ms[0] += edad_ms
+            return super().inferir(ruta, imagen=imagen)
+
+    deteccion = Deteccion(39, 0.9, (1, 2, 20, 30))
+    eventos, errores = _run(
+        tmp_path,
+        DetectorLento((deteccion,)),
+        capturas=[0],
+        reloj=lambda: ahora_ms[0] / 1000,
+    )
+    [evento] = eventos
+    assert errores == 0
+    assert evento["t_emit_ms"] - evento["t_capture_ms"] == edad_ms
+    assert evento["status"] == estado
+    if estado == "stale":
+        assert evento["detections"] == []
+    else:
+        assert evento["detections"] == [{"class_id": 39, "confidence": 0.9, "bbox": [1, 2, 20, 30]}]
+    assert "error" not in evento
+    assert (evento["image_width"], evento["image_height"]) == (80, 60)
+
+
+def test_cuadro_vacio_viejo_es_stale_y_no_ok_despejado(tmp_path):
+    ahora_ms = [0]
+
+    class DetectorLento(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            ahora_ms[0] += 501
+            return super().inferir(ruta, imagen=imagen)
+
+    eventos, errores = _run(
+        tmp_path, DetectorLento(), capturas=[0], reloj=lambda: ahora_ms[0] / 1000
+    )
+    assert errores == 0
+    assert eventos[0]["status"] == "stale"
+    assert eventos[0]["detections"] == []
+
+
+@pytest.mark.parametrize(
+    ("error", "codigo"),
+    [
+        (ErrorSalidaInvalida("NaN"), "invalid_output"),
+        (RuntimeError("predictor"), "detector_exception"),
+    ],
+)
+def test_error_especifico_prevalece_sobre_edad(tmp_path, error, codigo):
+    ahora_ms = [0]
+
+    class DetectorLento(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            ahora_ms[0] += 501
+            raise error
+
+    eventos, errores = _run(
+        tmp_path, DetectorLento(), capturas=[0], reloj=lambda: ahora_ms[0] / 1000
+    )
+    [evento] = eventos
+    assert errores == 1
+    assert evento["status"] == "error"
+    assert evento["error"]["code"] == codigo
+    assert evento["detections"] == []
+
+
+def test_jpeg_ilegible_viejo_conserva_error_de_lectura(tmp_path):
+    ruta = tmp_path / "ilegible.jpg"
+    ruta.write_bytes(b"")
+    ahora_ms = [0]
+    original = DetectorJPEG.leer_imagen
+
+    def lectura_tardia(ruta):
+        ahora_ms[0] = 501
+        return original(ruta)
+
+    with pytest.MonkeyPatch.context() as parche:
+        parche.setattr(DetectorJPEG, "leer_imagen", staticmethod(lectura_tardia))
+        eventos, errores = _run(
+            tmp_path, entrada=ruta, capturas=[0], reloj=lambda: ahora_ms[0] / 1000
+        )
+    assert errores == 1
+    assert eventos[0]["status"] == "error"
+    assert eventos[0]["error"]["code"] == "unreadable_image"
+
+
+def test_secuencia_continua_despues_de_stale(tmp_path):
+    carpeta = tmp_path / "entrada"
+    carpeta.mkdir()
+    _jpeg(carpeta / "a.jpg")
+    _jpeg(carpeta / "b.jpg")
+    ahora_ms = [0]
+    llamadas = [0]
+
+    class DetectorPrimeroLento(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            llamadas[0] += 1
+            if llamadas[0] == 1:
+                ahora_ms[0] += 501
+            return super().inferir(ruta, imagen=imagen)
+
+    def dormir(segundos):
+        ahora_ms[0] += max(1, round(segundos * 1000))
+
+    eventos, errores = _run(
+        tmp_path,
+        DetectorPrimeroLento(),
+        entrada=carpeta,
+        capturas=[0, 600],
+        sequence_id="S01",
+        reloj=lambda: ahora_ms[0] / 1000,
+        dormir=dormir,
+    )
+    assert errores == 0
+    assert [e["status"] for e in eventos] == ["stale", "ok"]
+    assert [e["frame_id"] for e in eventos] == ["a", "b"]
+    assert eventos[1]["detections"] == []
+
+
+@pytest.mark.parametrize(
+    ("fallo", "codigo"),
+    [
+        (RuntimeError("predictor"), "detector_exception"),
+        (ErrorSalidaInvalida("NaN"), "invalid_output"),
+    ],
+)
+def test_fallo_tras_decodificar_conserva_causa_si_desaparece_jpeg(tmp_path, fallo, codigo):
+    ruta = _jpeg(tmp_path / "cuadro.jpg")
+    config = cargar_config_detector()
+    detector = object.__new__(DetectorJPEG)
+    detector.config = config
+    detector.cargado = ModeloCargado(object(), "a" * 64, config.config_sha256)
+    detector._lock = threading.Lock()
+    detector.calentar = lambda: None
+
+    class Predictor:
+        tensor_shape = None
+
+        def __call__(self, source, stream=False):
+            ruta.unlink()
+            raise fallo
+
+    detector.predictor = Predictor()
+    eventos, errores = _run(tmp_path, detector, entrada=ruta)
+    assert errores == 1
+    assert eventos[0]["status"] == "error"
+    assert eventos[0]["error"]["code"] == codigo
+    assert (eventos[0]["image_width"], eventos[0]["image_height"]) == (80, 60)
+    assert not ruta.exists()
+
+
+def test_cuadro_ya_viejo_omite_predictor_pero_conserva_dimensiones(tmp_path, monkeypatch):
+    ruta = _jpeg(tmp_path / "cuadro.jpg")
+    ahora_ms = [0]
+    original = DetectorJPEG.leer_imagen
+
+    def lectura_tardia(ruta):
+        imagen = original(ruta)
+        ahora_ms[0] = 501
+        return imagen
+
+    class DetectorSinPrediccion(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            pytest.fail("el predictor no debe ejecutarse para un cuadro ya viejo")
+
+    monkeypatch.setattr(DetectorJPEG, "leer_imagen", staticmethod(lectura_tardia))
+    eventos, errores = _run(
+        tmp_path,
+        DetectorSinPrediccion(),
+        entrada=ruta,
+        capturas=[0],
+        reloj=lambda: ahora_ms[0] / 1000,
+    )
+    assert errores == 0
+    assert eventos[0]["status"] == "stale"
+    assert eventos[0]["detections"] == []
+    assert (eventos[0]["image_width"], eventos[0]["image_height"]) == (80, 60)
+
+
+def test_reloj_congelado_falla_sin_bucle_infinito(tmp_path):
+    sleeps = []
+    with pytest.raises(ErrorRunInfer, match="reloj monotónico no avanza"):
+        _run(
+            tmp_path,
+            capturas=[100],
+            reloj=lambda: 0.0,
+            dormir=lambda segundos: sleeps.append(segundos),
+        )
+    assert len(sleeps) == 10
+    assert all(0.001 <= segundos <= 0.1 for segundos in sleeps)
+
+
+def test_sleep_puede_despertar_varias_veces_sin_progreso(tmp_path):
+    ahora_ms = [0]
+    llamadas = [0]
+
+    def dormir(_segundos):
+        llamadas[0] += 1
+        if llamadas[0] == 10:
+            ahora_ms[0] = 100
+
+    eventos, errores = _run(
+        tmp_path, capturas=[100], reloj=lambda: ahora_ms[0] / 1000, dormir=dormir
+    )
+    assert errores == 0
+    assert llamadas[0] == 10
+    assert eventos[0]["t_emit_ms"] >= eventos[0]["t_capture_ms"] == 100
+
+
+def test_capturas_automaticas_esperan_avance_real_del_reloj(tmp_path, monkeypatch):
+    carpeta = tmp_path / "entrada"
+    carpeta.mkdir()
+    primero = _jpeg(carpeta / "a.jpg")
+    segundo = _jpeg(carpeta / "b.jpg")
+    monkeypatch.setattr(modulo_eventos, "_archivos", lambda _entrada: ([primero, segundo], False))
+    ahora_ms = [0]
+
+    def dormir(_segundos):
+        ahora_ms[0] += 1
+
+    eventos, errores = _run(
+        tmp_path, entrada=carpeta, reloj=lambda: ahora_ms[0] / 1000, dormir=dormir
+    )
+    assert errores == 0
+    assert [e["t_capture_ms"] for e in eventos] == [0, 1]
+    assert [e["t_emit_ms"] for e in eventos] == [0, 1]
+
+
+@pytest.mark.parametrize("error_lectura", [cv2.error("!buf.empty()"), FileNotFoundError("ausente")])
+def test_cli_continua_despues_de_error_al_leer_jpeg(tmp_path, monkeypatch, error_lectura):
     carpeta = tmp_path / "entrada"
     carpeta.mkdir()
     (carpeta / "a_vacio.jpg").write_bytes(b"")
@@ -307,12 +639,25 @@ def test_cli_continua_despues_de_jpeg_vacio_con_cv2_error(tmp_path, monkeypatch)
 
     def imread_windows(ruta, modo):
         if Path(ruta).name == "a_vacio.jpg":
-            raise cv2.error("!buf.empty() en imdecode")
+            raise error_lectura
         return imread_original(ruta, modo)
 
     monkeypatch.setattr(cv2, "imread", imread_windows)
-    monkeypatch.setattr(modulo_cli, "cargar_pesos", lambda _ruta, _config: detector.cargado)
-    monkeypatch.setattr(modulo_cli, "DetectorJPEG", lambda _cargado, _config: detector)
+    monkeypatch.setattr(
+        modulo_cli,
+        "ejecutar_run_supervisado",
+        lambda entrada, salida, **opciones: (
+            *ejecutar_run(
+                detector,
+                entrada,
+                salida,
+                run_id=opciones["run_id"],
+                sequence_id=opciones["sequence_id"],
+                capture_ms=opciones["capture_ms"],
+            ),
+            False,
+        ),
+    )
     salida = tmp_path / "secuencia.jsonl"
     codigo = main(
         [
@@ -360,7 +705,6 @@ def test_error_opencv_en_lectura_auxiliar_no_aborta_run(tmp_path, monkeypatch):
 @pytest.mark.parametrize(
     ("error_type", "codigo"),
     [
-        (ErrorImagenJPEG, "unreadable_image"),
         (ErrorSalidaInvalida, "invalid_output"),
         (RuntimeError, "detector_exception"),
     ],
@@ -504,8 +848,8 @@ def test_emit_antes_de_capture_y_nan_rechazados(tmp_path):
 
 def test_hash_de_resultado_inconsistente_emite_invalid_output(tmp_path):
     class Cambiante(DetectorFalso):
-        def inferir(self, ruta):
-            return replace(super().inferir(ruta), model_sha256="b" * 64)
+        def inferir(self, ruta, *, imagen=None):
+            return replace(super().inferir(ruta, imagen=imagen), model_sha256="b" * 64)
 
     eventos, errores = _run(tmp_path, Cambiante())
     assert errores == 1 and eventos[0]["error"]["code"] == "invalid_output"

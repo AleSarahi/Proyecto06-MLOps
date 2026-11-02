@@ -1,0 +1,1 @@
+{"run_id": "p506-ok_tardio", "frame_id": "b_ok_tardio", "t_ms": 701.0, "motivo": "cuadro_viejo", "errores": ["edad del cuadro 501.0 ms (ahora_ms - t_capture_ms) > max_frame_age_ms 500 ms"]}

@@ -1,0 +1,1 @@
+{"run_id": "p506-unreadable_image", "frame_id": "b_fallo", "t_ms": 200.0, "motivo": "error_detector:unreadable_image", "errores": ["error.code: 'unreadable_image'", "error.message: 'no se pudo leer o decodificar el JPEG'"]}

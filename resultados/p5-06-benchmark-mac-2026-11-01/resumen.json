@@ -1,0 +1,120 @@
+{
+  "tipo": "resumen_derivado_p5_06",
+  "benchmark_sha256": "83e0d2a4bfa8262bf9c7f389ab16ebc101f77db4cbf92cec2d757e8aacda4372",
+  "entorno_previo_sha256": "743a8f99a6aad338ffd425405d4dd50559f1e07556a39569964b660bea1d4b63",
+  "entorno_posterior_sha256": "8ef9136c29da311b3750e50772590416db45323f72f19165c7c9827cbbde65bb",
+  "muestras": {
+    "control": 50,
+    "supervisado": 50
+  },
+  "calentamientos_excluidos": {
+    "control": 10,
+    "supervisado": 10
+  },
+  "reinicios_excluidos": 10,
+  "reinicios_medidos": 50,
+  "stats_ms": {
+    "control": {
+      "media": 31.66374828,
+      "p50": 31.567166999999998,
+      "p95_lineal": 32.9998997,
+      "min": 30.78075,
+      "max": 33.260042
+    },
+    "supervisado": {
+      "media": 32.10488256,
+      "p50": 31.3577505,
+      "p95_lineal": 39.3816356,
+      "min": 30.86925,
+      "max": 40.617
+    },
+    "reinicio": {
+      "media": 1383.75369166,
+      "p50": 1339.8926875,
+      "p95_lineal": 1684.3788791999991,
+      "min": 1289.714792,
+      "max": 2085.822791
+    },
+    "fases_reinicio": {
+      "detencion_ms": {
+        "media": 5.70923338,
+        "p50": 5.1253335,
+        "p95_lineal": 8.081966849999997,
+        "min": 4.802333,
+        "max": 11.531166
+      },
+      "coordinacion_ms": {
+        "media": 0.03373497999998563,
+        "p50": 0.031541499999775624,
+        "p95_lineal": 0.053318899999931064,
+        "min": 0.02275000000008731,
+        "max": 0.06954100000007202
+      },
+      "creacion_proceso": {
+        "media": 3.53224748,
+        "p50": 3.961229,
+        "p95_lineal": 4.589201899999999,
+        "min": 1.713542,
+        "max": 5.855333
+      },
+      "arranque_hijo": {
+        "media": 891.13591168,
+        "p50": 858.925146,
+        "p95_lineal": 1052.8923876499998,
+        "min": 833.885208,
+        "max": 1548.792125
+      },
+      "carga_verificacion": {
+        "media": 41.93415328,
+        "p50": 40.38675,
+        "p95_lineal": 52.831198099999995,
+        "min": 39.020625,
+        "max": 69.070208
+      },
+      "calentamiento": {
+        "media": 441.01627498,
+        "p50": 427.1580835,
+        "p95_lineal": 509.3523607499999,
+        "min": 409.736542,
+        "max": 678.751542
+      },
+      "entrega_ready": {
+        "media": 0.39213588,
+        "p50": 0.293146,
+        "p95_lineal": 0.3997893999999999,
+        "min": 0.2585,
+        "max": 4.764542
+      },
+      "solapamiento_creacion_hijo_ms": {
+        "media": 0.0,
+        "p50": 0.0,
+        "p95_lineal": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    }
+  },
+  "coste_supervision_ipc": {
+    "diferencia_ms": {
+      "p50": -0.20941649999999612,
+      "p95_lineal": 6.3817359000000025
+    },
+    "diferencia_porcentual": {
+      "p50": -0.6633997279515015,
+      "p95_lineal": 19.338652414146587
+    }
+  },
+  "solicitudes_sobre_500_ms": {
+    "control": 0,
+    "supervisado": 0
+  },
+  "paridad_detecciones": {
+    "control_vs_p5_05": "60 de 60 solicitudes iguales en estado, dimensiones y detecciones",
+    "supervisado_vs_p5_05": "60 de 60 solicitudes iguales en estado, dimensiones y detecciones",
+    "criterio": "igualdad exacta en mismo host y runtime"
+  },
+  "fallos": 0,
+  "muestras_descartadas": 0,
+  "residuo_maximo_fases_ms": 2.2737367544323206e-13,
+  "aprobacion_rendimiento": "pendiente de umbrales de Karen y validación independiente Windows"
+}

@@ -7,10 +7,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from .config import RUTA_CONFIG_DETECTOR, cargar_config_detector
-from .detector import DetectorJPEG
-from .eventos import ejecutar_run
-from .pesos import cargar_pesos
+from .config import RUTA_CONFIG_DETECTOR
+from .trabajador import ejecutar_run_supervisado
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -33,13 +31,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     try:
-        config = cargar_config_detector(args.config)
-        detector = DetectorJPEG(cargar_pesos(args.weights, config), config)
-        salida, cuadros, errores = ejecutar_run(
-            detector,
+        salida, cuadros, errores, fallo_reinicio = ejecutar_run_supervisado(
             args.input,
             args.output,
             run_id=args.run_id,
+            config_ruta=args.config,
+            pesos_ruta=args.weights,
             sequence_id=args.sequence_id,
             capture_ms=args.capture_ms,
         )
@@ -47,7 +44,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"infer: {exc}", file=sys.stderr)
         return 2
     print(f"{salida}: {cuadros} cuadros, {errores} errores")
-    return 1 if errores else 0
+    return 1 if errores or fallo_reinicio else 0
 
 
 if __name__ == "__main__":
