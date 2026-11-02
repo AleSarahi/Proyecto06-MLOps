@@ -27,6 +27,13 @@ from infer.plazos import cargar_plazos_infer_con_hash
 from infer.preflight import consultar_preflight, exigir_preflight, guardar_y_exigir_preflight
 from infer.trabajador import PredictorSupervisado
 
+try:
+    from resultados.p5_06_comparacion import comparar_plataformas
+except ModuleNotFoundError as exc:
+    if exc.name != "resultados":
+        raise
+    from p5_06_comparacion import comparar_plataformas
+
 RAIZ = Path(__file__).resolve().parents[1]
 IMAGEN = RAIZ / "docs/carro/objeto_taza_centro_cerca.jpg"
 REFERENCIA = RAIZ / "resultados/p5-05-aceptacion-2h-a.jsonl"
@@ -103,12 +110,56 @@ def _registrar_condicion(condiciones: dict, clave: str) -> None:
     exigir_preflight(condiciones[clave]["preflight"])
 
 
-def _comparar(evento: dict, referencia: dict) -> None:
+def _validar_muestra(evento: dict) -> None:
     if validar_evento(evento):
         raise RuntimeError("evento producido durante benchmark no cumple A→B v1")
-    for campo in ("status", "image_width", "image_height", "detections"):
-        if evento[campo] != referencia[campo]:
-            raise RuntimeError(f"diferencia de detecciones o estado en {campo}")
+
+
+def _comparar_par(control: dict, supervisado: dict, referencia: dict, indice: int) -> dict:
+    """La paridad local es obligatoria; P5-05 se compara sin tolerancia implícita."""
+    campos = ("frame_id", "status", "image_width", "image_height", "detections")
+    diferencias_locales = [campo for campo in campos if control[campo] != supervisado[campo]]
+    comparaciones = {
+        "control": comparar_plataformas(control, referencia),
+        "supervisado": comparar_plataformas(supervisado, referencia),
+    }
+    return {
+        "indice": indice,
+        "fase": "calentamiento" if indice <= 10 else "medicion",
+        "diferencias_locales": diferencias_locales,
+        "comparaciones_p5_05": comparaciones,
+        "requiere_revision": bool(diferencias_locales)
+        or any(c["clasificacion"] != "coincidencia_exacta" for c in comparaciones.values()),
+    }
+
+
+def _exigir_paridad(par: dict) -> None:
+    if par["diferencias_locales"]:
+        raise RuntimeError(f"rutas locales difieren en {par['diferencias_locales']}")
+    if any(c["problemas_estructurales"] for c in par["comparaciones_p5_05"].values()):
+        raise RuntimeError("discrepancia estructural frente a P5-05; revisar evidencia parcial")
+
+
+def _maximos_diferencias(comparaciones: list[dict]) -> dict:
+    return {
+        ruta: {
+            "confidence": max(
+                (
+                    par["comparaciones_p5_05"][ruta]["max_abs_delta_confidence"]
+                    for par in comparaciones
+                ),
+                default=0.0,
+            ),
+            "bbox_px": max(
+                (
+                    par["comparaciones_p5_05"][ruta]["max_abs_delta_bbox_px"]
+                    for par in comparaciones
+                ),
+                default=0.0,
+            ),
+        }
+        for ruta in ("control", "supervisado")
+    }
 
 
 def main() -> None:
@@ -133,6 +184,9 @@ def main() -> None:
         for linea in REFERENCIA.read_text(encoding="utf-8").splitlines()
         if json.loads(linea)["frame_id"] == "ensayo-0012"
     )
+    if validar_evento(referencia):
+        raise RuntimeError("referencia P5-05 inválida")
+    referencia_sha256 = _sha256(REFERENCIA)
     salida.parent.mkdir(parents=True, exist_ok=True)
     preflight_ruta = salida.with_name(salida.stem + ".preflight.json")
     if salida.exists() or preflight_ruta.exists():
@@ -152,6 +206,8 @@ def main() -> None:
     supervisado_excluidos: list[float] = []
     reinicios_excluidos: list[dict] = []
     reinicios_medidos: list[dict] = []
+    comparaciones: list[dict] = []
+    evento_actual: dict | None = None
     predictor: PredictorSupervisado | None = None
     fase = "latencia"
     indice_actual = 0
@@ -163,15 +219,27 @@ def main() -> None:
         for indice in range(1, 61):
             fase = "latencia_control"
             indice_actual = indice
-            duracion, evento = medir_control(detector, IMAGEN, request_id=indice, plazos=plazos)
-            _comparar(evento, referencia)
+            duracion, evento_control = medir_control(
+                detector, IMAGEN, request_id=indice, plazos=plazos
+            )
             (control_excluidos if indice <= 10 else control).append(duracion)
+            evento_actual = {"ruta": "control", "evento": evento_control, "duracion_ms": duracion}
+            _validar_muestra(evento_control)
             fase = "latencia_supervisado"
-            duracion, evento = medir_supervisado(
+            duracion, evento_supervisado = medir_supervisado(
                 predictor, IMAGEN, request_id=indice, plazos=plazos
             )
-            _comparar(evento, referencia)
             (supervisado_excluidos if indice <= 10 else supervisado).append(duracion)
+            evento_actual = {
+                "ruta": "supervisado",
+                "evento": evento_supervisado,
+                "duracion_ms": duracion,
+            }
+            _validar_muestra(evento_supervisado)
+            par = _comparar_par(evento_control, evento_supervisado, referencia, indice)
+            comparaciones.append(par)
+            _exigir_paridad(par)
+            evento_actual = None
         _registrar_condicion(condiciones, "latencia_intercalada_fin")
         fase = "reinicio"
         _registrar_condicion(condiciones, "reinicio_inicio")
@@ -195,10 +263,14 @@ def main() -> None:
                     },
                     "reinicios_excluidos": reinicios_excluidos,
                     "reinicios_medidos": reinicios_medidos,
+                    "comparaciones": comparaciones,
+                    "maximos_diferencias_p5_05": _maximos_diferencias(comparaciones),
+                    "evento_actual": evento_actual,
                     "condiciones_series": condiciones,
                     "checkpoint_sha256": MODELO_SHA256,
                     "config_sha256": CONFIG_SHA256,
                     "imagen_sha256": IMAGEN_SHA256,
+                    "referencia_p5_05_sha256": referencia_sha256,
                 },
                 archivo,
                 ensure_ascii=False,
@@ -264,6 +336,7 @@ def main() -> None:
         "imagen": str(IMAGEN.relative_to(RAIZ)),
         "imagen_sha256": IMAGEN_SHA256,
         "referencia": str(REFERENCIA.relative_to(RAIZ)),
+        "referencia_p5_05_sha256": referencia_sha256,
         "procedimiento": {
             "orden": "10 pares control→supervisado excluidos, 50 pares medidos; reinicios aparte",
             "calentamiento_sintetico": 1,
@@ -301,12 +374,12 @@ def main() -> None:
         "reinicios_excluidos": reinicios_excluidos,
         "reinicios_medidos": reinicios_medidos,
         "detecciones": referencia["detections"],
+        "comparaciones": comparaciones,
+        "maximos_diferencias_p5_05": _maximos_diferencias(comparaciones),
         "paridad_detecciones": {
-            "control_vs_p5_05": "60 de 60 solicitudes iguales en estado, dimensiones y detecciones",
-            "supervisado_vs_p5_05": (
-                "60 de 60 solicitudes iguales en estado, dimensiones y detecciones"
-            ),
-            "criterio": "igualdad exacta en mismo host y runtime",
+            "control_vs_supervisado": "60 de 60 pares con igualdad estricta",
+            "p5_05": "diferencias numéricas entre plataformas pendientes de investigación",
+            "revision_pendiente": any(par["requiere_revision"] for par in comparaciones),
         },
         "desviaciones": [],
     }

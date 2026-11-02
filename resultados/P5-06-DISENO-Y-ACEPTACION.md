@@ -271,6 +271,19 @@ bit a bit. No usar S01–S08 ni `datos/cuadros/`; los 29 JPEG de P5-05 son copia
 del repositorio y solo se usarán si siguen autorizadas y disponibles. Si no lo están, se
 documentará la ausencia y no se afirmará comparación completa con P5-05.
 
+La comparación implementada para la revisión Windows exige igualdad estricta de estado,
+dimensiones y detecciones (cantidad, orden, clase, confianza y cada coordenada bbox) entre
+control y supervisado **en el mismo host**. Frente al JSONL histórico P5-05 conserva los
+valores originales, su SHA-256, diferencias firmadas por confianza y coordenada, y máximos
+absolutos. Clasifica coincidencia exacta, diferencia numérica pendiente o discrepancia
+estructural. Una diferencia numérica entre plataformas se registra sin descartar la muestra;
+**no queda aprobada** por completar la serie ni se aplica tolerancia implícita. Un cambio de
+estado, dimensiones, cantidad, clase u orden detiene la serie tras guardar la evidencia
+parcial. También la detienen un evento inválido o una diferencia entre rutas locales. Toda
+discrepancia requiere investigación antes de declarar equivalencia o aceptación funcional.
+El benchmark conserva los mismos 10 pares excluidos y 50 medidos; el comparador se ejecuta
+fuera del intervalo cronometrado y no cambia los límites de latencia de Karen.
+
 Medir el reinicio **por separado** desde la decisión de terminar el trabajador hasta recibir
 `READY` verificado del reemplazo; desglosar terminación, creación, hashes/carga y calentamiento.
 Hacer 10 reinicios de estabilización excluidos y 50 reinicios medidos en macOS y Windows, guardar

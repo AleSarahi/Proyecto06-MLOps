@@ -18,6 +18,13 @@ from infer.pesos import cargar_pesos
 from infer.rutas_seguras import abrir_exclusivo, directorio_evidencia, verificar_checkpoint
 from infer.trabajador import ejecutar_run_supervisado
 
+try:
+    from resultados.p5_06_comparacion import comparar_plataformas
+except ModuleNotFoundError as exc:
+    if exc.name != "resultados":
+        raise
+    from p5_06_comparacion import comparar_plataformas
+
 RAIZ = Path(__file__).resolve().parents[1]
 IMAGEN = RAIZ / "docs/carro/objeto_taza_centro_cerca.jpg"
 REFERENCIA = RAIZ / "resultados/p5-05-aceptacion-2h-a.jsonl"
@@ -109,21 +116,18 @@ def main() -> None:
     ):
         raise RuntimeError("READY, hashes, hilos o cierre incorrectos")
 
-    diferencias = {
-        "un_proceso_vs_supervisado": _diferencias(
-            control[0]["detections"], supervisado[0]["detections"]
-        ),
-        "un_proceso_vs_p5_05": _diferencias(control[0]["detections"], referencia["detections"]),
-        "supervisado_vs_p5_05": _diferencias(
-            supervisado[0]["detections"], referencia["detections"]
-        ),
+    diferencias_locales = _diferencias(control[0]["detections"], supervisado[0]["detections"])
+    comparaciones_p5_05 = {
+        "un_proceso": comparar_plataformas(control[0], referencia),
+        "supervisado": comparar_plataformas(supervisado[0], referencia),
     }
     resumen = {
         "tipo": "validacion_funcional_sin_benchmark",
-        "criterio": "igualdad exacta en el mismo host/runtime; cualquier diferencia se investiga",
+        "criterio": "igualdad local exacta; diferencias entre plataformas pendientes de revisión",
         "imagen": str(IMAGEN.relative_to(RAIZ)),
         "imagen_sha256": IMAGEN_SHA256,
         "referencia_p5_05": str(REFERENCIA.relative_to(RAIZ)),
+        "referencia_p5_05_sha256": _sha256(REFERENCIA),
         "checkpoint_sha256": MODELO_SHA256,
         "config_sha256": CONFIG_SHA256,
         "hilos_control": hilos_control,
@@ -132,14 +136,27 @@ def main() -> None:
         "detections_un_proceso": control[0]["detections"],
         "detections_supervisado": supervisado[0]["detections"],
         "detections_p5_05": referencia["detections"],
-        "diferencias": diferencias,
+        "diferencias_locales": diferencias_locales,
+        "comparaciones_p5_05": comparaciones_p5_05,
+        "revision_pendiente": any(
+            c["clasificacion"] != "coincidencia_exacta" for c in comparaciones_p5_05.values()
+        ),
         "contrato_v1_valido": True,
     }
     with abrir_exclusivo(salida / "comparacion.json") as evidencia:
         evidencia.write(json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
-    if any(diferencias.values()):
-        raise RuntimeError("las detecciones difieren; revisar comparacion.json")
-    print(json.dumps({"detecciones": len(control[0]["detections"]), "diferencias": diferencias}))
+    if diferencias_locales:
+        raise RuntimeError("las rutas locales difieren; revisar comparacion.json")
+    if any(c["problemas_estructurales"] for c in comparaciones_p5_05.values()):
+        raise RuntimeError("discrepancia estructural frente a P5-05; revisar comparacion.json")
+    print(
+        json.dumps(
+            {
+                "detecciones": len(control[0]["detections"]),
+                "revision_pendiente": resumen["revision_pendiente"],
+            }
+        )
+    )
 
 
 if __name__ == "__main__":
