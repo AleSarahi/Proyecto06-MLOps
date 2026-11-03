@@ -76,6 +76,8 @@ de afirmar aceptación integral de la serie. Este benchmark normal y sus
 reinicios directos son distintos de la validación funcional simulada de
 50 timeouts; no se repitieron mediciones ni se descartaron muestras.
 
+Decisión de Karen (2026-11-02) sobre la condición ambiental de la serie oficial Windows: se acepta como observación, no como excepción. La adenda exige OneDrive y VS Code cerrados; el preflight los verificó en sus cinco consultas (inicio y cuatro cortes de etapa) con resultado aprobado. OneDrive.Sync.Service, com.docker.backend y los demás procesos en segundo plano de la transcripción no forman parte de esa regla. La tabla de procesos ordena por tiempo de CPU acumulado, no por consumo durante la serie, y la carga del sistema durante la medición no se registró. Por los pares intercalados y los márgenes frente a los límites, esta condición no cambia el resultado. La serie no se repite y la evidencia no se edita.
+
 ## Inventario original del PR
 
 - `resultados/P5-06-AUDITORIA-PREFLIGHT.md`
