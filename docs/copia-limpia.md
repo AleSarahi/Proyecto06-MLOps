@@ -150,6 +150,7 @@ ejemplo una carpeta de usuario de Windows. Se arregló en `db2c4e6`.
    instala la del README.
 9. **C1–C7 sin entrada.** Es lo esperado hasta T20 (entradas reales desde `datos-evaluacion-v1` y
    `config-detector-v1`). Cuando lleguen, cambia el "3 de 10" del README y `tests/test_readme_b.py` avisa.
+   **Después:** T20 las agregó y el runner da 7 de 10 ([`docs/casos-reales.md`](casos-reales.md)).
 10. **`test_frame_id_neutral_en_directorio` (A, P5-05) falla a veces en Windows.** Falló en la segunda
     sesión; en la primera y en 8 repeticiones sueltas pasó. El error es `t_emit_ms: no puede ser anterior
     a t_capture_ms`. La causa probable está en `src/infer/eventos.py` (`ejecutar_run`): el reloj es
