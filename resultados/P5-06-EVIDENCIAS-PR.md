@@ -19,6 +19,22 @@ hashes coinciden. El ZIP público no es idéntico al original.
 Es evidencia funcional anterior al reloj de alta resolución. El benchmark oficial Windows
 sigue pendiente; la diferencia numérica frente a Mac permanece pendiente de investigación.
 
+### Revalidación funcional Windows del reloj
+
+Andy revalidó el commit `e75533fd480a9cb9aa126ac7cc3b49011e605a09`. El paquete
+original de Downloads permanece fuera de Git, con SHA-256
+`cd7debd52c1908fcf8f8019576376c24d006e0c40b3571c252e5c8c05c0aa752`.
+La copia pública depurada se conserva en
+`resultados/p5-06-validacion-windows-e75533f-2026-11-02/evidencia-publica.zip`, con
+SHA-256 `8fc143cfa5d2d8b2b898c4d7930427a79a9ea652ff4cb8bd416cb15cf3909c5a`.
+El `README.md` de esa carpeta identifica los siete archivos depurados, el reemplazo de
+67 apariciones del identificador local y la atribución reducida a «Andy». El índice público
+UTF-8 sin BOM verificó 293/293 hashes; el ZIP público no es idéntico al original.
+Se confirmó `QueryPerformanceCounter`, la prueba `spawn`, paridad local, contrato v1 y
+50/50 timeouts y recuperaciones **simulados**. VS Code estaba abierto: esta evidencia no
+es el benchmark oficial Windows, que sigue pendiente. La diferencia numérica frente a
+P5-05 Mac permanece pendiente de investigación, sin tolerancia ni aprobación implícita.
+
 ## Inventario original del PR
 
 - `resultados/P5-06-AUDITORIA-PREFLIGHT.md`
