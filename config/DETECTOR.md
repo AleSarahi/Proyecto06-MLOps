@@ -28,8 +28,12 @@ deserialización de PyTorch; por eso solo se permite el SHA-256 aprobado.
 
 ## Inferencia JPEG y validación previa (paso 3)
 
-`infer.detector.DetectorJPEG` decodifica cada JPEG con `cv2.imread(...,
-cv2.IMREAD_COLOR)` y pasa el arreglo BGR, no la ruta, al predictor. Extiende
+`infer.detector.DetectorJPEG` exige una ruta a un archivo regular `.jpg` o
+`.jpeg`, comprueba SOI y busca EOI después de SOI en cualquier posición (puede
+haber relleno después). Pillow carga por completo los bytes y luego
+`cv2.imdecode(..., cv2.IMREAD_COLOR)` decodifica **esos mismos bytes**; el
+arreglo BGR, no la ruta, llega al predictor. Un error de lectura o decodificación
+se publica como `unreadable_image`. Extiende
 `ultralytics.models.yolo.detect.predict.DetectionPredictor` sin alterar el
 paquete instalado. El método `preprocess` heredado conserva el letterbox,
 BGR→RGB, BCHW y `/255` de Ultralytics 8.3.0. El método `postprocess` extendido
@@ -52,6 +56,17 @@ de `detections == ()`. El predictor es una API interna de Ultralytics y su
 firma, la forma cruda o las reglas del NMS podrían cambiar en otra versión;
 el pin `8.3.0`, las comprobaciones de forma y las pruebas reales son la barrera
 de compatibilidad.
+
+Se aceptan JPEG progresivos válidos. La carga adicional con Pillow cuesta
+aproximadamente 0.5 ms por cuadro, según la medición de Karen; no se repitió la
+serie oficial Windows con este cambio. **Límite conocido:** si se agrega un EOI
+artificial a un JPEG truncado, Pillow y OpenCV todavía pueden producir una
+imagen y `infer` puede publicar `status=ok`. `captura` rechaza ese cuadro antes
+de entregarlo a `infer` porque comprueba la integridad del scan. Replicar esa
+validación más estricta en `infer` costaría aproximadamente 13–18 ms adicionales
+por cuadro, según la medición de Karen, y queda fuera de esta corrección.
+`captura` también puede rechazar JPEG baseline válidos con marcadores de reinicio;
+esta limitación no se ha corregido aquí.
 
 ## Comando `infer` y JSONL (paso 4)
 
@@ -197,6 +212,12 @@ SHA-256. Estas dos limitaciones requieren decisiones separadas.
 Una integración futura que reciba rutas de terceros deberá imponer una raíz
 autorizada y controlar los enlaces de sus directorios antes de invocar el CLI;
 las garantías de una herramienta local no sustituyen ese límite de confianza.
+La observación S8707 de SonarCloud sobre las rutas se evalúa con este modelo de
+operador local de confianza: las rutas de entrada y salida son elegidas por
+quien ejecuta el CLI. No se imponen restricciones de directorio ni límites de
+tamaño en esta corrección. La justificación queda pendiente de resolución en
+SonarCloud cuando el código sea final; no se marca como aceptada de forma
+automática.
 
 ## Parámetros efectivos
 
@@ -207,7 +228,7 @@ El objeto `effective` completo participa en `config_sha256`:
 | `model` | `name`, `backend` | YOLO11n con checkpoint PyTorch `.pt`. |
 | `runtime` | `ultralytics`, `torch`, `torchvision`, `opencv-python`, `numpy` | Versiones fijadas; Torchvision ejecuta NMS y OpenCV decodifica, redimensiona y rellena. |
 | `execution` | `device`, `dtype`, `batch`, `torch_threads`, `augment` | CPU, FP32, batch 1, dos hilos (`torch.set_num_threads(2)` después de `setup_model`) y sin aumentación. |
-| `preprocess` | `decoder`, `input_channels`, `model_channels`, `layout`, `imgsz`, `letterbox`, `stride`, `scale_fill`, `scaleup`, `center`, `padding_value`, `interpolation`, `normalization_divisor` | `cv2.imread` entrega BGR; el predictor hace `LetterBox(auto=True)` por batch 1 y `.pt`, BGR→RGB, BCHW, FP32 y `/255`. |
+| `preprocess` | `decoder`, `input_channels`, `model_channels`, `layout`, `imgsz`, `letterbox`, `stride`, `scale_fill`, `scaleup`, `center`, `padding_value`, `interpolation`, `normalization_divisor` | `cv2.imdecode` entrega BGR de los mismos bytes validados; el predictor hace `LetterBox(auto=True)` por batch 1 y `.pt`, BGR→RGB, BCHW, FP32 y `/255`. |
 | `postprocess` | `confidence`, `nms_iou`, `agnostic_nms`, `max_det`, `class_ids`, `bbox_format`, `bbox_unit`, `coordinates`, `clip_boxes` | Umbrales y NMS por clase; solo botella/taza; cajas `xyxy` en píxeles originales mediante `scale_boxes`, que recorta. |
 
 La validación fija las propiedades internas que `predict` no expone como

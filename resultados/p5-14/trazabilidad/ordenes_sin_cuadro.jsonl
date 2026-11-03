@@ -1,0 +1,1 @@
+{"event": "shutdown", "action": "STOP", "speed": 0, "steering": 0.0, "reason": "cierre", "t_decision_ms": 27085.322999977507, "t_command_ms": 27085.322999977507, "valid_until_ms": 27485.322999977507, "received": true}

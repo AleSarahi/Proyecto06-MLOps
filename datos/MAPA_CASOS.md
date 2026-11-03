@@ -75,13 +75,24 @@ detectan `captura` y las métricas, que avisan si el tamaño no coincide con la 
 
 Un JPEG que no existe no necesita fixture: basta una ruta inexistente. Desde P5-06 (#86), `infer` publica
 `status=error` con `unreadable_image` (`test_cli_jpeg_individual_inexistente_publica_evento`); en
-`config-detector-v1` terminaba con código 2 y sin evento.
+`config-detector-v1` terminaba con código 2 y sin evento. Desde #96 hace lo mismo con una entrada
+individual `.jpg` que no sea un archivo regular, como una FIFO
+(`test_fifo_jpeg_publica_unreadable_image_sin_leerlo`). Un directorio se trata como entrada de secuencia.
+La validación previa exige SOI, un EOI posterior y decodificación completa con Pillow antes de
+pasar los mismos bytes a OpenCV. Acepta JPEG progresivos válidos y bytes de relleno después de EOI.
+
+**Límite conocido:** un JPEG truncado al que se le añade artificialmente EOI todavía puede
+producir `status=ok`, porque Pillow y OpenCV pueden completar la imagen. `captura` rechaza esos
+cuadros antes de que lleguen a `infer` mediante su comprobación del scan. Una validación del scan
+equivalente dentro de `infer` costaría aproximadamente 13–18 ms adicionales por cuadro, según la
+medición de Karen; no forma parte de esta corrección. Los JPEG originales válidos con marcadores
+de reinicio también pueden ser rechazados por `captura`, una limitación de ese componente.
 
 ### `error.code` del contrato
 
 | `error.code` | Cómo se produce | Dónde se fuerza (P5-06, #86) |
 |---|---|---|
-| `unreadable_image` | Fixtures de arriba o un JPEG que no existe | Fixtures y `tests/test_infer_eventos.py` |
+| `unreadable_image` | Fixtures ilegibles de arriba, un JPEG que no existe o una ruta no regular | Fixtures, `tests/test_detector_jpeg.py` y `tests/test_infer_eventos.py` |
 | `detector_exception` | El detector lanza una excepción, o el trabajador reiniciado no pasa la verificación de hash, configuración o hilos | `test_prioridad_error_y_stale_durante_inferencia` y `test_reinicio_rechaza_hash_o_hilos_invalidos` (`tests/test_infer_trabajador.py`) |
 | `invalid_output` | El detector devuelve NaN o infinito, una confianza fuera de [0, 1], una clase fuera de rango, una caja invertida o sin área dentro de la imagen (una que solo se sale se recorta y sigue `ok`), o un hash de resultado inconsistente | `tests/test_detector_jpeg.py` y `tests/test_infer_eventos.py` (`test_deteccion_no_finita_emite_invalid_output_sin_json_especial`, `test_hash_de_resultado_inconsistente_emite_invalid_output`) |
 | `detector_timeout` | La solicitud pasa de `detector_timeout_ms` (500 ms): el trabajador se termina y se reinicia | `test_timeout_real_reinicia_y_cuadro_viejo_no_se_infiere` y `test_timeout_llega_a_b_como_stop` (`tests/test_infer_trabajador.py`) |
