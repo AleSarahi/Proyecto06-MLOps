@@ -69,9 +69,9 @@ sin objetos es `status=ok` con lista vacía; un error o la falta de cuadros nunc
 | Rol | Nombre | Qué hace | Tickets |
 |---|---|---|---|
 | PM A | Karen Santana | Coordina al grupo, acuerda clases y contrato con el PM B y valida al cierre. | — |
-| A1 · Detector | Heriberto Vlaminck | Selección, inferencia, manejo de errores y paquete del detector; primer recorrido. | P5-04 a P5-08 |
+| A1 · Detector | Heriberto Vlaminck | Contrato A → B (con B3), selección, inferencia, manejo de errores y paquete del detector; primer recorrido. | P5-02, P5-04 a P5-08 |
 | A2 · Datos | Andrea Arevalo | Dominio, captura, anotaciones, manifiesto, congelamiento, casos de entrada y documentación. | P5-03, P5-09 a P5-12, P5-17, P5-18 |
-| A3 · Métricas | Alejandra Rayas | Métricas, trazabilidad, benchmark y límites. | P5-13 a P5-16 |
+| A3 · Métricas | Alejandra Rayas | Repositorio, entorno fijado y CI; métricas, trazabilidad, benchmark y límites. | P5-01, P5-13 a P5-16 |
 
 El carro (P5-19) lo armaron y revisaron los tres. Los integrantes del grupo B están en
 [su sección](#grupo-b--control-y-verificación).
