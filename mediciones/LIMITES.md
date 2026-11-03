@@ -35,6 +35,9 @@ enlaza el contraste.
   (comunicación entre procesos, supervisión y publicación del evento), así que la edad real de un cuadro al
   llegar a B es mayor que la de la tabla.
 - **Escenas fuera del dominio:** el detector solo se probó con los objetos, la escena y la luz de PEND-04.
+- **C2, C5 y C7 con entradas reales:** fallan por un límite del detector, que en algunos cuadros no ve el
+  obstáculo o lo ve por debajo del umbral de 0.5; el control decide bien con lo que recibe, y no se cambió el
+  detector ni el umbral ([`docs/casos-reales.md`](../docs/casos-reales.md), T20: 7 de 10).
 
 ## Contraste con los plazos
 
