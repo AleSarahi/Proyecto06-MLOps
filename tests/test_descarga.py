@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import os
+import zipfile
 from pathlib import Path
 
 import pytest
 
 from infer import descarga
-from infer.config import cargar_config_detector
+from infer.config import RAIZ, cargar_config_detector
 
 CONTENIDO = b"checkpoint de prueba, no un modelo"
 SHA = hashlib.sha256(CONTENIDO).hexdigest()
@@ -109,7 +110,19 @@ def test_cli_reporta_el_error_con_salida_2(monkeypatch, capsys):
     assert "infer.descarga: SHA-256 no coincide" in capsys.readouterr().err
 
 
-def test_pesos_reales_coinciden_con_tamano_y_config():
+def test_ficha_del_modelo_coincide_con_descarga_y_config():
+    """El criterio de P5-07: lo que dice modelo/README.md es lo que baja y exige el código."""
+    ficha = (RAIZ / "modelo" / "README.md").read_text(encoding="utf-8")
+    config = cargar_config_detector()
+
+    assert descarga.URL_PESOS in ficha
+    assert f"{descarga.TAMANO_BYTES:,} B".replace(",", " ") in ficha
+    assert config.expected_model_sha256 in ficha
+    assert config.weights_path.relative_to(RAIZ).as_posix() in ficha
+    assert "python -m infer.descarga" in ficha
+
+
+def test_pesos_reales_coinciden_con_tamano_config_y_licencia():
     ruta = os.environ.get("P5_05_YOLO11N_PT")
     if not ruta:
         pytest.skip("definir P5_05_YOLO11N_PT para revisar los pesos reales")
@@ -118,3 +131,8 @@ def test_pesos_reales_coinciden_con_tamano_y_config():
 
     assert pesos.stat().st_size == descarga.TAMANO_BYTES
     assert descarga.sha256_de(pesos) == config.expected_model_sha256
+    # Los metadatos que cita la ficha, leídos del pickle sin deserializarlo.
+    with zipfile.ZipFile(pesos) as checkpoint:
+        metadatos = checkpoint.read("yolo11n/data.pkl")
+    for texto in (b"AGPL-3.0 License (https://ultralytics.com/license)", b"8.2.100", b"2024-09-25"):
+        assert texto in metadatos

@@ -36,6 +36,9 @@ uv run --locked python -m infer.descarga
   `P5_05_YOLO11N_PT=modelo/descargas/yolo11n.pt` para las pruebas con el detector real.
 - Para comprobarlo a mano: `sha256sum modelo/descargas/yolo11n.pt` (Git Bash) o
   `Get-FileHash modelo\descargas\yolo11n.pt` (PowerShell).
+- `tests/test_descarga.py` revisa que esta ficha diga la misma URL, tamaño, SHA-256 y ruta que el
+  código y `config/detector.json`. Con `P5_05_YOLO11N_PT` definida, también revisa tamaño, SHA-256 y
+  metadatos (licencia, versión y fecha) de los pesos reales, sin deserializarlos.
 
 **PEND-11, pesos:** fuera de Git, con descarga automatizable y hash, como permite la guía. Pesan menos
 de 50 MB y cabrían, pero así el repo no redistribuye los pesos AGPL-3.0 (ver Licencia) y se conserva
