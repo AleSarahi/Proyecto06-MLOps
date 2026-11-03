@@ -23,7 +23,7 @@
   "comando": [
     "resultados/p5-06-benchmark.py",
     "--weights",
-    "/Users/heribertovs/Library/Application Support/P5-05/yolo11n.pt",
+    "/Users/<REDACTED>/Library/Application Support/P5-05/yolo11n.pt",
     "--output",
     "resultados/p5-06-benchmark-mac-2026-11-01/benchmark.json",
     "--responsable",
