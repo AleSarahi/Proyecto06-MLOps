@@ -98,16 +98,31 @@ terminar, el equipo, el desplazamiento de cada secuencia, el SHA-256 de cada JPE
 | Hashes | `model_sha256` `0ebbc80d…` y `config_sha256` `6428a259…`, los congelados (`procedencia.comprobada: true`) |
 | Salida de los pasos | `infer` ×8, `control`, `construir` y `recalcular`: `0` |
 
-| Secuencia | Acciones de B |
-|---|---|
-| S01 | AVANZAR 12 |
-| S02 | AVANZAR 5, GIRAR_IZQ 7 |
-| S03 | AVANZAR 10, GIRAR_IZQ 2 |
-| S04 | AVANZAR 12 |
-| S05 | GIRAR_IZQ 1, STOP 11 |
-| S06 | AVANZAR 11, GIRAR_IZQ 3, STOP 6 |
-| S07 | AVANZAR 2, GIRAR_IZQ 13 |
-| S08 | AVANZAR 10, GIRAR_IZQ 2 |
+Conteos por caso: `resumen.json` los da por secuencia (`conteos.por_secuencia`, que `recalcular` vuelve a
+sacar), y cada secuencia es un caso según [`datos/MAPA_CASOS.md`](../datos/MAPA_CASOS.md). C8 a C10 no usan
+cuadros reales (son de las pruebas de B), así que no entran en esta corrida.
+
+| Caso | Secuencia | Acciones de B |
+|---|---|---|
+| C1 · Vía libre | S01 | AVANZAR 12 |
+| C2 · Obstáculo central | S02 | AVANZAR 5, GIRAR_IZQ 7 |
+| C3 · Obstáculo izquierdo | S03 | AVANZAR 10, GIRAR_IZQ 2 |
+| C4 · Obstáculo derecho | S04 | AVANZAR 12 |
+| C5 · Sin zona libre | S05 | GIRAR_IZQ 1, STOP 11 |
+| C7 · Libre → bloqueo → libre | S06 | AVANZAR 11, GIRAR_IZQ 3, STOP 6 |
+| C6 · Confianza | S07 | AVANZAR 2, GIRAR_IZQ 13 |
+| C1 · Vía libre, transitables | S08 | AVANZAR 10, GIRAR_IZQ 2 |
+
+**Estas acciones no son el veredicto de cada caso.** En un solo run, B no se reinicia entre secuencias: sigue
+con el estado en que terminó la anterior y necesita 3 cuadros libres seguidos para reanudar. Por eso:
+- `S03_f0001` y `f0002` siguen girando a la izquierda como al final de S02;
+- `S05_f0001` gira a la izquierda antes de frenar;
+- `S06_f0001` a `f0006` siguen en STOP desde S05;
+- `S08_f0001` y `f0002` siguen girando como al final de S07.
+
+El veredicto de cada caso lo da el runner de casos, que corre cada uno por separado (`casos/`, T17; con
+entradas reales, [`docs/casos-reales.md`](../docs/casos-reales.md), T20). Esta corrida sirve para las métricas
+de P5-13 y para seguir cada cuadro hasta su comando.
 
 Para comprobarlo:
 
