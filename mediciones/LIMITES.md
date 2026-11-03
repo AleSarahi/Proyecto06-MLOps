@@ -28,7 +28,7 @@ enlaza el contraste.
   declara ninguna distancia.
 - **Un FPS universal:** los tiempos valen para el equipo de PEND-05, conectado a la corriente, con el runtime
   y los hilos registrados en `resumen.json`. En otra máquina, o en batería, cambian (ver *Lo que ya se vio* y
-  *En una máquina lenta o cargada*). Con una máquina lenta, B frena todo por cuadros viejos.
+  *En una máquina lenta o cargada*). Con una máquina lenta, B puede frenar todo por cuadros viejos.
 - **La cadena completa de la cámara:** el benchmark parte de la imagen en memoria. La lectura y
   decodificación del JPEG se suman aparte (`bench.sobrecosto`), pero no se mide la captura en la ESP32-CAM, la
   transmisión por WiFi ni lo que agrega P5-06 (#86) al correr el predictor supervisado en otro proceso
@@ -214,12 +214,11 @@ Lo vio el grupo B al reproducir desde una copia limpia ([`docs/copia-limpia.md`]
 | Sesión | Energía y carga | Inferencia por cuadro | Edad al llegar a B (límite 500 ms) | Lo que hizo B con S09 |
 |---|---|---|---|---|
 | Primera | Batería al 10 % y descargando; CPU al 57 % por otros programas | 375–860 ms | 563–4063 ms | **STOP en los 12** (`cuadro_viejo`) |
-| Segunda, la misma laptop | Sin esa carga | — | 126–219 ms | `GIRAR_DER` en los 12, lo esperado |
+| Segunda, la misma laptop | No se registró | — | 126–219 ms | `GIRAR_DER` en los 12, lo esperado |
 
 Cuando cada inferencia tarda más que el periodo entre cuadros, los cuadros se acumulan y llegan cada vez más
 viejos: es el plazo que la tabla del contraste deja más ajustado (el periodo de entrada). B hizo lo correcto,
-rechazarlos y frenar, así que el carro queda seguro pero no avanza. En el ensayo de P5-14 (S01–S08, en batería
-y con otros programas abiertos) pasó lo mismo en S04 completo y al final de S08.
+rechazarlos y frenar, así que el carro queda seguro pero no avanza.
 
 Lo que deja: **los plazos se cumplen en el equipo de PEND-05 conectado a la corriente y con lo demás cerrado,
 no en cualquier máquina.** Si el evaluador corre en una máquina más lenta, en batería o con la CPU ocupada,
