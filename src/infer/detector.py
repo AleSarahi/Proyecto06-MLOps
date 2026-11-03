@@ -173,8 +173,10 @@ class DetectorJPEG:
         if archivo.suffix.lower() not in {".jpg", ".jpeg"}:
             raise ErrorImagenJPEG("se requiere un archivo JPEG local")
         try:
+            if not archivo.is_file():
+                raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
             contenido = archivo.read_bytes()
-            if not contenido.startswith(b"\xff\xd8") or not contenido.endswith(b"\xff\xd9"):
+            if not contenido.startswith(b"\xff\xd8") or b"\xff\xd9" not in contenido[2:]:
                 raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
             with Image.open(BytesIO(contenido)) as verificacion:
                 if verificacion.format != "JPEG":

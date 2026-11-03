@@ -317,6 +317,17 @@ def test_jpeg_progresivo_valido_pasa_por_flujo_infer(tmp_path):
     assert (evento["image_width"], evento["image_height"]) == (80, 60)
 
 
+def test_jpeg_con_relleno_tras_eoi_pasa_por_flujo_infer(tmp_path):
+    entrada = _jpeg(tmp_path / "relleno.jpg")
+    entrada.write_bytes(entrada.read_bytes() + b"relleno posterior al EOI")
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    [evento] = eventos
+    assert errores == 0
+    assert evento["status"] == "ok"
+    assert evento["detections"] == []
+    assert (evento["image_width"], evento["image_height"]) == (80, 60)
+
+
 def test_soi_y_eoi_sin_imagen_completa_emite_unreadable_image(tmp_path):
     entrada = tmp_path / "solo_marcadores.jpg"
     entrada.write_bytes(b"\xff\xd8\xff\xd9")
@@ -340,6 +351,18 @@ def test_jpeg_ausente_vacio_o_truncado_publica_error_v1(tmp_path, contenido):
     assert evento["error"]["message"]
     assert evento["detections"] == []
     assert (evento["image_width"], evento["image_height"]) == (None, None)
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="FIFO no disponible en esta plataforma")
+def test_fifo_jpeg_publica_unreadable_image_sin_leerlo(tmp_path):
+    entrada = tmp_path / "flujo.jpg"
+    os.mkfifo(entrada)
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    [evento] = eventos
+    assert errores == 1
+    assert evento["status"] == "error"
+    assert evento["error"]["code"] == "unreadable_image"
+    assert evento["detections"] == []
 
 
 def test_cli_jpeg_individual_inexistente_publica_evento(tmp_path, monkeypatch):
