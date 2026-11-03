@@ -93,11 +93,12 @@ Se corren desde la raíz del repo, después de `uv sync --locked`.
 
 | Para qué | Comando |
 |---|---|
+| Bajar y verificar los pesos (una vez, con red) | `uv run --locked python -m infer.descarga`: deja `modelo/descargas/yolo11n.pt` (fuera de Git) solo si su SHA-256 coincide con el de `config/detector.json` (ver [`modelo/README.md`](modelo/README.md)) |
 | Verificar el conjunto (`verify_dataset`) | `uv run --locked python -m conjunto verificar --sha256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
-| Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run>` |
-| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG, en orden: el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
+| Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run>` |
+| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG, en orden: el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
 | Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>` |
-| Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=<yolo11n.pt> --model-sha256 <hash> --config-sha256 <hash>` |
+| Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=modelo/descargas/yolo11n.pt --model-sha256 <hash> --config-sha256 <hash>` |
 
 ### Versión de entrega
 
@@ -109,7 +110,7 @@ Se corren desde la raíz del repo, después de `uv sync --locked`.
 | SHA-256 de los pesos (`model_sha256`) | `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1` |
 | `config_sha256` | `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` |
 | Tag de la configuración | `config-detector-v1` |
-| Pesos | **PENDIENTE: descarga de P5-07** |
+| Pesos | `yolo11n.pt` de la release v8.3.0 de Ultralytics, fuera de Git: `uv run --locked python -m infer.descarga` los deja en `modelo/descargas/yolo11n.pt` |
 
 `verificar` comprueba el hash del manifiesto, que no cubre las coordenadas de las cajas: el de
 `datos/anotaciones.jsonl` se compara aparte. Procedencia, criterio de anotación y lo demás de los datos:
