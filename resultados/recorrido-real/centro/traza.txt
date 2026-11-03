@@ -1,0 +1,63 @@
+S02_f0001 · run mapa-S02 · status ok · captura 0.0 ms · llegada 94.0000000409782 ms · 640x480 px (xyxy)
+  detecciones: ninguna
+  decisión: DETENIDO -> AVANZANDO · AVANZAR (decidió politica) · Centro libre: sin obstáculos en el camino, avanza recto.
+  comando: AVANZAR · speed 0.4 · steering 0.0 · t_command 94.0000000409782 ms · vale hasta 494.0000000409782 ms
+
+S02_f0002 · run mapa-S02 · status ok · captura 219.0 ms · llegada 312.00000015087426 ms · 640x480 px (xyxy)
+  detecciones: ninguna
+  decisión: AVANZANDO -> AVANZANDO · AVANZAR (decidió politica) · Centro libre: sin obstáculos en el camino, avanza recto.
+  comando: AVANZAR · speed 0.4 · steering 0.0 · t_command 312.00000015087426 ms · vale hasta 712.0000001508743 ms
+
+S02_f0003 · run mapa-S02 · status ok · captura 547.0 ms · llegada 655.9999999590218 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.3033256530761719 · bbox [267.74090576171875, 230.38104248046875, 456.763916015625, 373.2913818359375] -> no cuenta (clase o confianza)
+  decisión: AVANZANDO -> AVANZANDO · AVANZAR (decidió politica) · Centro libre: sin obstáculos en el camino, avanza recto. ignorada_por_confianza: class_id 41, confianza 0.303326 (umbral 0.5; no es falla de percepción).
+  comando: AVANZAR · speed 0.4 · steering 0.0 · t_command 655.9999999590218 ms · vale hasta 1055.9999999590218 ms
+
+S02_f0004 · run mapa-S02 · status ok · captura 750.0 ms · llegada 844.0000000409782 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.4188994765281677 · bbox [269.4559326171875, 226.7664337158203, 460.0947265625, 371.86492919921875] -> no cuenta (clase o confianza)
+  decisión: AVANZANDO -> AVANZANDO · AVANZAR (decidió politica) · Centro libre: sin obstáculos en el camino, avanza recto. ignorada_por_confianza: class_id 41, confianza 0.418899 (umbral 0.5; no es falla de percepción).
+  comando: AVANZAR · speed 0.4 · steering 0.0 · t_command 844.0000000409782 ms · vale hasta 1244.0000000409782 ms
+
+S02_f0005 · run mapa-S02 · status ok · captura 969.0 ms · llegada 1077.999999979511 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.48865029215812683 · bbox [268.2223815917969, 225.3478240966797, 463.4519348144531, 370.44232177734375] -> no cuenta (clase o confianza)
+  decisión: AVANZANDO -> AVANZANDO · AVANZAR (decidió politica) · Centro libre: sin obstáculos en el camino, avanza recto. ignorada_por_confianza: class_id 41, confianza 0.48865 (umbral 0.5; no es falla de percepción).
+  comando: AVANZAR · speed 0.4 · steering 0.0 · t_command 1077.999999979511 ms · vale hasta 1477.999999979511 ms
+
+S02_f0006 · run mapa-S02 · status ok · captura 1219.0 ms · llegada 1312.0000001508743 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.7921398878097534 · bbox [271.92706298828125, 223.63035583496094, 465.67510986328125, 372.663330078125] -> centro, der
+  decisión: AVANZANDO -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · Obstáculo en el centro (class_id 41, confianza 0.79214); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1312.0000001508743 ms · vale hasta 1712.0000001508743 ms
+
+S02_f0007 · run mapa-S02 · status ok · captura 1454.0 ms · llegada 1562.0000001508743 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.4150618016719818 · bbox [281.42401123046875, 223.54647827148438, 475.94256591796875, 373.6314392089844] -> no cuenta (clase o confianza)
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 1/3: sigue girando hacia la izquierda, que está libre. Centro libre: sin obstáculos en el camino, avanza recto. ignorada_por_confianza: class_id 41, confianza 0.415062 (umbral 0.5; no es falla de percepción).
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1562.0000001508743 ms · vale hasta 1962.0000001508743 ms
+
+S02_f0008 · run mapa-S02 · status ok · captura 1750.0 ms · llegada 1844.0000000409782 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.8219039440155029 · bbox [272.65545654296875, 222.53814697265625, 469.05072021484375, 372.4769287109375] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.821904); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1844.0000000409782 ms · vale hasta 2244.000000040978 ms
+
+S02_f0009 · run mapa-S02 · status ok · captura 1954.0 ms · llegada 2062.0000001508743 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.7565640211105347 · bbox [271.4403076171875, 222.47659301757812, 469.8082275390625, 373.5799255371094] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.756564); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2062.0000001508743 ms · vale hasta 2462.0000001508743 ms
+
+S02_f0010 · run mapa-S02 · status ok · captura 2204.0 ms · llegada 2312.0000001508743 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.8437091112136841 · bbox [269.8011474609375, 221.57794189453125, 468.06439208984375, 373.98486328125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.843709); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2312.0000001508743 ms · vale hasta 2712.0000001508743 ms
+
+S02_f0011 · run mapa-S02 · status ok · captura 2407.0 ms · llegada 2500.0 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.8984302282333374 · bbox [269.95025634765625, 221.6343994140625, 471.47430419921875, 376.06964111328125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.89843); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2500.0 ms · vale hasta 2900.0 ms
+
+S02_f0012 · run mapa-S02 · status ok · captura 2657.0 ms · llegada 2859.0000001713634 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.7937198281288147 · bbox [266.36798095703125, 219.70767211914062, 470.58154296875, 375.9459533691406] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.79372); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2859.0000001713634 ms · vale hasta 3259.0000001713634 ms
+
+Órdenes sin cuadro:
+  shutdown a los 2859.0000001713634 ms: STOP (cierre)
+Acciones por cuadro: AVANZAR 5, GIRAR_IZQ 7
