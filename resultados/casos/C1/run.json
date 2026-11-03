@@ -1,0 +1,53 @@
+{
+  "run_ids": [
+    "c1-s01-s08"
+  ],
+  "entrada": {
+    "ruta": "casos/C1/entrada.jsonl",
+    "sha256": "669032d9c8b6aaeaa307322585e2d8b173555ee4935e09e827a4dea3173ed45b"
+  },
+  "acciones": {
+    "archivo": null,
+    "hechas": [
+      {
+        "accion": "cerrar",
+        "t_ms": 6046.999999787658,
+        "comando": 24
+      }
+    ]
+  },
+  "config": {
+    "plazos.yaml": {
+      "ruta": "config/control/plazos.yaml",
+      "sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22"
+    },
+    "politica.yaml": {
+      "ruta": "config/control/politica.yaml",
+      "sha256": "847209f797953c397cc754cb82aee24a304161defbdc190ed6d2319963a85f65"
+    }
+  },
+  "detector": {
+    "model_sha256": [
+      "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+    ],
+    "config_sha256": [
+      "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"
+    ]
+  },
+  "contratos": {
+    "percepcion": "1",
+    "comando": "1"
+  },
+  "conteos": {
+    "eventos": 24,
+    "comandos": 25,
+    "comandos_fuera_de_contrato": 0,
+    "errores": 0
+  },
+  "archivos": [
+    "detecciones.jsonl",
+    "decisiones.jsonl",
+    "comandos.jsonl",
+    "errores.jsonl"
+  ]
+}

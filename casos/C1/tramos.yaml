@@ -1,0 +1,11 @@
+# C1 · Qué cuadros de entrada.jsonl le tocan a cada tramo de expectativa.yaml (T20).
+# Formato: casos/README.md, "Cómo se corren los casos".
+#
+# Salida de `python -m infer` con config-detector-v1 (config_sha256 6428a259…, model_sha256
+# 0ebbc80d…) sobre los cuadros del tag datos-evaluacion-v1, con los t_capture_ms de su
+# captura.jsonl, en un solo run (c1-s01-s08): primero S01 y después S08. Para que el reloj no
+# retroceda, S08 corrió con sus t_capture_ms + 3406 ms (el último de S01, 3156, más 250).
+# Se copió sin cambios (docs/casos-reales.md). Tramos: datos/MAPA_CASOS.md (P5-12).
+entrada: real
+tramos:
+  libre: [S01_f0001, S01_f0002, S01_f0003, S01_f0004, S01_f0005, S01_f0006, S01_f0007, S01_f0008, S01_f0009, S01_f0010, S01_f0011, S01_f0012, S08_f0001, S08_f0002, S08_f0003, S08_f0004, S08_f0005, S08_f0006, S08_f0007, S08_f0008, S08_f0009, S08_f0010, S08_f0011, S08_f0012]

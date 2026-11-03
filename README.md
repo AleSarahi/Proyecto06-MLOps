@@ -149,11 +149,12 @@ Por caso quedan en `resultados/casos/Cn/` los mismos archivos de `python -m cont
 (cada tramo con su motivo), y la tabla en `resultados/casos/resumen.txt`. Qué se espera de cada caso y cómo
 se juzga: [`casos/README.md`](casos/README.md).
 
-> Hoy pasan **3 de 10**: C8, C9 y C10, cuyas entradas están armadas a mano porque prueban fallas sin
-> video (sin cuadros, errores del detector y emergencia). C1 a C7 salen de las secuencias S01 a S08
-> (`datos/cuadros/`) pasadas por `infer`, pero se arman cuando el conjunto esté congelado (P5-11) y
-> exista `datos/MAPA_CASOS.md` (P5-12). Mientras tanto, el runner los marca FALLA con "falta
-> entrada.jsonl".
+> Hoy pasan **7 de 10**: C1, C3, C4 y C6, con las secuencias reales de S01 a S08 pasadas por `infer`
+> (`datos-evaluacion-v1`, `config-detector-v1`), y C8, C9 y C10, armados a mano porque prueban fallas
+> sin video. **C2, C5 y C7 fallan por el detector**, no por el control: no ve la taza o el obstáculo
+> en algunos cuadros, o lo ve debajo del umbral, y el control hace lo correcto con lo que recibe. Cada
+> cuadro y su score están en [`docs/casos-reales.md`](docs/casos-reales.md). Las expectativas no se
+> cambian para que pasen.
 
 ### 4. Comprobar que una expectativa alterada se detecta
 

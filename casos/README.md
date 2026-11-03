@@ -6,7 +6,7 @@ sus acciones y su expectativa, y `casos/runner.py` los corre todos (T15, T17).
 | Paso | Ticket | Qué deja |
 |---|---|---|
 | Qué debe pasar | **T15** | `casos/Cn/expectativa.yaml` (este formato). |
-| Con qué se prueba | Por asignar | La entrada de cada caso, con las secuencias de A (P5-09, P5-12). |
+| Con qué se prueba | T17 (C8–C10), **T20** (C1–C7) | `casos/Cn/entrada.jsonl` y `tramos.yaml`. C1–C7 con `infer` sobre las secuencias de A (`datos/MAPA_CASOS.md`, [`docs/casos-reales.md`](../docs/casos-reales.md)); C8–C10 armadas. |
 | Correrlo y comparar | T17 | `casos/runner.py`: corre `python -m control` y juzga cada caso con su expectativa. |
 | Revisión | T24 | Ale revisa las expectativas. |
 

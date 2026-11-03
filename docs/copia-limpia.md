@@ -6,18 +6,20 @@ correr, sin red, lo mismo que correrá el evaluador. Todo es offline, en CPU y *
 > **Resultado (2026-11-02):** desde un clon nuevo de `main` (`58bce1e`), sin red después de instalar,
 > corren el contrato, el recorrido de una secuencia real hasta el adaptador virtual, los 10 casos
 > (**3 de 10 pasan**, como dice el README: C1–C7 esperan sus entradas reales de T20) y el cambio
-> deliberado de una expectativa (falla, y al restaurarla vuelve a pasar). Ninguna prueba ni comando
-> intentó conectarse a la red. Lo que se encontró está en [Problemas](#problemas-encontrados):
-> 4 corregidos en esta rama y 5 anotados.
+> deliberado de una expectativa (falla, y al restaurarla vuelve a pasar). Se hizo dos veces: una con
+> la red quitada por software, en Git Bash, y otra **con el Wi-Fi apagado**, en PowerShell
+> ([Segunda sesión](#segunda-sesión-wi-fi-apagado-powershell)). En la segunda, S09 dio
+> `GIRAR_DER 12`. Lo que se encontró está en [Problemas](#problemas-encontrados): 4 corregidos en esta
+> rama y 6 anotados.
 
 ## Máquina
 
 | Qué | Valor |
 |---|---|
-| Fecha | 2026-11-02, de 16:35 a 17:10 (UTC−6) |
+| Fecha | 2026-11-02: primera sesión de 16:35 a 17:10 (UTC−6); segunda sesión después, en la misma laptop |
 | Equipo | Laptop Windows 11 Home 10.0.26200, Intel Core i7-1255U (10 núcleos, 12 hilos), 15.7 GB de RAM |
-| Energía | **Con batería, al 10 % y descargando**; CPU al 57 % de carga por otros programas (Discord, Chrome, VS Code, VPN) |
-| Terminal | Git Bash; el paso 4b también en PowerShell 5.1 |
+| Energía (primera sesión) | **Con batería, al 10 % y descargando**; CPU al 57 % de carga por otros programas (Discord, Chrome, VS Code, VPN) |
+| Terminal | Primera sesión: Git Bash (el paso 10d en PowerShell 5.1). Segunda sesión: PowerShell 5.1 |
 | uv | 0.12.23 (el README pide 0.12.13; con la 0.12.23 `uv sync --locked` funciona igual) |
 | Python | 3.12.10 del sistema; `.python-version` pide 3.12 |
 | Repo | `git clone https://github.com/karenelizabg/Proyecto05-MLOPS.git`, `main` en `58bce1e` (#73) |
@@ -25,7 +27,8 @@ correr, sin red, lo mismo que correrá el evaluador. Todo es offline, en CPU y *
 
 ## Cómo se quitó la red
 
-Con red solo se hicieron `git clone`, `uv sync --locked` y la descarga de los pesos. Después:
+Con red solo se hicieron `git clone`, `uv sync --locked` y la descarga de los pesos. En la segunda
+sesión se **apagó el Wi-Fi** (ver abajo). En la primera, la red se quitó por software:
 
 - `UV_OFFLINE=1`: uv no puede descargar nada.
 - Un `sitecustomize.py` **fuera del repo**, cargado con `PYTHONPATH`. Hace fallar toda conexión y
@@ -34,13 +37,10 @@ Con red solo se hicieron `git clone`, `uv sync --locked` y la descarga de los pe
   falla.
 - **0 intentos anotados** en todo el ensayo, pytest incluido.
 
-No se apagó el Wi-Fi del equipo: la sesión de trabajo necesitaba la red. Esa prueba queda en
-[Qué no se probó](#qué-no-se-probó).
-
 Para que la instalación no aprovechara lo ya descargado en esta laptop, `uv sync` usó una caché de uv
 **vacía** (`UV_CACHE_DIR` en una carpeta nueva).
 
-## Comandos y resultados
+## Comandos y resultados (primera sesión, red quitada por software)
 
 Todos desde la raíz del clon. `<pesos>` es la ruta local de `yolo11n.pt`. Los comandos están en Git
 Bash. En PowerShell, `VARIABLE=valor comando` (paso 1b) no funciona: primero
@@ -74,6 +74,43 @@ llaves (`.env`, `.pem`, `.key`, tokens) y enlaces relativos rotos en los 30 `.md
 rutas del problema 1. Las credenciales de `tests/test_captura.py` son datos falsos de una prueba que
 comprueba que no se impriman.
 
+## Segunda sesión: Wi-Fi apagado (PowerShell)
+
+Otro clon de la rama `p5-t19-copia-limpia`, en otra carpeta, con los pesos fuera del repo. Con Wi-Fi
+solo se hicieron `git pull` y `uv sync --locked` (`Checked 50 packages`). Después se **apagó el Wi-Fi**
+y todo se corrió en PowerShell, desde la raíz del clon:
+
+```powershell
+$env:UV_OFFLINE = "1"
+$env:P5_05_YOLO11N_PT = "<pesos>"
+```
+
+| # | Comando | Resultado |
+|---|---|---|
+| 1 | `uv run pytest -q -rs` | **1129 pasan**, 2 se saltan (permisos POSIX), 3 fallan: las 2 del problema 6 y `test_frame_id_neutral_en_directorio` (problema 10). |
+| 2 | `uv run ruff check .` · `uv run ruff format --check .` | `All checks passed!` · `114 files already formatted`. |
+| 3 | `uv run python -m contrato config/contrato/ejemplos/flujo.jsonl` | `OK (5 eventos)`. |
+| 4 | `uv run python -m control --entrada config/contrato/ejemplos/flujo.jsonl --config config/control/ --salida resultados/ejemplo-01/` | `5 eventos, 6 comandos, 2 errores`. |
+| 5 | `uv run python -m infer --input datos/pruebas-b/S09 --weights $env:P5_05_YOLO11N_PT --output resultados/s09-sin-red/detector.jsonl --run-id s09-sin-red --sequence-id S09 --capture-ms 0 … --capture-ms 2531` | `12 cuadros, 0 errores`. |
+| 6 | `uv run python -m contrato resultados/s09-sin-red/detector.jsonl` | `OK (12 eventos)`. |
+| 7 | `uv run python -m control --entrada resultados/s09-sin-red/detector.jsonl --config config/control/ --salida resultados/s09-sin-red/` | `12 eventos, 13 comandos, 0 errores`. |
+| 8 | `uv run python -m control.traza --salida resultados/s09-sin-red/` | **`GIRAR_DER 12`** (`steering 0.5`), decidido por la política. `cup` en los 12 cuadros, de 0.76 a 0.93; edad de 126 a 219 ms. Es lo mismo que en `docs/recorrido-real.md`. |
+| 9 | `uv run python casos/runner.py` y `git status --short` | **3 de 10** (C8, C9, C10). `git status` solo muestra `resultados/ejemplo-01/` y `resultados/s09-sin-red/`, nuevos: `resultados/casos/` ya no queda como modificado (problema 2). |
+| 10 | En una línea de PowerShell, `acciones_permitidas: [AVANZAR]` en el tramo `hueco` de `casos/C8/expectativa.yaml`; `git diff`, `uv run pytest -q tests/test_expectativas.py` y `uv run python casos/runner.py C8 --salida "$env:TEMP\c8-alterada"` | El diff muestra `[STOP]` → `[AVANZAR]`. 4 fallan (tramo incoherente, AVANZAR sin velocidad, C8 sin STOP y el hash congelado). `C8 armada 2/3 FALLA` · `hueco: ninguna orden con AVANZAR en el plazo de 600 ms`. |
+| 11 | `git checkout -- casos/C8/expectativa.yaml`, otra vez la prueba y el runner, y `git status --short casos` | 78 pasan; `C8 armada 3/3 PASA`; nada en `casos/`. |
+
+El paso 10 se hizo con:
+
+```powershell
+$f = (Resolve-Path "casos\C8\expectativa.yaml").Path
+$t = [IO.File]::ReadAllText($f)
+[IO.File]::WriteAllText($f, ($t -replace '(?s)(nombre: hueco.*?acciones_permitidas: )\[STOP\]', '${1}[AVANZAR]'))
+```
+
+Antes de traer `db2c4e6`, la misma corrida de pytest dio 4 fallas. La cuarta era
+`test_ningun_archivo_versionado_trae_rutas_de_una_maquina`: el propio `docs/copia-limpia.md` ponía de
+ejemplo una carpeta de usuario de Windows. Se arregló en `db2c4e6`.
+
 ## Problemas encontrados
 
 ### Corregidos en esta rama
@@ -99,8 +136,9 @@ comprueba que no se impriman.
    llegaron con 563 a 4063 ms de edad (el límite es 500). No es la copia limpia: la misma corrida en la
    copia usada en T16, que el 2026-11-01 dio de 79 a 188 ms, dio ahora de 516 a 3563 ms. La laptop estaba
    con batería al 10 % y la CPU ocupada. B hizo lo correcto (rechazar cuadros viejos), y se dejó la
-   primera corrida. Va como dato para P5-16: las mediciones de `mediciones/` se hicieron conectadas a la
-   corriente.
+   primera corrida. En la segunda sesión, la misma laptop dio de 126 a 219 ms y `GIRAR_DER 12`. Va como
+   dato para P5-16: el resultado depende de la carga de la máquina, y las mediciones de `mediciones/` se
+   hicieron conectadas a la corriente.
 6. **2 pruebas de A fallan en Windows:** `test_benchmark_rechaza_enlace_final_sin_tocar_destino[True]` y
    `test_enlace_final_de_salida_no_se_sobrescribe[True]` (P5-05/P5-15). Prueban enlaces simbólicos, que
    en Windows piden permisos especiales. También fallan en la copia de trabajo de `main`. Las ve el grupo A.
@@ -112,12 +150,20 @@ comprueba que no se impriman.
    instala la del README.
 9. **C1–C7 sin entrada.** Es lo esperado hasta T20 (entradas reales desde `datos-evaluacion-v1` y
    `config-detector-v1`). Cuando lleguen, cambia el "3 de 10" del README y `tests/test_readme_b.py` avisa.
+   **Después:** T20 las agregó y el runner da 7 de 10 ([`docs/casos-reales.md`](casos-reales.md)).
+10. **`test_frame_id_neutral_en_directorio` (A, P5-05) falla a veces en Windows.** Falló en la segunda
+    sesión; en la primera y en 8 repeticiones sueltas pasó. El error es `t_emit_ms: no puede ser anterior
+    a t_capture_ms`. La causa probable está en `src/infer/eventos.py` (`ejecutar_run`): el reloj es
+    `time.monotonic`, que en Windows es `GetTickCount64` y avanza de 15.6 en 15.6 ms. La prueba pide
+    capturas a 0 y 1 ms con un detector falso que no tarda. `infer` duerme 1 ms, pero el reloj puede
+    no haber avanzado todavía, y `t_emit_ms` sale en 0, antes de la captura. En corridas reales no pasa,
+    porque cada inferencia tarda más de 100 ms. Un reloj más fino (`time.perf_counter`, también
+    monotónico) lo evitaría. Es código de A: se les avisa.
 
 ## Qué no se probó
 
-- [ ] **El Wi-Fi apagado de verdad.** La red se quitó por software (ver arriba). Para repetirlo: clonar,
-  `uv sync --locked`, bajar los pesos, **apagar el Wi-Fi** y correr la tabla desde el paso 1.
-- [ ] **Conectada a la corriente y sin otros programas abiertos.** Con eso, S09 debería dar `GIRAR_DER 12`,
-  como en `docs/recorrido-real.md`.
-- [ ] macOS y Linux. En Linux las 2 pruebas del problema 6 deberían pasar.
+- [x] **El Wi-Fi apagado de verdad:** segunda sesión.
+- [x] **S09 da `GIRAR_DER 12`**: segunda sesión, como en `docs/recorrido-real.md`.
+- [ ] macOS y Linux. En Linux las 2 pruebas del problema 6 deberían pasar, y el reloj del problema 10
+  es fino.
 - [ ] Instalación con `pip` desde la copia limpia: se probó en T18.

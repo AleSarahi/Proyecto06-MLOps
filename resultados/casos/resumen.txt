@@ -1,29 +1,27 @@
 Caso  Entrada  Tramos  Resultado
-C1    -        -       FALLA
-C2    -        -       FALLA
-C3    -        -       FALLA
-C4    -        -       FALLA
-C5    -        -       FALLA
-C6    -        -       FALLA
-C7    -        -       FALLA
+C1    real     1/1     PASA
+C2    real     0/1     FALLA
+C3    real     1/1     PASA
+C4    real     1/1     PASA
+C5    real     0/1     FALLA
+C6    armada   2/2     PASA
+C7    real     3/5     FALLA
 C8    armada   3/3     PASA
 C9    armada   4/4     PASA
 C10   armada   7/7     PASA
 
-3 de 10 casos pasan.
+7 de 10 casos pasan.
 
 Por qué fallan (detalle en resultados/casos/Cn/veredicto.json):
-  C1
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
   C2
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
-  C3
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
-  C4
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
+    - obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida
+    - obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida
+    - obstaculo: orden 3 (AVANZAR, event=frame, frame_id=S02_f0003): AVANZAR está prohibida
+    - obstaculo: orden 4 (AVANZAR, event=frame, frame_id=S02_f0004): AVANZAR está prohibida
+    - obstaculo: orden 5 (AVANZAR, event=frame, frame_id=S02_f0005): AVANZAR está prohibida
+    - obstaculo: orden 6 (GIRAR_IZQ, event=frame, frame_id=S02_f0006): sale a los 1312 ms; el plazo es 500
   C5
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
-  C6
-    - falta entrada.jsonl
+    - sin_zona_libre: orden 1 (GIRAR_IZQ, event=frame, frame_id=S05_f0001): GIRAR_IZQ está prohibida
   C7
-    - falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)
+    - bloqueo: orden 2 (AVANZAR, event=frame, frame_id=S06_f0002): AVANZAR está prohibida
+    - bloqueo_otra_vez: orden 7 (AVANZAR, event=frame, frame_id=S06_f0007): AVANZAR está prohibida
