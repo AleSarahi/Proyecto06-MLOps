@@ -1,9 +1,40 @@
 {
   "caso": "C2",
-  "entrada": null,
-  "tramos": [],
+  "entrada": "real",
+  "tramos": [
+    {
+      "tramo": "obstaculo",
+      "ordenes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "motivos": [
+        "orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida",
+        "orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida",
+        "orden 3 (AVANZAR, event=frame, frame_id=S02_f0003): AVANZAR está prohibida",
+        "orden 4 (AVANZAR, event=frame, frame_id=S02_f0004): AVANZAR está prohibida",
+        "orden 5 (AVANZAR, event=frame, frame_id=S02_f0005): AVANZAR está prohibida",
+        "orden 6 (GIRAR_IZQ, event=frame, frame_id=S02_f0006): sale a los 1312 ms; el plazo es 500"
+      ]
+    }
+  ],
   "pasa": false,
   "motivos": [
-    "falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)"
+    "obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida",
+    "obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida",
+    "obstaculo: orden 3 (AVANZAR, event=frame, frame_id=S02_f0003): AVANZAR está prohibida",
+    "obstaculo: orden 4 (AVANZAR, event=frame, frame_id=S02_f0004): AVANZAR está prohibida",
+    "obstaculo: orden 5 (AVANZAR, event=frame, frame_id=S02_f0005): AVANZAR está prohibida",
+    "obstaculo: orden 6 (GIRAR_IZQ, event=frame, frame_id=S02_f0006): sale a los 1312 ms; el plazo es 500"
   ]
 }

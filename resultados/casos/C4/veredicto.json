@@ -1,9 +1,26 @@
 {
   "caso": "C4",
-  "entrada": null,
-  "tramos": [],
-  "pasa": false,
-  "motivos": [
-    "falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)"
-  ]
+  "entrada": "real",
+  "tramos": [
+    {
+      "tramo": "obstaculo_der",
+      "ordenes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "motivos": []
+    }
+  ],
+  "pasa": true,
+  "motivos": []
 }

@@ -1,9 +1,30 @@
 {
   "caso": "C5",
-  "entrada": null,
-  "tramos": [],
+  "entrada": "real",
+  "tramos": [
+    {
+      "tramo": "sin_zona_libre",
+      "ordenes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "motivos": [
+        "orden 1 (GIRAR_IZQ, event=frame, frame_id=S05_f0001): GIRAR_IZQ está prohibida"
+      ]
+    }
+  ],
   "pasa": false,
   "motivos": [
-    "falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)"
+    "sin_zona_libre: orden 1 (GIRAR_IZQ, event=frame, frame_id=S05_f0001): GIRAR_IZQ está prohibida"
   ]
 }

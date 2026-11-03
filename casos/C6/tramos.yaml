@@ -1,0 +1,13 @@
+# C6 · Qué cuadros de entrada.jsonl le tocan a cada tramo de expectativa.yaml (T20).
+# Formato: casos/README.md, "Cómo se corren los casos".
+#
+# Armada con casos/armar_c6.py desde la única corrida de `python -m infer` sobre S07
+# (resultados/p5-12-c6-s07.jsonl, run c6-s07, config-detector-v1, tag datos-evaluacion-v1). En S07 la
+# confianza alterna y la expectativa pide primero los cuadros de abajo de umbral_confianza (0.5): se
+# reordenan y se les ponen capturas nuevas cada 200 ms, con la misma demora de cada cuadro. Las
+# detecciones y los frame_id son los de infer. Los 4 cuadros sin detección (f0004, f0008, f0012, f0013)
+# no entran: son falsos negativos (datos/MAPA_CASOS.md, "C6: scores de S7").
+entrada: armada
+tramos:
+  bajo_umbral: [S07_f0003, S07_f0006, S07_f0007, S07_f0009]
+  sobre_umbral: [S07_f0001, S07_f0002, S07_f0005, S07_f0010, S07_f0011, S07_f0014, S07_f0015]

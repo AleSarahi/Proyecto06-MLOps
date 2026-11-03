@@ -1,0 +1,11 @@
+# C5 · Qué cuadros de entrada.jsonl le tocan a cada tramo de expectativa.yaml (T20).
+# Formato: casos/README.md, "Cómo se corren los casos".
+#
+# Salida de `python -m infer` con config-detector-v1 (config_sha256 6428a259…, model_sha256
+# 0ebbc80d…) sobre los cuadros del tag datos-evaluacion-v1, con los t_capture_ms de su
+# captura.jsonl. Se copió sin cambios; es la única corrida de B sobre esa secuencia
+# (docs/casos-reales.md). Los tramos son los de datos/MAPA_CASOS.md (P5-12).
+# Run mapa-S05, 12 cuadros.
+entrada: real
+tramos:
+  sin_zona_libre: [S05_f0001, S05_f0002, S05_f0003, S05_f0004, S05_f0005, S05_f0006, S05_f0007, S05_f0008, S05_f0009, S05_f0010, S05_f0011, S05_f0012]

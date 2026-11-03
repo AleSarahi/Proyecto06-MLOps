@@ -1,9 +1,65 @@
 {
   "caso": "C7",
-  "entrada": null,
-  "tramos": [],
+  "entrada": "real",
+  "tramos": [
+    {
+      "tramo": "libre",
+      "ordenes": [
+        1
+      ],
+      "motivos": []
+    },
+    {
+      "tramo": "bloqueo",
+      "ordenes": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "motivos": [
+        "orden 2 (AVANZAR, event=frame, frame_id=S06_f0002): AVANZAR está prohibida"
+      ]
+    },
+    {
+      "tramo": "un_cuadro_libre",
+      "ordenes": [
+        6
+      ],
+      "motivos": []
+    },
+    {
+      "tramo": "bloqueo_otra_vez",
+      "ordenes": [
+        7,
+        8
+      ],
+      "motivos": [
+        "orden 7 (AVANZAR, event=frame, frame_id=S06_f0007): AVANZAR está prohibida"
+      ]
+    },
+    {
+      "tramo": "libre_otra_vez",
+      "ordenes": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "motivos": []
+    }
+  ],
   "pasa": false,
   "motivos": [
-    "falta entrada.jsonl (pide una secuencia real de A: datos/MAPA_CASOS.md)"
+    "bloqueo: orden 2 (AVANZAR, event=frame, frame_id=S06_f0002): AVANZAR está prohibida",
+    "bloqueo_otra_vez: orden 7 (AVANZAR, event=frame, frame_id=S06_f0007): AVANZAR está prohibida"
   ]
 }

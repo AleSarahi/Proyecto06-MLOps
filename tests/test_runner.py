@@ -102,10 +102,11 @@ def test_tabla_de_los_diez_casos_y_sale_1_si_alguno_falla(tmp_path, capsys):
         assert (salida / caso / "veredicto.json").is_file()
 
 
-def test_el_detalle_apunta_a_la_carpeta_de_salida_que_se_uso(tmp_path, capsys):
+def test_el_detalle_apunta_a_la_carpeta_de_salida_que_se_uso(copia, tmp_path, capsys):
     """T18: con --salida fuera del repo, el aviso no manda a buscar en resultados/casos/."""
     salida = tmp_path / "salida"
-    correr("C1", "--salida", str(salida))
+    (copia / "C1" / "entrada.jsonl").unlink()  # para que falle y el runner imprima el aviso
+    correr("C1", "--casos", str(copia), "--salida", str(salida))
     assert f"(detalle en {salida / 'Cn' / 'veredicto.json'}):" in capsys.readouterr().out
 
 
@@ -125,12 +126,11 @@ def test_los_registros_quedan_en_resultados_casos_cn(tmp_path):
 
 
 @pytest.mark.parametrize("caso", ["C1", "C2", "C3", "C4", "C5", "C7"])
-def test_sin_secuencia_real_el_caso_falla_y_lo_dice(tmp_path, caso):
-    """Mientras A no entregue las secuencias (P5-09, P5-12), estos casos no pueden pasar."""
+def test_sin_secuencia_real_el_caso_falla_y_lo_dice(copia, tmp_path, caso):
+    """Sin la entrada de una secuencia real de A (P5-09, P5-12), estos casos no pueden pasar."""
     salida = tmp_path / "salida"
-    if (CASOS / caso / "entrada.jsonl").is_file():
-        pytest.skip(f"{caso} ya tiene entrada")
-    assert correr(caso, "--salida", str(salida)) == 1
+    (copia / caso / "entrada.jsonl").unlink(missing_ok=True)
+    assert correr(caso, "--casos", str(copia), "--salida", str(salida)) == 1
     [motivo] = veredicto(salida, caso)["motivos"]
     assert "falta entrada.jsonl" in motivo
     assert "secuencia real" in motivo
