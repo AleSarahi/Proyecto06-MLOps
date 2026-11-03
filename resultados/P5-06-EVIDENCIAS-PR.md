@@ -35,6 +35,47 @@ Se confirmó `QueryPerformanceCounter`, la prueba `spawn`, paridad local, contra
 es el benchmark oficial Windows, que sigue pendiente. La diferencia numérica frente a
 P5-05 Mac permanece pendiente de investigación, sin tolerancia ni aprobación implícita.
 
+### Serie oficial independiente Windows
+
+Andy ejecutó una sola serie oficial sobre el commit
+`83d81f262f8423e20832462e478222dc4129faa0`. El ZIP original recibido,
+`p5-06-serie-oficial-windows-83d81f2.zip`, permanece intacto **fuera de Git**
+en Downloads (SHA-256
+`cca7a2b3b91cea9ec05046653b66e283677e1afee812d1da629b93b7d1e353b8`).
+La copia pública depurada está en
+`resultados/p5-06-benchmark-windows-andrea/evidencia-publica.zip` (SHA-256
+`49b1f18d85267c40c3401b38a079dbac79ac48fad3f546ac3bcded72a0b4c407`).
+El `README.md` de esa carpeta enumera los hashes originales y públicos de los seis
+miembros, las 15 sustituciones autorizadas y el procedimiento. El SHA-256
+original de `benchmark.json` sigue identificando el archivo conservado fuera de Git.
+Ambos índices
+`SHA256SUMS.txt` verifican 5/5 archivos; el público es UTF-8 sin BOM. El ZIP
+público no es idéntico al original y conserva las muestras y resultados técnicos.
+
+La ejecución registró 10 pares de calentamiento excluidos y 50 pares medidos
+control → supervisado, 10 reinicios excluidos y 50 reinicios directos medidos.
+Los límites numéricos de Karen se cumplen: Δp50 = **0.88705 ms** (≤5),
+Δp95 = **0.71957 ms** (≤10), p95 supervisado = **58.9775 ms** (≤150),
+máximo supervisado = **60.6622 ms** (≤200) y **0** solicitudes normales
+superiores a 500 ms. Los 50 reinicios medidos tienen READY con hashes y dos
+hilos correctos; su p50/p95 total es **4015.30725/4799.444585 ms**, sin
+umbral numérico de aceptación. La paridad control-supervisado local es exacta.
+
+Ante P5-05 Mac se observó la misma clase 41 y confianza, y diferencia máxima
+de bbox de **0.00006103515625 px**. Según la decisión comunicada de Karen del
+**2026-11-02**, se acepta exclusivamente esa diferencia numérica de plataforma;
+no se agregan tolerancias, y cualquier diferencia distinta requiere otra
+revisión. El `benchmark.json` original conserva su clasificación anterior
+`diferencia_numerica_pendiente`; esta decisión se documenta aquí sin reescribirlo.
+
+El preflight registró AC y ahorro desactivado. La transcripción muestra
+`OneDrive.Sync.Service` y `com.docker.backend` activos en la captura inicial de
+procesos, aunque el preflight reportó `procesos_bloqueantes=[]`. La condición
+se documenta sin declararla invalidante y queda para revisión de Karen antes
+de afirmar aceptación integral de la serie. Este benchmark normal y sus
+reinicios directos son distintos de la validación funcional simulada de
+50 timeouts; no se repitieron mediciones ni se descartaron muestras.
+
 ## Inventario original del PR
 
 - `resultados/P5-06-AUDITORIA-PREFLIGHT.md`
