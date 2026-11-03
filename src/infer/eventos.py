@@ -15,6 +15,7 @@ from contrato.validador import validar_evento, validar_flujo
 
 from .detector import DetectorJPEG, ErrorImagenJPEG, ErrorSalidaInvalida
 from .plazos import PlazosInfer, cargar_plazos_infer, validar_plazos_infer
+from .reloj import leer_reloj_s
 
 _ID = re.compile(r"[A-Za-z0-9._-]{1,64}\Z")
 _JPEG = {".jpg", ".jpeg"}
@@ -238,7 +239,7 @@ def ejecutar_run(
     run_id: str,
     sequence_id: str | None = None,
     capture_ms: Sequence[float] | None = None,
-    reloj: Callable[[], float] = time.monotonic,
+    reloj: Callable[[], float] = leer_reloj_s,
     dormir: Callable[[float], None] = time.sleep,
     plazos: PlazosInfer | None = None,
 ) -> tuple[Path, int, int]:

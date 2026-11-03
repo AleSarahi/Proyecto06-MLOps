@@ -74,14 +74,14 @@ desactivan reglas ni se excluyen archivos para obtener una calificación.
 ## Arquitectura propuesta
 
 1. **Principal de A.** Enumera los JPEG y sus `capture_ms`, valida IDs y plazos, mantiene un
-   registro ordenado de cuadros pendientes, controla el reloj monotónico relativo al run y es el
+   registro ordenado de cuadros pendientes, controla el reloj de rendimiento relativo al run y es el
    **único** escritor del JSONL de percepción. Conserva el hash esperado del modelo y el hash de
    configuración efectiva para todo el run. Ninguna respuesta del trabajador escribe un evento.
 2. **Trabajador persistente.** Se crea con `multiprocessing` y método `spawn` en Windows, macOS
    y Linux. Recibe una referencia local al JPEG junto con `run_id`, `frame_id`, `request_id` y
-   generación del proceso, el origen monotónico del run y el instante de captura. Lee y decodifica
+   generación del proceso, el origen del reloj de rendimiento del run y el instante de captura. Lee y decodifica
    el JPEG, comunica las dimensiones originales cuando las obtiene, vuelve a comprobar la edad
-   con el mismo reloj monotónico antes de inferir, ejecuta el predictor CPU/FP32 si sigue vigente
+   con el mismo reloj de rendimiento antes de inferir, ejecuta el predictor CPU/FP32 si sigue vigente
    y devuelve detecciones o un fallo clasificado.
    Atiende una solicitud a la vez; no hay una cola de inferencias en el trabajador.
 3. **Canal IPC.** Dos `multiprocessing.Queue` privadas **por generación**, una para solicitudes
@@ -109,7 +109,7 @@ desactivan reglas ni se excluyen archivos para obtener una calificación.
 
 ### Plazo, reloj y clasificación
 
-Para la solicitud `i`, `inicio_i` es el `monotonic()` del principal justo antes de entregar el
+Para la solicitud `i`, `inicio_i` es el `perf_counter()` del principal justo antes de entregar el
 mensaje al canal; `fin_i` es el instante en que el principal **recibe la respuesta final completa**.
 El límite es `inicio_i + detector_timeout_ms`, con el mismo reloj para ambos extremos. El tiempo
 de IPC, lectura JPEG, decodificación, inferencia y respuesta queda dentro. Una respuesta recibida
@@ -182,7 +182,7 @@ cerca de la escritura como permita la ruta actual, sin fingir que la escritura o
   errores pendientes. El tiempo de recuperación puede volver viejos los cuadros en cola.
 - El contrato exige dimensiones válidas para `stale`. Si la decodificación no concluye antes del
   plazo, solo se conoce un timeout; no se debe fabricar un `stale` con dimensiones ficticias.
-- Los relojes monotónicos de principal y trabajador deben referir el mismo reloj del host al
+- Los relojes de rendimiento de principal y trabajador deben referir el mismo reloj del host al
   comprobar edad. La prueba multiproceso verificará esa correspondencia en Windows y macOS;
   el principal mantiene la autoridad final sobre `t_capture_ms` y `t_emit_ms`.
 
@@ -291,7 +291,7 @@ cada muestra y p50/p95; registrar también
 fallos, sin eliminarlos de la evidencia. Esas duraciones no se descuentan de la edad del cuadro.
 El total de cada reinicio comienza justo antes de `detener()` y termina al verificar el nuevo
 `READY`. Se registran detención e `iniciar()` por separado. Esta última se descompone con marcas
-del mismo reloj monotónico del host: creación de colas/proceso y `spawn`, arranque del hijo,
+del mismo reloj de rendimiento del host: creación de colas/proceso y `spawn`, arranque del hijo,
 carga y verificación de configuración/modelo/hilos, calentamiento y entrega de READY al
 principal. Se conserva el intervalo de coordinación entre detener e iniciar para que las fases
 sumen el total observado salvo redondeo; si el hijo empieza a cargar antes de que `start()`
@@ -393,3 +393,35 @@ durabilidad tras una caída. Un error de escritura impide garantizar la publicac
 cuadros pendientes en ese mismo JSONL. La serie de latencia normal y los 50 reinicios directos
 del benchmark Mac histórico permanecen distintos de estos 50 reinicios provocados por timeout;
 sus datos brutos no se alteraron.
+
+## Cambio de reloj autorizado antes del benchmark Windows
+
+Andy observó en su Windows con Python 3.12 que `time.monotonic()` avanzaba en pasos
+aproximados de 15,6 ms (15,625 ms en `ENTORNO.txt`). Esa observación es de su equipo;
+no se presenta como medición universal de Windows. Karen autorizó un reloj único de alta
+resolución para P5-06 antes de la serie oficial. `src/infer/reloj.py` centraliza
+`time.perf_counter()` y `time.perf_counter_ns()`, que son las dos unidades del mismo
+reloj. `time.get_clock_info("perf_counter")` aporta el nombre de implementación y la
+resolución **reportada por Python**, sin estimar una resolución empírica. En Windows se
+espera que la implementación informe `QueryPerformanceCounter`; la comprobación efectiva
+queda a cargo de la revalidación de Andy.
+
+El cambio abarca origen del run, captura y espera de `--capture-ms`, edad y emisión de
+cuadros en `eventos.py`, medición interna del detector, deadline desde envío hasta
+respuesta, trazas de publicación después de `flush`, reinicio y fases READY entre padre e
+hijo, y ambas rutas del benchmark. Segundos y nanosegundos se convierten explícitamente
+a milisegundos donde corresponde. El origen enviado por IPC y las marcas READY proceden
+del mismo reloj del host. Una prueba `multiprocessing` con `spawn` registra una lectura
+del padre, una del hijo y otra del padre y exige que la del hijo quede entre ambas, sin
+suponer tiempos de planificación. La prueba debe ejecutarse en Windows antes del benchmark.
+Las claves de traza `inicio_monotonic_s` y `publicado_monotonic_s` se mantienen para no
+romper las herramientas y evidencias existentes; en los runs nuevos sus valores proceden
+de `perf_counter()`. El manifiesto A y el benchmark (también su evidencia parcial)
+registran `nombre`, `implementacion` y `resolucion_reportada_s` bajo `reloj`.
+
+El plazo de 500 ms, el límite de edad, la prioridad error > stale > ok, el contrato A→B v1,
+los límites de sobrecosto y el procedimiento intercalado 10 + 50 permanecen intactos.
+La evidencia Windows del commit `4fefb4a` se conserva en
+`resultados/p5-06-validacion-windows-4fefb4a-2026-11-02/` y es anterior a este cambio.
+Andy debe repetir la validación funcional y la prueba entre procesos en el nuevo commit;
+la serie oficial Windows sigue pendiente hasta completar esa revalidación y el preflight.

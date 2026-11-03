@@ -26,6 +26,7 @@ from infer.detector import DetectorJPEG
 from infer.pesos import cargar_pesos
 from infer.plazos import cargar_plazos_infer_con_hash
 from infer.preflight import consultar_preflight, exigir_preflight, guardar_y_exigir_preflight
+from infer.reloj import descripcion_reloj
 from infer.trabajador import PredictorSupervisado
 
 
@@ -276,6 +277,7 @@ def main() -> None:
                     "condiciones_series": condiciones,
                     "checkpoint_sha256": MODELO_SHA256,
                     "config_sha256": CONFIG_SHA256,
+                    "reloj": descripcion_reloj(),
                     "imagen_sha256": IMAGEN_SHA256,
                     "referencia_p5_05_sha256": referencia_sha256,
                 },
@@ -338,6 +340,7 @@ def main() -> None:
         },
         "checkpoint_sha256": MODELO_SHA256,
         "config_sha256": CONFIG_SHA256,
+        "reloj": descripcion_reloj(),
         "plazos_sha256": plazos_sha256,
         "torch_threads": 2,
         "imagen": str(IMAGEN.relative_to(RAIZ)),
@@ -351,7 +354,7 @@ def main() -> None:
             "solicitudes_medidas_por_ruta": 50,
             "reinicios_excluidos": 10,
             "reinicios_medidos": 50,
-            "reloj": "time.monotonic_ns",
+            "reloj": "time.perf_counter_ns",
             "percentil": "numpy.percentile(method=linear)",
             "control": "antes de _evento_cuadro hasta retorno validado, sin IPC",
             "supervisado": "antes de solicitar hasta recibir respuesta completa validada",

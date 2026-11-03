@@ -153,4 +153,6 @@ def test_script_no_inicia_predictor_si_preflight_falla(tmp_path, monkeypatch) ->
     with pytest.raises(ErrorPreflight):
         modulo.main()
     assert not salida.exists()
-    assert json.loads((tmp_path / "benchmark.preflight.json").read_text()) == estado
+    contenido = (tmp_path / "benchmark.preflight.json").read_text(encoding="utf-8")
+    assert "alimentación" in contenido
+    assert json.loads(contenido) == estado

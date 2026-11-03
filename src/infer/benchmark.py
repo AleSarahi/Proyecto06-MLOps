@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -10,6 +9,7 @@ from typing import Any
 from .detector import DetectorJPEG
 from .eventos import _evento_cuadro
 from .plazos import PlazosInfer
+from .reloj import leer_reloj_ns
 from .trabajador import PredictorSupervisado
 
 
@@ -19,7 +19,7 @@ def medir_control(
     *,
     request_id: int,
     plazos: PlazosInfer,
-    reloj_ns: Callable[[], int] = time.monotonic_ns,
+    reloj_ns: Callable[[], int] = leer_reloj_ns,
 ) -> tuple[float, dict[str, Any]]:
     """Desde antes de decodificar hasta terminar la validación de _evento_cuadro."""
     inicio_ns = reloj_ns()
@@ -46,7 +46,7 @@ def medir_supervisado(
     *,
     request_id: int,
     plazos: PlazosInfer,
-    reloj_ns: Callable[[], int] = time.monotonic_ns,
+    reloj_ns: Callable[[], int] = leer_reloj_ns,
 ) -> tuple[float, dict[str, Any]]:
     """Desde antes de solicitar (y enviar) hasta recibir la respuesta verificada."""
     inicio_ns = reloj_ns()
@@ -70,7 +70,7 @@ def medir_supervisado(
 def medir_reinicio(
     predictor: PredictorSupervisado,
     *,
-    reloj_ns: Callable[[], int] = time.monotonic_ns,
+    reloj_ns: Callable[[], int] = leer_reloj_ns,
 ) -> dict[str, Any]:
     """Desde antes de terminar el hijo anterior hasta READY verificado del nuevo."""
     inicio_ns = reloj_ns()

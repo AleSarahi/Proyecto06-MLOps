@@ -1,6 +1,6 @@
 # P5-06 · guía propuesta para la validación independiente de Andrea en Windows
 
-**Estado:** propuesta para revisión; no constituye evidencia de ejecución en Windows ni aprobación de P5-06. Base examinada: commit `016d1867b886a1bc5d8ee6ffd2233d49df9b4ad8` del PR #86; la política de comparación se publica en un commit posterior. Andrea debe anotar el SHA completo del commit que efectivamente valida. Basada en `P5-06-DISENO-Y-ACEPTACION.md`, `P5-05-REVISION-A3.md`, los scripts y las pruebas de la rama. Usar PowerShell desde la raíz de un clon nuevo. No procesar S01–S08 ni `datos/cuadros/`.
+**Estado:** propuesta para la revalidación del reloj; esta versión de la guía no constituye evidencia de ejecución en Windows ni aprobación de P5-06. El commit `016d1867b886a1bc5d8ee6ffd2233d49df9b4ad8` es una base histórica del PR #86. Andy validó funcionalmente el commit anterior al cambio de reloj `4fefb4adddb0e9d9a04379b7e5589a0e6d6758ff`; su ZIP íntegro y desviaciones se documentan en `p5-06-validacion-windows-4fefb4a-2026-11-02/README.md`. La corrección del reloj tendrá otro commit, aún pendiente; Andrea debe anotar el SHA completo del commit que efectivamente valide en cada ejecución. Basada en `P5-06-DISENO-Y-ACEPTACION.md`, `P5-05-REVISION-A3.md`, los scripts y las pruebas de la rama. Usar PowerShell desde la raíz de un clon nuevo. No procesar S01–S08 ni `datos/cuadros/`.
 
 ## 1. Preparación y prerrequisitos
 
@@ -16,7 +16,7 @@ powershell -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/0.13.6/ins
 $Repo = Join-Path $HOME 'Proyecto05-MLOPS-P5-06'
 git clone --branch p5-06-errores-detector --single-branch https://github.com/karenelizabg/Proyecto05-MLOPS.git $Repo
 Set-Location $Repo
-$ExpectedHead = Read-Host 'SHA completo del nuevo commit de P5-06 publicado en el PR #86'
+$ExpectedHead = Read-Host 'SHA completo del commit de P5-06 que se va a validar (Andy: 4fefb4a; reloj: pendiente)'
 if ($ExpectedHead -notmatch '^[0-9a-f]{40}$') { throw 'Se requiere un SHA completo de 40 caracteres hexadecimales' }
 git checkout --detach $ExpectedHead
 $Head = (git rev-parse HEAD).Trim()
@@ -30,10 +30,17 @@ $Python = Join-Path (Get-Location).Path '.venv\Scripts\python.exe'
 & $Python --version
 Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,OSArchitecture,@{Name='RAM_GiB';Expression={[math]::Round($_.TotalVisibleMemorySize / 1MB, 2)}}
 Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores,NumberOfLogicalProcessors
-& $Python -c 'import sys, importlib.metadata as m; print(sys.version); print({p:m.version(p) for p in ("ultralytics","torch","torchvision","opencv-python","numpy","pillow")})'
+$PythonCode = @'
+import sys
+import importlib.metadata as m
+print(sys.version)
+print({p: m.version(p) for p in ("ultralytics", "torch", "torchvision", "opencv-python", "numpy", "pillow")})
+'@
+$PythonCode | & $Python -
+if ($LASTEXITCODE -ne 0) { throw 'consulta de versiones de Python o paquetes falló' }
 ```
 
-Registrar el HEAD comprobado. Si el commit no está disponible en el clon, detenerse y conservar el error; no validar un HEAD distinto por accidente. Si el lockfile no instala, detenerse y guardar el error; no editar `uv.lock` para continuar.
+Para la **revalidación del reloj**, introducir el SHA completo del futuro commit que lo publique, no el SHA `4fefb4a` del paquete histórico. Registrar el HEAD comprobado. Si el commit no está disponible en el clon, detenerse y conservar el error; no validar un HEAD distinto por accidente. Si el lockfile no instala, detenerse y guardar el error; no editar `uv.lock` para continuar.
 
 El checkpoint está **fuera del repositorio**. `P5-05-REVISION-A3.md` documenta la descarga manual desde la release oficial `v8.3.0` de Ultralytics y su verificación. Reutilizar un checkpoint ya verificado o ejecutar este bloque de ese procedimiento; detenerse si falla el tamaño o el hash.
 
@@ -55,9 +62,23 @@ if ($Actual -ne $Expected -or $Size -ne 5613764) { throw "Checkpoint incorrecto:
 Si el archivo ya existe, el bloque no lo descarga otra vez y verifica sus bytes. `config/detector.json` debe permanecer intacto; su configuración efectiva debe dar `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` y `torch_threads=2`. `config/control/plazos.yaml` debe conservar `detector_timeout_ms: 500` y `max_frame_age_ms: 500`; registrar su SHA-256 por separado.
 
 ```powershell
-& $Python -c 'from infer.config import cargar_config_detector; c=cargar_config_detector(); assert c.config_sha256=="6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"; assert c.expected_model_sha256=="0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"; assert c.torch_threads==2; print(c.config_sha256, c.torch_threads, c.expected_model_sha256)'
+$PythonCode = @'
+from infer.config import cargar_config_detector
+c = cargar_config_detector()
+assert c.config_sha256 == "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"
+assert c.expected_model_sha256 == "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+assert c.torch_threads == 2
+print(c.config_sha256, c.torch_threads, c.expected_model_sha256)
+'@
+$PythonCode | & $Python -
 if ($LASTEXITCODE -ne 0) { throw 'configuración efectiva o dos hilos incorrectos' }
-& $Python -c 'from infer.plazos import cargar_plazos_infer_con_hash; p,h=cargar_plazos_infer_con_hash(); assert p.detector_timeout_ms==500 and p.max_frame_age_ms==500; print(p.detector_timeout_ms, p.max_frame_age_ms, h)'
+$PythonCode = @'
+from infer.plazos import cargar_plazos_infer_con_hash
+p, h = cargar_plazos_infer_con_hash()
+assert p.detector_timeout_ms == 500 and p.max_frame_age_ms == 500
+print(p.detector_timeout_ms, p.max_frame_age_ms, h)
+'@
+$PythonCode | & $Python -
 if ($LASTEXITCODE -ne 0) { throw 'plazos compartidos incorrectos' }
 (Get-FileHash -LiteralPath '.\config\control\plazos.yaml' -Algorithm SHA256).Hash.ToLowerInvariant()
 ```
@@ -87,9 +108,31 @@ if ($LASTEXITCODE -ne 0) { throw 'contrato v1 falló en JPEG sintéticos' }
 
 Las pruebas automatizadas ejercitan timeout con trabajador bloqueado, reinicio exitoso y fallido, clasificación de pendientes, prioridad error > stale > ok, ausencia de duplicados, hashes/hilos, contrato y `detector_timeout` → STOP de B. Usan predictores simulados para las fallas; **no son una medición oficial de 500–600 ms de publicación**.
 
+Como parte de la revalidación funcional del nuevo commit, verificar que padre e
+hijo `spawn` comparten el reloj `perf_counter_ns` y registrar sus características. En Windows
+`implementacion` debe identificar `QueryPerformanceCounter`; `resolucion_reportada_s` es la
+resolución informada por Python, no una medida independiente. Conservar la salida del test y
+revisar `reloj` en los manifiestos `.infer-run.json`. Las claves históricas
+`inicio_monotonic_s` y `publicado_monotonic_s` de las trazas siguen existiendo, pero los
+nuevos valores se toman de `perf_counter()`.
+
 ```powershell
-& $Python -m pytest -q tests/test_infer_trabajador.py tests/test_infer_benchmark.py tests/test_infer_preflight.py tests/test_infer_control_integracion.py
+& $Python -m pytest -q tests/test_infer_reloj.py
+if ($LASTEXITCODE -ne 0) { throw 'prueba del reloj entre procesos falló; no iniciar benchmark' }
+$PythonCode = @'
+from infer.reloj import descripcion_reloj
+print(descripcion_reloj())
+assert "QueryPerformanceCounter" in descripcion_reloj()["implementacion"]
+'@
+$PythonCode | & $Python -
+if ($LASTEXITCODE -ne 0) { throw 'reloj de alta resolución de Windows no verificado' }
+```
+
+```powershell
+& $Python -m pytest -q tests/test_infer_reloj.py tests/test_infer_trabajador.py tests/test_infer_benchmark.py tests/test_infer_preflight.py tests/test_infer_control_integracion.py
+if ($LASTEXITCODE -ne 0) { throw 'pruebas específicas fallaron; no iniciar benchmark' }
 & $Python -m pytest -q
+if ($LASTEXITCODE -ne 0) { throw 'suite completa falló; no iniciar benchmark' }
 ```
 
 Conservar salida completa, número de pruebas y fallos. Si un test falla en Windows, registrar el fallo y el entorno antes de cambiar código. El manifiesto funcional y los JSONL dan evidencia de spawn, calentamiento, READY, plazos, hashes, eventos únicos y cierre; las pruebas cubren fallas y reinicios simulados.
@@ -137,6 +180,11 @@ no una secuencia continua de 50 cuadros; las pruebas de cuadros pendientes son s
 Andrea debe intervenir para verificar que la laptop está en **AC**, el ahorro de batería está **desactivado**, OneDrive y VS Code están **cerrados**, y no hay carga interferente relevante. Registrar el estado observado y los procesos/carga. `src/infer/preflight.py` consulta `GetSystemPowerStatus` (`ACLineStatus`, `SystemStatusFlag`) y `tasklist`; el script bloquea la serie si cualquier condición es falsa o no verificable y guarda `benchmark.preflight.json` junto al `benchmark.json` propuesto. No cambiar configuración para mejorar tiempos.
 
 El comando siguiente usa la interfaz actual de `resultados/p5-06-benchmark.py`. **Es una instrucción propuesta; no se ejecutó aquí.** Usar un archivo de salida nuevo, en una carpeta controlada por Andrea. Ejecutarlo una sola vez por máquina; ante fallo conservar la evidencia parcial y detenerse, sin repetir selectivamente por cercanía al límite.
+Solo iniciar esta serie tras revalidar el nuevo commit con paridad local, contrato y pruebas
+funcionales favorables, confirmar el reloj entre procesos y superar el preflight. Investigar
+las diferencias numéricas frente a Mac conforme a la política multiplataforma; completar
+el benchmark no las aprueba. `benchmark.json` y el manifiesto
+guardarán `reloj.nombre`, `reloj.implementacion` y `reloj.resolucion_reportada_s`.
 
 ```powershell
 $BenchmarkPath = Join-Path $Repo 'resultados\p5-06-benchmark-windows-andrea\benchmark.json'
@@ -169,9 +217,9 @@ Aplicar todos los límites sobre cifras sin redondear: `p50_supervisado − p50_
 
 ## 4. Evidencia por entregar
 
-- Commit `016d1867b886a1bc5d8ee6ffd2233d49df9b4ad8` comprobado; Windows/CPU/RAM; versiones de Python, `uv`, PyTorch, Ultralytics, Torchvision, OpenCV, NumPy; estado de AC/ahorro, OneDrive, VS Code, carga del host, salida de los comandos y cualquier desviación.
+- SHA completo del commit comprobado en cada ejecución (Andy validó `4fefb4adddb0e9d9a04379b7e5589a0e6d6758ff`; registrar por separado el futuro commit del reloj); Windows/CPU/RAM; versiones de Python, `uv`, PyTorch, Ultralytics, Torchvision, OpenCV, NumPy; estado de AC/ahorro, OneDrive, VS Code, carga del host, salida de los comandos y cualquier desviación.
 - Ubicación externa, tamaño y SHA-256 del checkpoint; SHA-256 efectivo de configuración, SHA-256 de `plazos.yaml`, valor de los dos plazos y del JPEG permitido.
-- De cada validación funcional: `comparacion.json` o `validacion.json`, ambos JSONL, JPEG sintéticos cuando corresponda, manifiesto `.infer-run.json`, salida de `python -m contrato`, resultado de pytest y cualquier error. Registrar READY, hilos, hashes, IDs, dimensiones, estados, ausencia de duplicados y cierre.
+- De cada validación funcional: `comparacion.json` o `validacion.json`, ambos JSONL, JPEG sintéticos cuando corresponda, manifiesto `.infer-run.json`, salida de `python -m contrato`, resultado de pytest y cualquier error. Registrar READY, hilos, hashes, IDs, dimensiones, estados, ausencia de duplicados, cierre, características del reloj y resultado de la prueba `spawn` padre–hijo–padre.
 - De la serie oficial: `benchmark.json`, `benchmark.preflight.json`, las 50 muestras de cada ruta, 10 calentamientos por ruta, 50 reinicios medidos y 10 excluidos, fases, percentiles sin redondear, fallos/descartes y salida de terminal. Guardar evidencia parcial si aborta. Indicar expresamente que la medición de reinicio fue directa.
 - Para la validación separada de timeout forzado: `muestras.jsonl`, `resumen.json`, JSONL y manifiesto de cada uno de los 50 intentos, marcas monotónicas de inicio de solicitud y publicación del evento, duración individual, `frame_id`, READY, continuidad y resultado de contrato. Del caso terminal, conservar sus tres eventos, manifiesto y `codigo_cli_con_resultado_inyectado`. Registrar SHA-256 de los archivos entregados. Usar `resultados/P5-06-VALIDACION-TIMEOUT.md`; el benchmark normal no produce estos datos.
 
@@ -183,4 +231,4 @@ No repetir ni reemplazar `resultados/p5-06-benchmark-mac-2026-11-01/`, `p5-06-va
 2. Los 50 reinicios del benchmark normal siguen siendo directos. Los resultados de la herramienta de timeout, las pruebas de cuadros pendientes y el benchmark deben reportarse por separado. El trabajador simulado declara los hashes esperados; la verificación criptográfica y el calentamiento con checkpoint real pertenecen a la validación funcional aparte.
 3. No hay procedimiento que induzca un fallo terminal **del modelo real** en Windows sin alterar pesos o configuración. El caso se verifica con fábrica simulada y con la política de salida del CLI; no atribuirle una ejecución real del checkpoint en fallo.
 4. El benchmark solo guarda `preflight` del sistema y `tasklist` para procesos bloqueantes; Andrea debe registrar por separado la carga/procesos que juzgue interferentes y cualquier desviación. La serie Mac anterior se ejecutó en bloques y permanece como referencia histórica, no como réplica de este procedimiento.
-5. El commit base `016d1867` todavía exigía igualdad numérica exacta frente a Mac. Andrea debe introducir el SHA completo del commit posterior que contiene la política de comparación y verificar el HEAD antes de ejecutar la validación. Los bloques PowerShell no se ejecutaron en Windows durante la preparación. La validación independiente debe registrar cualquier incompatibilidad real de PowerShell, `spawn`, dependencias o preflight. No hay un comando que pruebe el fallo terminal del modelo real sin inyección ni una serie de 50 timeouts en una sola secuencia continua; la herramienta usa 50 runs independientes.
+5. El commit histórico `016d1867` todavía exigía igualdad numérica exacta frente a Mac. Andy validó el commit posterior `4fefb4a`, que contiene la política de comparación multiplataforma. La corrección del reloj tiene un commit futuro pendiente; anotar su SHA cuando exista y verificar el HEAD antes de validarlo. Estos bloques PowerShell se revisaron estáticamente, pero no se ejecutaron en Windows durante la preparación. La validación independiente debe registrar cualquier incompatibilidad real de PowerShell, `spawn`, dependencias o preflight. No hay un comando que pruebe el fallo terminal del modelo real sin inyección ni una serie de 50 timeouts en una sola secuencia continua; la herramienta usa 50 runs independientes.

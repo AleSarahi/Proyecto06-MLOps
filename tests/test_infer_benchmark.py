@@ -135,6 +135,7 @@ def test_misma_solicitud_en_ambas_rutas_y_ready_verificado(tmp_path: Path) -> No
     assert control["detections"] == supervisado["detections"] == []
     assert [control["frame_id"], supervisado["frame_id"]] == [ruta.stem] * 2
     assert all(validar_evento(e) == [] for e in (control, supervisado))
+    assert all(e["t_capture_ms"] <= e["t_emit_ms"] for e in (control, supervisado))
     assert ready["model_sha256"] == detector.cargado.model_sha256
     assert ready["config_sha256"] == detector.config.config_sha256
     assert ready["torch_threads"] == 2

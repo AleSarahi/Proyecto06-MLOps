@@ -30,6 +30,7 @@ from .eventos import (
 )
 from .pesos import cargar_pesos
 from .plazos import RUTA_PLAZOS, PlazosInfer, cargar_plazos_infer_con_hash
+from .reloj import descripcion_reloj, leer_reloj_ns, leer_reloj_s
 from .rutas_seguras import abrir_exclusivo, verificar_checkpoint
 
 INICIO_GUARDA_S = 120.0  # Guarda operativa de arranque, no umbral de aceptación de latencia.
@@ -80,7 +81,7 @@ def _bucle_trabajador(
     hash_modelo: str,
     generacion: int,
 ) -> None:
-    inicio_carga_ns = time.monotonic_ns()
+    inicio_carga_ns = leer_reloj_ns()
     try:
         detector = fabrica(config_ruta, pesos_ruta)
         if (
@@ -91,11 +92,11 @@ def _bucle_trabajador(
             raise ErrorTrabajador("los SHA-256 del trabajador no coinciden con el run")
         if detector.config.torch_threads != 2:
             raise ErrorTrabajador("la configuración efectiva no usa torch_threads=2")
-        fin_carga_ns = time.monotonic_ns()
+        fin_carga_ns = leer_reloj_ns()
         detector.calentar()
         if torch.get_num_threads() != 2:
             raise ErrorTrabajador("el trabajador no confirmó torch_threads=2 tras calentar")
-        fin_calentamiento_ns = time.monotonic_ns()
+        fin_calentamiento_ns = leer_reloj_ns()
         respuestas.put(
             (
                 generacion,
@@ -121,7 +122,7 @@ def _bucle_trabajador(
             continue
 
         def transcurrido(origen_run: float = origen) -> float:
-            return (time.monotonic() - origen_run) * 1000
+            return (leer_reloj_s() - origen_run) * 1000
 
         def aviso(dimensiones: tuple[int, int], solicitud_id: int = request_id) -> None:
             respuestas.put((generacion, solicitud_id, "decoded", dimensiones))
@@ -152,7 +153,7 @@ class PredictorSupervisado:
         *,
         fabrica: Callable[[Path, Path], DetectorJPEG] = crear_detector_real,
         inicio_guarda_s: float = INICIO_GUARDA_S,
-        reloj: Callable[[], float] = time.monotonic,
+        reloj: Callable[[], float] = leer_reloj_s,
         trazas: list[dict[str, Any]] | None = None,
     ) -> None:
         self.contexto = mp.get_context("spawn")
@@ -171,7 +172,7 @@ class PredictorSupervisado:
         self.cierre_limpio: bool | None = None
 
     def iniciar(self) -> None:
-        inicio_total_ns = time.monotonic_ns()
+        inicio_total_ns = leer_reloj_ns()
         self.generacion += 1
         self.solicitudes = self.contexto.Queue(maxsize=1)
         self.respuestas = self.contexto.Queue()
@@ -191,10 +192,10 @@ class PredictorSupervisado:
         inicio = self.reloj()
         try:
             self.proceso.start()
-            fin_creacion_ns = time.monotonic_ns()
-            limite_inicio = time.monotonic() + self.inicio_guarda_s
+            fin_creacion_ns = leer_reloj_ns()
+            limite_inicio = leer_reloj_s() + self.inicio_guarda_s
             while True:
-                restante = limite_inicio - time.monotonic()
+                restante = limite_inicio - leer_reloj_s()
                 if restante <= 0:
                     raise ErrorTrabajador("se agotó la guarda de inicialización")
                 try:
@@ -219,7 +220,7 @@ class PredictorSupervisado:
             ):
                 raise ErrorTrabajador(f"READY inválido: {respuesta!r}")
             inicio_carga_ns, fin_carga_ns, fin_calentamiento_ns = respuesta[5]
-            fin_ready_ns = time.monotonic_ns()
+            fin_ready_ns = leer_reloj_ns()
             tiempos = _desglosar_ready_ns(
                 (
                     inicio_total_ns,
@@ -426,10 +427,10 @@ def ejecutar_run_supervisado(
         print(f"infer: {exc}", file=sys.stderr)
         falla_reinicio = True
     destino.parent.mkdir(parents=True, exist_ok=True)
-    origen = time.monotonic()
+    origen = leer_reloj_s()
 
     def transcurrido() -> float:
-        return (time.monotonic() - origen) * 1000
+        return (leer_reloj_s() - origen) * 1000
 
     meta = SimpleNamespace(
         config=config, cargado=SimpleNamespace(model_sha256=config.expected_model_sha256)
@@ -507,7 +508,7 @@ def ejecutar_run_supervisado(
             archivo.write(linea + "\n")
             archivo.flush()
             if trazas is not None and not falla_reinicio:
-                publicado_s = time.monotonic()
+                publicado_s = leer_reloj_s()
                 traza = trazas[-1]
                 traza["publicado_monotonic_s"] = publicado_s
                 traza["duracion_publicacion_ms"] = (
@@ -519,7 +520,7 @@ def ejecutar_run_supervisado(
             ultima_captura = captura
             if recuperar:
                 assert registro_recuperacion is not None
-                inicio_recuperacion = time.monotonic()
+                inicio_recuperacion = leer_reloj_s()
                 if not supervisor.detener():
                     falla_reinicio = True
                 else:
@@ -528,9 +529,7 @@ def ejecutar_run_supervisado(
                     except ErrorTrabajador as exc:
                         print(f"infer: reinicio fallido: {exc}", file=sys.stderr)
                         falla_reinicio = True
-                registro_recuperacion["reinicio_ms"] = (
-                    time.monotonic() - inicio_recuperacion
-                ) * 1000
+                registro_recuperacion["reinicio_ms"] = (leer_reloj_s() - inicio_recuperacion) * 1000
                 registro_recuperacion["reinicio_ok"] = not falla_reinicio
                 if trazas is not None:
                     trazas[-1]["reinicio_ok"] = not falla_reinicio
@@ -555,6 +554,7 @@ def ejecutar_run_supervisado(
                     },
                     "model_sha256": config.expected_model_sha256,
                     "config_sha256": config.config_sha256,
+                    "reloj": descripcion_reloj(),
                     "generaciones": supervisor.cronologia,
                     "conteos": {
                         "eventos": len(eventos),

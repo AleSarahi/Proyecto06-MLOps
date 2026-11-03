@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import math
 import threading
-import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -16,6 +15,7 @@ from ultralytics.models.yolo.detect.predict import DetectionPredictor
 
 from .config import ConfigDetector
 from .pesos import ModeloCargado
+from .reloj import leer_reloj_s
 
 _COCO_NCLASES = 80
 
@@ -193,9 +193,9 @@ class DetectorJPEG:
         height, width = imagen.shape[:2]
         with self._lock:
             self.predictor.tensor_shape = None
-            inicio = time.perf_counter()
+            inicio = leer_reloj_s()
             resultados = self.predictor(source=imagen, stream=False)
-            transcurrido = (time.perf_counter() - inicio) * 1000
+            transcurrido = (leer_reloj_s() - inicio) * 1000
             if len(resultados) != 1 or self.predictor.tensor_shape is None:
                 raise ErrorSalidaInvalida("el predictor no devolvió exactamente un cuadro")
             resultado = resultados[0]

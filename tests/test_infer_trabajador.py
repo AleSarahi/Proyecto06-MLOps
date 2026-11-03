@@ -23,6 +23,7 @@ from control.supervisor import Supervisor
 from infer.config import RUTA_CONFIG_DETECTOR, cargar_config_detector
 from infer.detector import ErrorSalidaInvalida, ResultadoJPEG
 from infer.eventos import _evento_cuadro
+from infer.reloj import leer_reloj_s
 from infer.trabajador import PredictorSupervisado, ejecutar_run_supervisado
 
 
@@ -139,6 +140,8 @@ def test_inferencia_normal_y_manifiesto_de_plazos(tmp_path: Path) -> None:
         "plazos_sha256": hashlib.sha256(plazos).hexdigest(),
     }
     assert manifiesto["config_sha256"] == cargar_config_detector().config_sha256
+    assert manifiesto["reloj"]["nombre"] == "perf_counter"
+    assert manifiesto["reloj"]["resolucion_reportada_s"] > 0
     assert (
         manifiesto["percepcion"]["sha256"]
         == hashlib.sha256((tmp_path / "eventos.jsonl").read_bytes()).hexdigest()
@@ -217,6 +220,7 @@ def test_timeout_se_publica_antes_del_reinicio_y_traza_el_flush(tmp_path: Path) 
     manifiesto = json.loads((tmp_path / "antes-ready.infer-run.json").read_text())
     assert manifiesto["generaciones"][-1]["estado"] == "ready"
     assert manifiesto["generaciones"][-2]["reinicio_ms"] >= 600
+    assert manifiesto["reloj"]["nombre"] == "perf_counter"
 
 
 @pytest.mark.parametrize("operacion", ["write", "flush"])
@@ -438,7 +442,10 @@ def test_prioridad_error_y_stale_durante_inferencia(
         assert "error" not in evento and evento["detections"] == []
 
 
-@pytest.mark.parametrize(("envio_s", "estado"), [(0.5, "result"), (0.500001, "timeout")])
+@pytest.mark.parametrize(
+    ("envio_s", "estado"),
+    [(0.499, "result"), (0.5, "result"), (0.501, "timeout")],
+)
 def test_plazo_incluye_envio_y_respeta_limite_exacto(tmp_path: Path, envio_s: float, estado: str):
     reloj = [0.0]
 
@@ -474,6 +481,43 @@ def test_plazo_incluye_envio_y_respeta_limite_exacto(tmp_path: Path, envio_s: fl
     assert predictor.trazas[0]["publicado_monotonic_s"] is None
 
 
+@pytest.mark.parametrize(("recepcion_s", "estado"), [(0.3, "result"), (0.301, "timeout")])
+def test_plazo_incluye_respuesta_completa(tmp_path: Path, recepcion_s: float, estado: str) -> None:
+    reloj = [0.0]
+
+    class Solicitudes:
+        def put_nowait(self, _mensaje):
+            reloj[0] += 0.2
+
+    class Respuestas:
+        def get(self, timeout):
+            assert timeout >= 0
+            reloj[0] += recepcion_s
+            return (1, 1, "result", {"run_id": "r", "frame_id": "a"})
+
+    predictor = object.__new__(PredictorSupervisado)
+    predictor.generacion = 1
+    predictor.solicitudes = Solicitudes()
+    predictor.respuestas = Respuestas()
+    predictor.proceso = None
+    predictor.reloj = lambda: reloj[0]
+    predictor.trazas = []
+    clase, evento, _ = predictor.solicitar(
+        request_id=1,
+        ruta=tmp_path / "a.jpg",
+        run_id="r",
+        secuencia="s",
+        indice=1,
+        frame_id="a",
+        captura=0,
+        origen=0,
+        plazos=SimpleNamespace(detector_timeout_ms=500, max_frame_age_ms=500),
+    )
+    assert clase == estado
+    assert (evento is not None) == (estado == "result")
+    assert predictor.trazas[0]["inicio_monotonic_s"] == 0.0
+
+
 def test_reinicio_exitoso_acepta_cuadro_nuevo_vigente(tmp_path: Path) -> None:
     ruta = tmp_path / "a.jpg"
     _jpeg(ruta)
@@ -494,7 +538,7 @@ def test_reinicio_exitoso_acepta_cuadro_nuevo_vigente(tmp_path: Path) -> None:
             indice=1,
             frame_id="a",
             captura=0,
-            origen=time.monotonic(),
+            origen=leer_reloj_s(),
             plazos=plazos,
         )
         assert primero[0] == "timeout"
@@ -508,7 +552,7 @@ def test_reinicio_exitoso_acepta_cuadro_nuevo_vigente(tmp_path: Path) -> None:
             indice=2,
             frame_id="b",
             captura=0,
-            origen=time.monotonic(),
+            origen=leer_reloj_s(),
             plazos=plazos,
         )
     finally:
@@ -537,7 +581,7 @@ def test_respuesta_duplicada_de_generacion_anterior_se_descarta(tmp_path: Path) 
     predictor.solicitudes = Solicitudes()
     predictor.respuestas = Respuestas()
     predictor.proceso = None
-    predictor.reloj = time.monotonic
+    predictor.reloj = leer_reloj_s
     clase, evento, _ = predictor.solicitar(
         request_id=2,
         ruta=tmp_path / "a.jpg",
@@ -546,7 +590,7 @@ def test_respuesta_duplicada_de_generacion_anterior_se_descarta(tmp_path: Path) 
         indice=2,
         frame_id="nuevo",
         captura=0,
-        origen=time.monotonic(),
+        origen=leer_reloj_s(),
         plazos=SimpleNamespace(detector_timeout_ms=500, max_frame_age_ms=500),
     )
     assert clase == "result" and evento == {"run_id": "r", "frame_id": "nuevo"}

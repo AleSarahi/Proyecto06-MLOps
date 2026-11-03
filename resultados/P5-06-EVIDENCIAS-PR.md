@@ -1,7 +1,25 @@
 # Evidencias previstas para el PR en borrador de P5-06
 
-Lista exacta preparada antes de publicar. No se ha creado el PR ni se han hecho commits.
+La lista original se preparó antes de publicar el PR #86. Se conserva a continuación
+como inventario histórico; la evidencia Windows se recibió después.
 La serie Mac original queda intacta; las correcciones de interpretación están en la auditoría.
+
+## Evidencia Windows recibida después de abrir el PR
+
+El ZIP funcional independiente para el commit `4fefb4adddb0e9d9a04379b7e5589a0e6d6758ff`
+se conserva **fuera de Git**, sin cambios, con SHA-256
+`8a8192fe0f91f7c72fb2d9e6ee557e79a6917818af4dcf03a7b7e59966c903d4`.
+La copia pública depurada se encuentra en
+`resultados/p5-06-validacion-windows-4fefb4a-2026-11-02/evidencia-publica.zip`
+(SHA-256 `12addf5aeb48bd4b90d846e177360b8adc29631bcd30ca897159323a45ff0b42`).
+Su `README.md` documenta procedencia, ocho archivos depurados, integridad, entorno,
+desviaciones y resultados. El índice original contenía BOM UTF-8; sus 282 entradas se
+verificaron con `utf-8-sig`. El índice público se regeneró en UTF-8 sin BOM y sus 282
+hashes coinciden. El ZIP público no es idéntico al original.
+Es evidencia funcional anterior al reloj de alta resolución. El benchmark oficial Windows
+sigue pendiente; la diferencia numérica frente a Mac permanece pendiente de investigación.
+
+## Inventario original del PR
 
 - `resultados/P5-06-AUDITORIA-PREFLIGHT.md`
 - `resultados/P5-06-DISENO-Y-ACEPTACION.md`

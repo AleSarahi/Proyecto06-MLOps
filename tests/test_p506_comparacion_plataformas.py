@@ -161,6 +161,8 @@ def test_benchmark_guarda_muestra_y_discrepancia_antes_de_detenerse(tmp_path, mo
     with pytest.raises(RuntimeError, match="discrepancia estructural"):
         modulo.main()
     parcial = json.loads(salida.read_text())
+    assert parcial["reloj"]["nombre"] == "perf_counter"
+    assert parcial["reloj"]["resolucion_reportada_s"] > 0
     assert parcial["fase"] == "latencia_supervisado"
     assert parcial["indice"] == 1
     assert parcial["calentamientos_excluidos_ms"] == {"control": [12.0], "supervisado": [13.0]}
