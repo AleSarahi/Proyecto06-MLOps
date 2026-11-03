@@ -70,3 +70,56 @@ en `resumen.json`.
 
 Salida de `construir`: `0` sin advertencias · `1` con advertencias (cuadros sin evento, errores del detector,
 mínimos de E3, procedencia sin comprobar...) · `2` si no se puede leer o unir; no se escribe nada.
+
+### La corrida de entrega: S01–S08 en un solo run (`resultados/p5-14/`)
+
+Las 8 secuencias de evaluación de `datos-evaluacion-v1`, de `infer` a la trazabilidad, con el `run_id`
+`p5-14-s01-s08`. Se hizo con [`p5-14-corrida.py`](p5-14-corrida.py) en la laptop de A3 (i5-1135G7, 8 GB,
+Windows 11), conectada a la corriente y con lo demás cerrado:
+
+```bash
+uv run --locked python resultados/p5-14-corrida.py --pesos modelo/descargas/yolo11n.pt
+```
+
+`infer` recibe una secuencia por llamada, así que el script la llama 8 veces con el mismo `run_id` y los
+`t_capture_ms` de cada `captura.jsonl`, recorridos para que el reloj siga creciendo: cada secuencia empieza
+250 ms después del último cuadro de la anterior. Antes comprueba el SHA-256 de cada JPEG contra su
+`captura.jsonl`. Cada secuencia va en su carpeta (`infer/Sxx/`) porque `infer` escribe el manifiesto del run
+(`<run_id>.infer-run.json`) junto al JSONL. `corrida.json` guarda el commit, la energía al empezar y al
+terminar, el equipo, el desplazamiento de cada secuencia, el SHA-256 de cada JPEG y la salida de cada paso.
+
+| | |
+|---|---|
+| Cuadros | 107, los 107 `status=ok`: ningún `stale`, `detector_timeout` ni otro error |
+| Edad del cuadro al emitirse (`t_emit_ms − t_capture_ms`) | de 99 a 161 ms (p50 104) |
+| Errores de B | 0; la única orden sin cuadro es el `STOP` de cierre |
+| Métricas (IoU 0.50) | TP 71, FP 0, FN 24: precisión 1.0, recall 0.747, **F1 0.8554**; criterio 1.4: 5.0 |
+| Por clase | botella (39) F1 0.829; taza (41) F1 0.881 |
+| Hashes | `model_sha256` `0ebbc80d…` y `config_sha256` `6428a259…`, los congelados (`procedencia.comprobada: true`) |
+| Salida de los pasos | `infer` ×8, `control`, `construir` y `recalcular`: `0` |
+
+| Secuencia | Acciones de B |
+|---|---|
+| S01 | AVANZAR 12 |
+| S02 | AVANZAR 5, GIRAR_IZQ 7 |
+| S03 | AVANZAR 10, GIRAR_IZQ 2 |
+| S04 | AVANZAR 12 |
+| S05 | GIRAR_IZQ 1, STOP 11 |
+| S06 | AVANZAR 11, GIRAR_IZQ 3, STOP 6 |
+| S07 | AVANZAR 2, GIRAR_IZQ 13 |
+| S08 | AVANZAR 10, GIRAR_IZQ 2 |
+
+Para comprobarlo:
+
+```bash
+uv run --locked python -m trazabilidad recalcular resultados/p5-14/trazabilidad/   # sale 0: mismas cifras
+uv run --locked python -m trazabilidad cuadro resultados/p5-14/trazabilidad/ S02_f0008
+```
+
+`S02_f0008` llega en un paso a su detección (taza, confianza 0.82), su anotación (TP 1), la decisión de la
+política y el comando `GIRAR_IZQ` (velocidad 0.4, giro −0.5).
+
+**En batería no sale así.** Una prueba antes de esta, en batería al 68 %, dio 74 `stale` y 4
+`detector_timeout` de 107 (F1 0.21): el primer cuadro de varias secuencias pasó los 500 ms con el detector
+en frío, y reiniciarlo tras el timeout deja viejos los cuadros siguientes. Esa prueba no se guardó. Ver
+[`mediciones/LIMITES.md`](../mediciones/LIMITES.md), *En una máquina lenta o cargada*.
