@@ -455,7 +455,7 @@ def evaluar(
     veredicto["pasa"] = not motivos
     veredicto["motivos"] = motivos
     texto = json.dumps(veredicto, ensure_ascii=False, indent=2) + "\n"
-    (salida / NOMBRE_VEREDICTO).write_text(texto, encoding="utf-8")  # NOSONAR (S8707)
+    (salida / NOMBRE_VEREDICTO).write_text(texto, encoding="utf-8", newline="\n")  # NOSONAR (S8707)
     return veredicto
 
 
@@ -547,7 +547,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         for n in nombres
     ]
     texto = tabla(veredictos, args.salida)
-    (args.salida / NOMBRE_RESUMEN).write_text(texto, encoding="utf-8")  # NOSONAR (S8707)
+    resumen = args.salida / NOMBRE_RESUMEN
+    resumen.write_text(texto, encoding="utf-8", newline="\n")  # NOSONAR (S8707)
     print(texto, end="")
     return 0 if all(v["pasa"] for v in veredictos) else 1
 

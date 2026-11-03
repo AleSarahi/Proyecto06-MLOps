@@ -3,7 +3,7 @@
     "recorrido-real-der"
   ],
   "entrada": {
-    "ruta": "C:/Users/angel/AppData/Local/Temp/claude/c--Users-angel-OneDrive-Documentos-semestre-9-intercambio-mlops-projecto-5/13b72590-26d4-47f0-ad0f-88e48d3948ad/scratchpad/nueva/der/detector.jsonl",
+    "ruta": "resultados/recorrido-real/der/detector.jsonl",
     "sha256": "94056e5ad739f1ce565198d1303dd1a75e2ee2908bd0a0a76a303c0b5b175ed3"
   },
   "acciones": {
