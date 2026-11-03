@@ -49,9 +49,10 @@ def test_archivo_que_ya_coincide_no_se_vuelve_a_descargar(tmp_path: Path):
 def test_archivo_distinto_en_destino_falla_sin_sobrescribirlo(tmp_path: Path):
     destino = tmp_path / "yolo11n.pt"
     destino.write_bytes(b"otro checkpoint")
+    url = _fuente(tmp_path)
 
     with pytest.raises(descarga.ErrorDescarga, match="ya existe y su SHA-256 no coincide"):
-        descarga.descargar_pesos(_fuente(tmp_path), destino, SHA, len(CONTENIDO))
+        descarga.descargar_pesos(url, destino, SHA, len(CONTENIDO))
     assert destino.read_bytes() == b"otro checkpoint"
 
 
@@ -66,18 +67,20 @@ def test_archivo_distinto_en_destino_falla_sin_sobrescribirlo(tmp_path: Path):
 )
 def test_bytes_distintos_no_llegan_a_la_ruta_final(tmp_path: Path, contenido: bytes, mensaje):
     destino = tmp_path / "descargas" / "yolo11n.pt"
+    url = _fuente(tmp_path, contenido)
 
     with pytest.raises(descarga.ErrorDescarga, match=mensaje):
-        descarga.descargar_pesos(_fuente(tmp_path, contenido), destino, SHA, len(CONTENIDO))
+        descarga.descargar_pesos(url, destino, SHA, len(CONTENIDO))
     assert not destino.exists()
     assert _sin_temporales(destino.parent)
 
 
 def test_fuente_inalcanzable_no_deja_temporales(tmp_path: Path):
     destino = tmp_path / "descargas" / "yolo11n.pt"
+    url = (tmp_path / "no-existe.pt").as_uri()
 
     with pytest.raises(OSError):
-        descarga.descargar_pesos((tmp_path / "no-existe.pt").as_uri(), destino, SHA, len(CONTENIDO))
+        descarga.descargar_pesos(url, destino, SHA, len(CONTENIDO))
     assert not destino.exists()
     assert _sin_temporales(destino.parent)
 

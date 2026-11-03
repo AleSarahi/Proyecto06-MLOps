@@ -28,8 +28,9 @@ $ git status --short
 # (vacío: los pesos quedan fuera de Git)
 ```
 
-Con `--url` apuntando a otro checkpoint de la misma release (`yolov8n.pt`), el comando sale con 2
-(`la descarga pasa de 5613764 B: no es el checkpoint`) y no deja nada en la ruta final.
+Con `descargar_pesos` apuntando a otro checkpoint de la misma release (`yolov8n.pt`) y el SHA-256 de
+`config/detector.json`, falla con `la descarga pasa de 5613764 B: no es el checkpoint` y la carpeta
+queda vacía. El comando no deja elegir la fuente (ver "Lo que no se probó").
 
 ## Matriz de aceptación
 
@@ -52,4 +53,5 @@ deserializarlo. `test_pesos_reales_coinciden_con_tamano_config_y_licencia` los r
   solo usa la biblioteca estándar (`urllib`, `hashlib`, `tempfile`, `os.replace`).
 - **Detrás de un proxy o sin certificados del sistema**: la descarga usa la configuración TLS por omisión
   de Python. Si falla, se puede bajar el archivo a mano y ponerlo en `modelo/descargas/`: correr el
-  comando otra vez lo verifica sin red.
+  comando otra vez lo verifica sin red. Es la única alternativa: el comando ya no acepta otra URL
+  (`--url` se quitó porque SonarCloud lo marcó como S8703 y solo vale la release oficial).

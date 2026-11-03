@@ -30,8 +30,8 @@ uv run --locked python -m infer.descarga
   entonces lo deja en `modelo/descargas/`. Si no coincide, no queda nada en esa ruta y sale con 2.
 - Si el archivo ya está y coincide, no vuelve a bajarlo (`ya estaba`). Si está pero es otro, falla y no
   lo sobrescribe: hay que borrarlo a mano.
-- `--destino <ruta>` lo guarda en otro lado; `--url <url>` lo baja de otra fuente, con el mismo
-  SHA-256 obligatorio.
+- `--destino <ruta>` lo guarda en otro lado. La fuente no se puede cambiar: si no hay acceso a la
+  release, se copia el archivo a mano a `modelo/descargas/` y el comando lo verifica sin red.
 - Después, todo corre sin red: `--weights modelo/descargas/yolo11n.pt` en `infer`, y
   `P5_05_YOLO11N_PT=modelo/descargas/yolo11n.pt` para las pruebas con el detector real.
 - Para comprobarlo a mano: `sha256sum modelo/descargas/yolo11n.pt` (Git Bash) o
