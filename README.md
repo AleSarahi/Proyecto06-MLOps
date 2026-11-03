@@ -95,7 +95,7 @@ Se corren desde la raíz del repo, después de `uv sync --locked`.
 |---|---|
 | Verificar el conjunto (`verify_dataset`) | `uv run --locked python -m conjunto verificar --sha256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
 | Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run>` |
-| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG (**PENDIENTE: confirmar con Heriberto que sale de `t_relativo_ms` del manifiesto**) |
+| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights <yolo11n.pt> --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG, en orden: el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
 | Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>` |
 | Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=<yolo11n.pt> --model-sha256 <hash> --config-sha256 <hash>` |
 
