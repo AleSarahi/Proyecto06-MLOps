@@ -1,9 +1,20 @@
 # P5-04 · Selección del detector
 
-**Estado:** YOLO11n sigue seleccionado condicionalmente. Tras la revisión de
+**Estado (2026-11-02):** **YOLO11n queda seleccionado.** Tras la revisión de
 Andy con el umbral de la política B, ambas PM aprobaron que el dominio de
-obstáculos quede en botella y taza. Pendientes la documentación completa de
-AGPL-3.0 y la prueba de compatibilidad Windows. P5-04 no está cerrado.
+obstáculos quede en botella y taza (`bottle=39`, `cup=41`). Lo que dejaba la
+selección en condicional ya se cumplió:
+
+- **Windows:** P5-15 (#82) probó YOLO11n en la laptop Windows de Ale (A3) y
+  registró ahí el benchmark formal (`mediciones/final-1` a `final-3`).
+- **Licencia:** el origen, la AGPL-3.0 del código y de los pesos, y cómo aplica
+  a la entrega están en la ficha [`modelo/README.md`](README.md) (P5-07).
+- **PR #64** (T12, Hannah) está integrado: el Grupo B ya usa las clases
+  `[39, 41]`.
+
+El resto del documento es el registro de la selección tal como se hizo; los
+pendientes de Windows, licencia y PR #64 que menciona quedaron resueltos como
+dice este estado.
 
 ## 1. Contexto
 
