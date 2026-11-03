@@ -14,6 +14,7 @@ import cv2
 import numpy as np
 import pytest
 import torch
+from PIL import Image
 
 import infer.__main__ as modulo_cli
 import infer.eventos as modulo_eventos
@@ -274,6 +275,69 @@ def test_jpeg_corrupto_emite_unreadable_image(tmp_path):
     assert errores == 1 and eventos[0]["error"]["code"] == "unreadable_image"
 
 
+@pytest.mark.parametrize(
+    ("nombre", "estado"),
+    [
+        ("no_es_jpeg.jpg", "error"),
+        ("sin_imagen.jpg", "error"),
+        ("vacia.jpg", "error"),
+        ("truncado.jpg", "error"),
+        ("otras_dimensiones.jpg", "ok"),
+    ],
+)
+def test_fixtures_reales_pasan_por_flujo_infer(nombre, estado, tmp_path):
+    class DetectorFixture(DetectorFalso):
+        def inferir(self, ruta, *, imagen=None):
+            resultado = super().inferir(ruta, imagen=imagen)
+            return replace(resultado, width=imagen.shape[1], height=imagen.shape[0])
+
+    entrada = Path(__file__).resolve().parents[1] / "datos" / "fixtures" / nombre
+    eventos, errores = _run(tmp_path, DetectorFixture(), entrada=entrada)
+    [evento] = eventos
+    assert evento["status"] == estado
+    assert evento["detections"] == []
+    if estado == "error":
+        assert errores == 1
+        assert evento["error"]["code"] == "unreadable_image"
+        assert (evento["image_width"], evento["image_height"]) == (None, None)
+    else:
+        assert errores == 0
+        assert "error" not in evento
+        assert (evento["image_width"], evento["image_height"]) == (320, 240)
+
+
+def test_jpeg_progresivo_valido_pasa_por_flujo_infer(tmp_path):
+    entrada = tmp_path / "progresivo.jpg"
+    Image.new("RGB", (80, 60), (10, 20, 30)).save(entrada, format="JPEG", progressive=True)
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    [evento] = eventos
+    assert errores == 0
+    assert evento["status"] == "ok"
+    assert evento["detections"] == []
+    assert (evento["image_width"], evento["image_height"]) == (80, 60)
+
+
+def test_jpeg_con_relleno_tras_eoi_pasa_por_flujo_infer(tmp_path):
+    entrada = _jpeg(tmp_path / "relleno.jpg")
+    entrada.write_bytes(entrada.read_bytes() + b"relleno posterior al EOI")
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    [evento] = eventos
+    assert errores == 0
+    assert evento["status"] == "ok"
+    assert evento["detections"] == []
+    assert (evento["image_width"], evento["image_height"]) == (80, 60)
+
+
+def test_soi_y_eoi_sin_imagen_completa_emite_unreadable_image(tmp_path):
+    entrada = tmp_path / "solo_marcadores.jpg"
+    entrada.write_bytes(b"\xff\xd8\xff\xd9")
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    assert errores == 1
+    assert eventos[0]["status"] == "error"
+    assert eventos[0]["error"]["code"] == "unreadable_image"
+    assert eventos[0]["detections"] == []
+
+
 @pytest.mark.parametrize("contenido", [None, b"", b"\xff\xd8\xff"])
 def test_jpeg_ausente_vacio_o_truncado_publica_error_v1(tmp_path, contenido):
     ruta = tmp_path / "fallido.jpg"
@@ -287,6 +351,18 @@ def test_jpeg_ausente_vacio_o_truncado_publica_error_v1(tmp_path, contenido):
     assert evento["error"]["message"]
     assert evento["detections"] == []
     assert (evento["image_width"], evento["image_height"]) == (None, None)
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="FIFO no disponible en esta plataforma")
+def test_fifo_jpeg_publica_unreadable_image_sin_leerlo(tmp_path):
+    entrada = tmp_path / "flujo.jpg"
+    os.mkfifo(entrada)
+    eventos, errores = _run(tmp_path, entrada=entrada)
+    [evento] = eventos
+    assert errores == 1
+    assert evento["status"] == "error"
+    assert evento["error"]["code"] == "unreadable_image"
+    assert evento["detections"] == []
 
 
 def test_cli_jpeg_individual_inexistente_publica_evento(tmp_path, monkeypatch):
