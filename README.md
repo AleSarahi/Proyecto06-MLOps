@@ -25,6 +25,9 @@ uv sync --locked
 ```
 
 Funciona igual en Windows, macOS y Linux. En Windows, los comandos con `bash` necesitan Git Bash.
+Si después de instalarlo `uv` no se reconoce (en Windows, `pip` sin permisos de administrador lo deja en una
+carpeta fuera del `PATH` y lo avisa), `python -m uv` hace lo mismo: `python -m uv sync --locked`,
+`python -m uv run …`.
 
 ## Comandos
 
@@ -33,13 +36,13 @@ Funciona igual en Windows, macOS y Linux. En Windows, los comandos con `bash` ne
 | Pruebas | `uv run pytest -q` |
 | Lint y formato | `uv run ruff check .` · `uv run ruff format --check .` |
 | Validar eventos del contrato | `uv run python -m contrato config/contrato/ejemplos/flujo.jsonl` |
-| Métricas de detección (P5-13) | `uv run python -m metricas --detecciones run.jsonl --anotaciones anotaciones.jsonl --salida resultados/metricas/ --model-sha256 … --config-sha256 …` (ver [`config/anotaciones/`](config/anotaciones/README.md)) |
+| Métricas de detección (P5-13) | `uv run --locked python -m metricas …`: comando completo y cómo juntar las 8 secuencias en [Grupo A · Comandos](#grupo-a--percepción-y-datos) |
 | Resultados por cuadro y recálculo (P5-14) | `uv run python -m trazabilidad construir --corrida resultados/<run>/ --anotaciones datos/anotaciones.jsonl --salida resultados/<run>/trazabilidad/` · `… recalcular <carpeta>` · `… cuadro <carpeta> <frame_id>` (ver [`resultados/`](resultados/README.md)) |
-| Benchmark (P5-15) | `uv run python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=<yolo11n.pt> --model-sha256 … --config-sha256 …` (ver [`mediciones/`](mediciones/README.md)) |
+| Benchmark (P5-15) | `uv run --locked python -m bench …`: comando completo en [Grupo A · Comandos](#grupo-a--percepción-y-datos) (ver [`mediciones/`](mediciones/README.md)) |
 | Límites (P5-16) | `uv run python -m bench.limites mediciones/final-1/ mediciones/final-2/ mediciones/final-3/ --sobrecosto mediciones/final-sobrecosto/ --salida mediciones/final-contraste/` (ver [`mediciones/LIMITES.md`](mediciones/LIMITES.md)) |
 | Capturar una secuencia del carro (P5-09) | `uv run python -m captura --url http://IP:81/stream --secuencia S01 [--cuadros 12]` (guarda en `datos/cuadros/S01/` solo si sale completa; un intento fallido va a `datos/cuadros/_fallidas/`; ver [`datos/DOMINIO.md`](datos/DOMINIO.md)) |
 | Manifiesto y `verify_dataset` (P5-11) | `uv run python -m conjunto manifiesto` · `uv run python -m conjunto verificar [--sha256 HASH_CONGELADO]` · `uv run python -m conjunto hojas --salida <carpeta nueva>` (leen `datos/cuadros/`, `datos/anotaciones.jsonl` y `datos/manifiesto.jsonl`) |
-| Inferir (P5-05) | `uv run --locked python -m infer --input <JPEG o carpeta> --weights <ruta local>/yolo11n.pt --output <archivo .jsonl> --run-id <run> [--sequence-id S01] [--capture-ms …]` (ver [`config/DETECTOR.md`](config/DETECTOR.md)) |
+| Pesos e inferencia (P5-07, P5-05) | `uv run --locked python -m infer.descarga` (una vez, con red) y `uv run --locked python -m infer …`: comandos completos en [Grupo A · Comandos](#grupo-a--percepción-y-datos) (ver [`config/DETECTOR.md`](config/DETECTOR.md)) |
 | Correr el control con una secuencia (grupo B) | `uv run python -m control --entrada <eventos.jsonl> --config config/control/ --salida <carpeta>/` (ver [Grupo B](#grupo-b--control-y-verificación)) |
 | Casos C1–C10 (grupo B) | `uv run python casos/runner.py` |
 
@@ -84,7 +87,7 @@ El carro (P5-19) lo armaron y revisaron los tres. Los integrantes del grupo B es
 | A1 | A3 | Detector y hashes para medir | `src/infer/`, `config/detector.json` |
 | A1 | B | Eventos por cuadro | [Contrato v1](config/contrato/CONTRATO.md) |
 | A2 | B | Secuencias, mapa de casos y entradas fallidas | `datos/MAPA_CASOS.md`, `datos/fixtures/` |
-| A2 | B | S9 y S10, solo para pruebas de B, fuera de la evaluación | `datos/pruebas-b/` |
+| A2 | B | S09 y S10, solo para pruebas de B, fuera de la evaluación | `datos/pruebas-b/` |
 | B | A3 | Corrida de control para unirla con detecciones y anotaciones | `resultados/<run>/` |
 
 ### Comandos
@@ -96,9 +99,32 @@ Se corren desde la raíz del repo, después de `uv sync --locked`.
 | Bajar y verificar los pesos (una vez, con red) | `uv run --locked python -m infer.descarga`: deja `modelo/descargas/yolo11n.pt` (fuera de Git) solo si su SHA-256 coincide con el de `config/detector.json` (ver [`modelo/README.md`](modelo/README.md)) |
 | Verificar el conjunto (`verify_dataset`) | `uv run --locked python -m conjunto verificar --sha256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
 | Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run>` |
-| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms <ms>`, con un `--capture-ms` por cada JPEG, en orden: el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
-| Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>` |
+| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms 0 --capture-ms 281 --capture-ms 594 --capture-ms 797 --capture-ms 1047 --capture-ms 1344 --capture-ms 1609 --capture-ms 1844 --capture-ms 2141 --capture-ms 2500 --capture-ms 2797 --capture-ms 3156`: un `--capture-ms` por JPEG, en orden, con el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
+| Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>`, con un `<run.jsonl>` que tenga las 8 secuencias (abajo) |
 | Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=modelo/descargas/yolo11n.pt --model-sha256 <hash> --config-sha256 <hash>` |
+
+#### Métricas del conjunto completo
+
+`metricas` evalúa un solo `run_id` contra los 107 cuadros anotados: con una sola secuencia, los demás
+cuadros cuentan como falsos negativos. Hay que inferir S01 a S08 con el **mismo** `--run-id`, cada una en
+**su propia carpeta** (`infer` guarda `<run-id>.infer-run.json` junto a la salida y no lo sobrescribe), y
+juntar las 8 salidas. En Git Bash:
+
+```bash
+for s in S01 S02 S03 S04 S05 S06 S07 S08; do
+  tiempos=$(grep "\"sequence_id\": \"$s\"" datos/manifiesto.jsonl \
+    | sed -E 's/.*"t_relativo_ms": ([0-9]+).*/--capture-ms \1/' | tr '\n' ' ')
+  uv run --locked python -m infer --input datos/cuadros/$s/ --weights modelo/descargas/yolo11n.pt \
+    --output resultados/conjunto/$s/detecciones.jsonl --run-id conjunto --sequence-id $s $tiempos
+done
+cat resultados/conjunto/S0{1..8}/detecciones.jsonl > resultados/conjunto/conjunto.jsonl
+uv run --locked python -m contrato resultados/conjunto/conjunto.jsonl
+# resultados/conjunto/conjunto.jsonl: OK (107 eventos)
+```
+
+`metricas` rechaza un archivo con BOM. En PowerShell 5.1, `>` y `Set-Content -Encoding UTF8` lo agregan;
+si se junta ahí, que sea sin BOM:
+`[IO.File]::WriteAllLines("$PWD\resultados\conjunto\conjunto.jsonl", [string[]](Get-Content resultados\conjunto\S0*\detecciones.jsonl -Encoding UTF8))`.
 
 ### Versión de entrega
 
