@@ -142,26 +142,48 @@ def test_jpeg_ilegible_no_se_confunde_con_cero_detecciones(tmp_path, contenido):
 
 
 def test_error_de_opencv_al_decodificar_es_error_imagen(tmp_path, monkeypatch):
-    ruta = tmp_path / "vacio.jpg"
-    ruta.write_bytes(b"")
+    ruta = _jpeg(tmp_path / "imagen.jpg")
 
-    def imread_con_error(_ruta, _modo):
+    def imdecode_con_error(_contenido, _modo):
         raise cv2.error("!buf.empty() en imdecode")
 
-    monkeypatch.setattr(cv2, "imread", imread_con_error)
+    monkeypatch.setattr(cv2, "imdecode", imdecode_con_error)
     with pytest.raises(ErrorImagenJPEG, match="decodificar"):
         _detector_falso([]).inferir(ruta)
 
 
 @pytest.mark.parametrize("error", [FileNotFoundError("ausente"), PermissionError("sin acceso")])
 def test_error_del_sistema_al_leer_jpeg_es_error_imagen(tmp_path, monkeypatch, error):
-    def imread_con_error(_ruta, _modo):
+    ruta = _jpeg(tmp_path / "imagen.jpg")
+
+    def leer_con_error(_ruta):
         raise error
 
-    monkeypatch.setattr(cv2, "imread", imread_con_error)
+    monkeypatch.setattr(Path, "read_bytes", leer_con_error)
     with pytest.raises(ErrorImagenJPEG, match="decodificar") as capturado:
-        _detector_falso([]).inferir(tmp_path / "ausente.jpg")
+        _detector_falso([]).inferir(ruta)
     assert capturado.value.__cause__ is error
+
+
+def test_directorio_con_extension_jpeg_no_se_lee(tmp_path, monkeypatch):
+    ruta = tmp_path / "directorio.jpg"
+    ruta.mkdir()
+
+    def lectura_prohibida(_ruta):
+        pytest.fail("se intentó leer una ruta que no es archivo regular")
+
+    monkeypatch.setattr(Path, "read_bytes", lectura_prohibida)
+    with pytest.raises(ErrorImagenJPEG, match="decodificar"):
+        DetectorJPEG.leer_imagen(ruta)
+
+
+def test_relleno_tras_eoi_conserva_pixeles_bgr(tmp_path):
+    ruta = _jpeg(tmp_path / "imagen.jpg", 32, 24)
+    original = DetectorJPEG.leer_imagen(ruta)
+    ruta.write_bytes(ruta.read_bytes() + b"\x00\xff\x00relleno")
+    con_relleno = DetectorJPEG.leer_imagen(ruta)
+    np.testing.assert_array_equal(con_relleno, original)
+    assert con_relleno[0, 0, 0] > con_relleno[0, 0, 2]
 
 
 def test_bottle_cup_y_otra_clase_coco(tmp_path):

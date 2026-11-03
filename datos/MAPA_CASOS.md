@@ -73,17 +73,27 @@ de cuadros del conjunto, y en `datos/` no hay ningún JPEG truncado real del str
 `otras_dimensiones.jpg` no es un error para `infer`: el contrato pide los píxeles del cuadro original. Lo
 detectan `captura` y las métricas, que avisan si el tamaño no coincide con la anotación.
 
-Un JPEG que no existe no necesita fixture: basta una ruta inexistente. En `config-detector-v1`, `infer`
-termina con código 2 y sin evento; A1 lo corrige en P5-06.
+Un JPEG que no existe no necesita fixture: basta una ruta inexistente. `infer` publica un evento
+`status=error` con `unreadable_image`; también lo hace para una entrada individual `.jpg` que no
+sea un archivo regular, como una FIFO. Un directorio se trata como entrada de secuencia.
+La validación previa exige SOI, un EOI posterior y decodificación completa con Pillow antes de
+pasar los mismos bytes a OpenCV. Acepta JPEG progresivos válidos y bytes de relleno después de EOI.
+
+**Límite conocido:** un JPEG truncado al que se le añade artificialmente EOI todavía puede
+producir `status=ok`, porque Pillow y OpenCV pueden completar la imagen. `captura` rechaza esos
+cuadros antes de que lleguen a `infer` mediante su comprobación del scan. Una validación del scan
+equivalente dentro de `infer` costaría aproximadamente 13–18 ms adicionales por cuadro, según la
+medición de Karen; no forma parte de esta corrección. Los JPEG originales válidos con marcadores
+de reinicio también pueden ser rechazados por `captura`, una limitación de ese componente.
 
 ### `error.code` del contrato
 
 | `error.code` | Cómo se produce | Estado |
 |---|---|---|
-| `unreadable_image` | Fixtures de arriba | Comprobado, salvo el JPEG inexistente (P5-06) |
-| `detector_exception` | Se fuerza una excepción en el detector | Sin archivo de entrada; pendiente de la lista de A1 (P5-06) |
-| `invalid_output` | Se fuerza una salida inválida del detector | Sin archivo de entrada; pendiente de la lista de A1 (P5-06) |
-| `detector_timeout` | Se fuerza un tiempo agotado | `infer` todavía no lo aplica (P5-06) |
+| `unreadable_image` | Fixtures ilegibles de arriba, JPEG inexistente o ruta no regular | Comprobado en el flujo de `infer` |
+| `detector_exception` | Se fuerza una excepción en el detector | Comprobado con pruebas; no hay JPEG que la provoque por sí solo |
+| `invalid_output` | Se fuerza una salida inválida del detector | Comprobado con pruebas; no hay JPEG que la provoque por sí solo |
+| `detector_timeout` | Se fuerza un tiempo agotado | Comprobado con pruebas del trabajador |
 
 C8 no necesita archivos: el hueco sin cuadros y los cuadros viejos (`status=stale`, o `status=ok` con
 `t_emit_ms − t_capture_ms` mayor que `max_frame_age_ms`) son eventos armados en `casos/C8/entrada.jsonl`.
@@ -91,6 +101,4 @@ C10 puede usar cualquier secuencia.
 
 ## Falta
 
-- [ ] Lista de errores de A1: cómo se fuerza `detector_exception`, `invalid_output` y `detector_timeout` (P5-06).
-- [ ] Corrección del JPEG inexistente en `infer` (P5-06).
 - [ ] B3 confirma que el mapa le sirve para armar C1–C9.
