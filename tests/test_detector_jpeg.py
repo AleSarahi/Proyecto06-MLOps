@@ -142,23 +142,22 @@ def test_jpeg_ilegible_no_se_confunde_con_cero_detecciones(tmp_path, contenido):
 
 
 def test_error_de_opencv_al_decodificar_es_error_imagen(tmp_path, monkeypatch):
-    ruta = tmp_path / "vacio.jpg"
-    ruta.write_bytes(b"")
+    ruta = _jpeg(tmp_path / "imagen.jpg")
 
-    def imread_con_error(_ruta, _modo):
+    def imdecode_con_error(_contenido, _modo):
         raise cv2.error("!buf.empty() en imdecode")
 
-    monkeypatch.setattr(cv2, "imread", imread_con_error)
+    monkeypatch.setattr(cv2, "imdecode", imdecode_con_error)
     with pytest.raises(ErrorImagenJPEG, match="decodificar"):
         _detector_falso([]).inferir(ruta)
 
 
 @pytest.mark.parametrize("error", [FileNotFoundError("ausente"), PermissionError("sin acceso")])
 def test_error_del_sistema_al_leer_jpeg_es_error_imagen(tmp_path, monkeypatch, error):
-    def imread_con_error(_ruta, _modo):
+    def leer_con_error(_ruta):
         raise error
 
-    monkeypatch.setattr(cv2, "imread", imread_con_error)
+    monkeypatch.setattr(Path, "read_bytes", leer_con_error)
     with pytest.raises(ErrorImagenJPEG, match="decodificar") as capturado:
         _detector_falso([]).inferir(tmp_path / "ausente.jpg")
     assert capturado.value.__cause__ is error

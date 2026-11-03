@@ -5,12 +5,14 @@ from __future__ import annotations
 import math
 import threading
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
 import cv2
 import numpy as np
 import torch
+from PIL import Image
 from ultralytics.models.yolo.detect.predict import DetectionPredictor
 
 from .config import ConfigDetector
@@ -166,13 +168,20 @@ class DetectorJPEG:
 
     @staticmethod
     def leer_imagen(ruta: str | Path) -> np.ndarray:
-        """Decodifica una sola vez y distingue fallos de lectura de los del predictor."""
+        """Valida el JPEG completo y entrega píxeles BGR sin releer el archivo."""
         archivo = Path(ruta)
         if archivo.suffix.lower() not in {".jpg", ".jpeg"}:
             raise ErrorImagenJPEG("se requiere un archivo JPEG local")
         try:
-            imagen = cv2.imread(str(archivo), cv2.IMREAD_COLOR)
-        except (cv2.error, OSError) as exc:
+            contenido = archivo.read_bytes()
+            if not contenido.startswith(b"\xff\xd8") or not contenido.endswith(b"\xff\xd9"):
+                raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
+            with Image.open(BytesIO(contenido)) as verificacion:
+                if verificacion.format != "JPEG":
+                    raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
+                verificacion.load()
+            imagen = cv2.imdecode(np.frombuffer(contenido, dtype=np.uint8), cv2.IMREAD_COLOR)
+        except (cv2.error, OSError, SyntaxError, Image.DecompressionBombError) as exc:
             raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}") from exc
         if (
             imagen is None
