@@ -214,7 +214,7 @@ Lo vio el grupo B al reproducir desde una copia limpia ([`docs/copia-limpia.md`]
 | Sesión | Energía y carga | Inferencia por cuadro | Edad al llegar a B (límite 500 ms) | Lo que hizo B con S09 |
 |---|---|---|---|---|
 | Primera | Batería al 10 % y descargando; CPU al 57 % por otros programas | 375–860 ms | 563–4063 ms | **STOP en los 12** (`cuadro_viejo`) |
-| Segunda, la misma laptop | No se registró | — | 126–219 ms | `GIRAR_DER` en los 12, lo esperado |
+| Segunda, la misma laptop | No se registró | No se registró | 126–219 ms | `GIRAR_DER` en los 12, lo esperado |
 
 Cuando cada inferencia tarda más que el periodo entre cuadros, los cuadros se acumulan y llegan cada vez más
 viejos: es el plazo que la tabla del contraste deja más ajustado (el periodo de entrada). B hizo lo correcto,
