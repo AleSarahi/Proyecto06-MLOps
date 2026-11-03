@@ -311,7 +311,7 @@ class Corrida:
             ],
         }
         texto = json.dumps(resumen, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
-        (self.salida / NOMBRE_RUN).write_text(texto, encoding="utf-8")
+        (self.salida / NOMBRE_RUN).write_text(texto, encoding="utf-8", newline="\n")
         return resumen
 
 
@@ -350,7 +350,7 @@ def _es_numero(valor: Any) -> bool:
 
 
 def _anexar(ruta: Path, linea: Any) -> None:
-    with ruta.open("a", encoding="utf-8") as registro:
+    with ruta.open("a", encoding="utf-8", newline="\n") as registro:
         registro.write(json.dumps(linea, ensure_ascii=False, allow_nan=False) + "\n")
 
 

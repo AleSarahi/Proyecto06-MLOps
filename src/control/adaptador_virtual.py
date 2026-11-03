@@ -46,7 +46,7 @@ class AdaptadorVirtual:
             registrado["speed"] = 0
             registrado["steering"] = 0.0
 
-        with self.ruta_registro.open("a", encoding="utf-8") as registro:
+        with self.ruta_registro.open("a", encoding="utf-8", newline="\n") as registro:
             registro.write(json.dumps(registrado, ensure_ascii=False, allow_nan=False) + "\n")
         self._activo = registrado
         return registrado
