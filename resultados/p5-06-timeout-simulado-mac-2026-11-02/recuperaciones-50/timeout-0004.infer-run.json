@@ -1,0 +1,63 @@
+{
+  "run_id": "timeout-0004",
+  "percepcion": {
+    "archivo": "timeout-0004.jsonl",
+    "sha256": "6bedb3bada9afd879300cc6026bb67eaac1cc11b668e067411819a035c920cee"
+  },
+  "plazos": {
+    "detector_timeout_ms": 500.0,
+    "max_frame_age_ms": 500.0,
+    "plazos_sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22"
+  },
+  "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "generaciones": [
+    {
+      "generacion": 1,
+      "estado": "ready",
+      "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "torch_threads": 2,
+      "duracion_ms": 867.945459,
+      "fases_ms": {
+        "creacion_proceso": 3.305209,
+        "arranque_hijo": 864.058541,
+        "carga_verificacion": 0.316542,
+        "calentamiento": 0.013125,
+        "entrega_ready": 0.252042
+      },
+      "solapamiento_creacion_hijo_ms": 0.0
+    },
+    {
+      "generacion": 1,
+      "frame_id": "cuadro-0004",
+      "estado": "timeout",
+      "t_fallo_ms": 502.34825001098216,
+      "reinicio_ms": 904.1636659530923,
+      "reinicio_ok": true
+    },
+    {
+      "generacion": 2,
+      "estado": "ready",
+      "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "torch_threads": 2,
+      "duracion_ms": 889.407875,
+      "fases_ms": {
+        "creacion_proceso": 6.584458,
+        "arranque_hijo": 882.278708,
+        "carga_verificacion": 0.305542,
+        "calentamiento": 0.012125,
+        "entrega_ready": 0.227042
+      },
+      "solapamiento_creacion_hijo_ms": 0.0
+    }
+  ],
+  "conteos": {
+    "eventos": 1,
+    "errores": 1,
+    "stale": 0
+  },
+  "fallo_reinicio": false,
+  "cierre_limpio": true
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "frame_id": "b_ok_tardio",
+    "evento_a": {
+      "schema_version": "1",
+      "run_id": "p506-ok_tardio",
+      "sequence_id": "integracion",
+      "frame_id": "b_ok_tardio",
+      "t_capture_ms": 200.0,
+      "t_emit_ms": 200.0,
+      "image_width": 80,
+      "image_height": 60,
+      "model_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "status": "ok",
+      "bbox_format": "xyxy",
+      "bbox_unit": "px",
+      "detections": []
+    },
+    "t_recibido_ms": 701.0,
+    "edad_al_emitir_ms": 0.0,
+    "edad_al_recibir_ms": 501.0,
+    "error_code": null,
+    "esperado": {
+      "action": "STOP",
+      "reason": "cuadro_viejo"
+    },
+    "observado": {
+      "schema_version": "1",
+      "run_id": "p506-ok_tardio",
+      "frame_id": "b_ok_tardio",
+      "event": "frame",
+      "state_before": "AVANZANDO",
+      "state_after": "DETENIDO",
+      "t_decision_ms": 701.0,
+      "action": "STOP",
+      "speed": 0,
+      "steering": 0.0,
+      "reason": "cuadro_viejo",
+      "received": true,
+      "t_command_ms": 701.0,
+      "valid_until_ms": 1101.0
+    },
+    "error_b": {
+      "run_id": "p506-ok_tardio",
+      "frame_id": "b_ok_tardio",
+      "t_ms": 701.0,
+      "motivo": "cuadro_viejo",
+      "errores": [
+        "edad del cuadro 501.0 ms (ahora_ms - t_capture_ms) > max_frame_age_ms 500 ms"
+      ]
+    }
+  }
+]

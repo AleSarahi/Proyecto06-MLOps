@@ -1,0 +1,1 @@
+{"run_id": "p506-invalid_output", "frame_id": "b_fallo", "t_ms": 200.0, "motivo": "error_detector:invalid_output", "errores": ["error.code: 'invalid_output'", "error.message: 'salida inválida del detector'"]}

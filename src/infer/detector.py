@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import math
 import threading
-import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -16,6 +15,7 @@ from ultralytics.models.yolo.detect.predict import DetectionPredictor
 
 from .config import ConfigDetector
 from .pesos import ModeloCargado
+from .reloj import leer_reloj_s
 
 _COCO_NCLASES = 80
 
@@ -164,14 +164,15 @@ class DetectorJPEG:
             if len(resultados) != 1:
                 raise ErrorSalidaInvalida("el calentamiento no devolvió exactamente un cuadro")
 
-    def inferir(self, ruta: str | Path) -> ResultadoJPEG:
-        """Decodifica el JPEG local y ejecuta la ruta nativa de predicción."""
+    @staticmethod
+    def leer_imagen(ruta: str | Path) -> np.ndarray:
+        """Decodifica una sola vez y distingue fallos de lectura de los del predictor."""
         archivo = Path(ruta)
         if archivo.suffix.lower() not in {".jpg", ".jpeg"}:
             raise ErrorImagenJPEG("se requiere un archivo JPEG local")
         try:
             imagen = cv2.imread(str(archivo), cv2.IMREAD_COLOR)
-        except cv2.error as exc:
+        except (cv2.error, OSError) as exc:
             raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}") from exc
         if (
             imagen is None
@@ -183,12 +184,18 @@ class DetectorJPEG:
             or imagen.shape[1] < 1
         ):
             raise ErrorImagenJPEG(f"no se pudo decodificar JPEG válido: {archivo}")
+        return imagen
+
+    def inferir(self, ruta: str | Path, *, imagen: np.ndarray | None = None) -> ResultadoJPEG:
+        """Ejecuta la predicción; acepta una imagen ya decodificada por el publicador."""
+        if imagen is None:
+            imagen = self.leer_imagen(ruta)
         height, width = imagen.shape[:2]
         with self._lock:
             self.predictor.tensor_shape = None
-            inicio = time.perf_counter()
+            inicio = leer_reloj_s()
             resultados = self.predictor(source=imagen, stream=False)
-            transcurrido = (time.perf_counter() - inicio) * 1000
+            transcurrido = (leer_reloj_s() - inicio) * 1000
             if len(resultados) != 1 or self.predictor.tensor_shape is None:
                 raise ErrorSalidaInvalida("el predictor no devolvió exactamente un cuadro")
             resultado = resultados[0]

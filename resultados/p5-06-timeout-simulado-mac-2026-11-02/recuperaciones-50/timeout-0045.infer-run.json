@@ -1,0 +1,63 @@
+{
+  "run_id": "timeout-0045",
+  "percepcion": {
+    "archivo": "timeout-0045.jsonl",
+    "sha256": "4c52f240a2b15e9b381911d210de7f0047a4693d90db104ad64531520bdbef04"
+  },
+  "plazos": {
+    "detector_timeout_ms": 500.0,
+    "max_frame_age_ms": 500.0,
+    "plazos_sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22"
+  },
+  "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "generaciones": [
+    {
+      "generacion": 1,
+      "estado": "ready",
+      "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "torch_threads": 2,
+      "duracion_ms": 868.06075,
+      "fases_ms": {
+        "creacion_proceso": 3.161583,
+        "arranque_hijo": 864.314167,
+        "carga_verificacion": 0.322166,
+        "calentamiento": 0.012417,
+        "entrega_ready": 0.250417
+      },
+      "solapamiento_creacion_hijo_ms": 0.0
+    },
+    {
+      "generacion": 1,
+      "frame_id": "cuadro-0045",
+      "estado": "timeout",
+      "t_fallo_ms": 502.3554170038551,
+      "reinicio_ms": 900.1833749935031,
+      "reinicio_ok": true
+    },
+    {
+      "generacion": 2,
+      "estado": "ready",
+      "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "torch_threads": 2,
+      "duracion_ms": 884.772209,
+      "fases_ms": {
+        "creacion_proceso": 7.709417,
+        "arranque_hijo": 876.344167,
+        "carga_verificacion": 0.500875,
+        "calentamiento": 0.013,
+        "entrega_ready": 0.20475
+      },
+      "solapamiento_creacion_hijo_ms": 0.0
+    }
+  ],
+  "conteos": {
+    "eventos": 1,
+    "errores": 1,
+    "stale": 0
+  },
+  "fallo_reinicio": false,
+  "cierre_limpio": true
+}

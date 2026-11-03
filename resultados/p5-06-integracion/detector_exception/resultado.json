@@ -1,0 +1,56 @@
+[
+  {
+    "frame_id": "b_fallo",
+    "evento_a": {
+      "schema_version": "1",
+      "run_id": "p506-detector_exception",
+      "sequence_id": "integracion",
+      "frame_id": "b_fallo",
+      "t_capture_ms": 200.0,
+      "t_emit_ms": 200.0,
+      "image_width": 80,
+      "image_height": 60,
+      "model_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "status": "error",
+      "bbox_format": "xyxy",
+      "bbox_unit": "px",
+      "detections": [],
+      "error": {
+        "code": "detector_exception",
+        "message": "falló la ejecución del detector"
+      }
+    },
+    "error_code": "detector_exception",
+    "esperado": {
+      "action": "STOP",
+      "reason": "error_detector:detector_exception"
+    },
+    "observado": {
+      "schema_version": "1",
+      "run_id": "p506-detector_exception",
+      "frame_id": "b_fallo",
+      "event": "frame",
+      "state_before": "AVANZANDO",
+      "state_after": "DETENIDO",
+      "t_decision_ms": 200.0,
+      "action": "STOP",
+      "speed": 0,
+      "steering": 0.0,
+      "reason": "error_detector:detector_exception",
+      "received": true,
+      "t_command_ms": 200.0,
+      "valid_until_ms": 600.0
+    },
+    "error_b": {
+      "run_id": "p506-detector_exception",
+      "frame_id": "b_fallo",
+      "t_ms": 200.0,
+      "motivo": "error_detector:detector_exception",
+      "errores": [
+        "error.code: 'detector_exception'",
+        "error.message: 'falló la ejecución del detector'"
+      ]
+    }
+  }
+]

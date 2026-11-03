@@ -106,8 +106,11 @@ modelo y el calentamiento quedan fuera del run. Antes de fijar ese origen,
 `infer` pasa `np.zeros((480, 640, 3), dtype=np.uint8)` por la misma llamada
 `predictor(source=imagen, stream=False)` de la inferencia real, tanto para un
 JPEG individual como para un directorio. El resultado sintético se descarta:
-no genera evento ni consume `frame_id`. Si falla el calentamiento, el run no
-comienza. Esto no cambia los pesos, la configuración efectiva ni sus hashes.
+no genera evento ni consume `frame_id`. El predictor corre en un proceso persistente
+creado con `spawn`. Si falla su inicialización después de validar la entrada y los
+hashes, el principal registra un evento de error por JPEG pendiente y sale con
+código distinto de cero. Esto no cambia los pesos, la configuración efectiva ni
+sus hashes.
 El hilo verificado es el pool intraop de PyTorch; no impone automáticamente
 límites a OpenCV, BLAS ni al pool interop.
 
@@ -115,8 +118,12 @@ Cada línea es un evento A→B v1 con los 14 campos obligatorios, `status=ok` y
 `detections` (posiblemente `[]`), o `status=error`, `detections=[]` y
 `error={code,message}`. `ErrorImagenJPEG` produce `unreadable_image`,
 `ErrorSalidaInvalida` produce `invalid_output` y otras excepciones del detector
-producen `detector_exception`. No se aplica todavía `stale` ni `detector_timeout`
-de P5-06. El código de salida es 0 sin errores, 1 si hubo eventos de error y 2
+producen `detector_exception`. Un cuadro legible que supera `max_frame_age_ms`
+produce `stale`; una solicitud que supera `detector_timeout_ms` produce
+`detector_timeout`, termina el trabajador y provoca su reinicio. Ambos plazos
+se leen de `config/control/plazos.yaml`; su SHA-256 y valores quedan en
+`<run-id>.infer-run.json`, separados de `config_sha256`. El código de salida es
+0 sin errores, 1 si hubo eventos de error o falló la recuperación y 2
 para fallo de configuración, pesos o contrato. Cada evento se comprueba con
 `validar_evento` y `validar_flujo`, se serializa con `allow_nan=False` y se
 escribe como una línea completa. Se verifica con:
@@ -126,10 +133,11 @@ uv run --locked python -m contrato resultados/ejemplo.jsonl
 ```
 
 Limitaciones: los tiempos de un directorio requieren datos suministrados por
-el usuario; no se infieren del nombre del archivo. La inferencia reutiliza un
-predictor CPU dentro del proceso. Una interrupción externa puede dejar un
-archivo con los eventos completos ya emitidos; esta fase no implementa
-transacciones del archivo entero ni la política temporal P5-06.
+el usuario; no se infieren del nombre del archivo. Una interrupción externa
+puede dejar un archivo con los eventos completos ya emitidos; no hay una
+transacción del archivo entero. El timeout cubre IPC, lectura e inferencia
+de cada solicitud; la carga inicial, el calentamiento y el reinicio se miden
+por separado.
 
 ### Copias neutrales del ensayo P5-04
 

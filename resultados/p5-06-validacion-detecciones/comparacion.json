@@ -1,0 +1,61 @@
+{
+  "tipo": "validacion_funcional_sin_benchmark",
+  "criterio": "igualdad exacta en el mismo host/runtime; cualquier diferencia se investiga",
+  "imagen": "docs/carro/objeto_taza_centro_cerca.jpg",
+  "imagen_sha256": "670fec5473ceda61b5a6283711596d610d75577dfb1bc9d5ffc8de52c1e9cbcc",
+  "referencia_p5_05": "resultados/p5-05-aceptacion-2h-a.jsonl",
+  "checkpoint_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "hilos_control": 2,
+  "ready": {
+    "generacion": 1,
+    "estado": "ready",
+    "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+    "torch_threads": 2,
+    "duracion_ms": 1376.9412090769038
+  },
+  "cierre_limpio": true,
+  "detections_un_proceso": [
+    {
+      "class_id": 41,
+      "confidence": 0.9552612900733948,
+      "bbox": [
+        200.49513244628906,
+        228.77520751953125,
+        494.0516357421875,
+        460.55670166015625
+      ]
+    }
+  ],
+  "detections_supervisado": [
+    {
+      "class_id": 41,
+      "confidence": 0.9552612900733948,
+      "bbox": [
+        200.49513244628906,
+        228.77520751953125,
+        494.0516357421875,
+        460.55670166015625
+      ]
+    }
+  ],
+  "detections_p5_05": [
+    {
+      "class_id": 41,
+      "confidence": 0.9552612900733948,
+      "bbox": [
+        200.49513244628906,
+        228.77520751953125,
+        494.0516357421875,
+        460.55670166015625
+      ]
+    }
+  ],
+  "diferencias": {
+    "un_proceso_vs_supervisado": [],
+    "un_proceso_vs_p5_05": [],
+    "supervisado_vs_p5_05": []
+  },
+  "contrato_v1_valido": true
+}
