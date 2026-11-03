@@ -1,0 +1,1630 @@
+{
+  "tipo": "benchmark_p5_06",
+  "fecha_utc": "2026-11-02T04:35:34.612656+00:00",
+  "responsable": "A1",
+  "host": {
+    "os": "macOS-27.0.1-arm64-arm-64bit",
+    "arquitectura": "arm64",
+    "cpu": "arm",
+    "ram_bytes": 17179869184,
+    "python": "3.12.14",
+    "modo_energia": "bateria-descargando",
+    "carga_sistema_inicio": [
+      3.2705078125,
+      2.81396484375,
+      2.6162109375
+    ],
+    "carga_sistema_fin": [
+      4.24853515625,
+      3.35498046875,
+      2.84814453125
+    ]
+  },
+  "comando": [
+    "resultados/p5-06-benchmark.py",
+    "--weights",
+    "/Users/<REDACTED>/Library/Application Support/P5-05/yolo11n.pt",
+    "--output",
+    "resultados/p5-06-benchmark-mac-2026-11-01/benchmark.json",
+    "--responsable",
+    "A1",
+    "--modo-energia",
+    "bateria-descargando"
+  ],
+  "condiciones_series": {
+    "control_inicio": {
+      "fecha_utc": "2026-11-02T04:34:05.889185+00:00",
+      "carga_sistema": [
+        3.2705078125,
+        2.81396484375,
+        2.6162109375
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t79%; charging; 0:48 remaining present: true"
+    },
+    "control_fin": {
+      "fecha_utc": "2026-11-02T04:34:07.857815+00:00",
+      "carga_sistema": [
+        3.56884765625,
+        2.88330078125,
+        2.6416015625
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t79%; charging; 0:48 remaining present: true"
+    },
+    "supervisado_inicio": {
+      "fecha_utc": "2026-11-02T04:34:07.870791+00:00",
+      "carga_sistema": [
+        3.56884765625,
+        2.88330078125,
+        2.6416015625
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t79%; charging; 0:48 remaining present: true"
+    },
+    "supervisado_fin": {
+      "fecha_utc": "2026-11-02T04:34:11.208872+00:00",
+      "carga_sistema": [
+        3.56884765625,
+        2.88330078125,
+        2.6416015625
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t79%; charging; 0:48 remaining present: true"
+    },
+    "reinicio_inicio": {
+      "fecha_utc": "2026-11-02T04:34:11.230044+00:00",
+      "carga_sistema": [
+        3.56884765625,
+        2.88330078125,
+        2.6416015625
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t79%; charging; 0:48 remaining present: true"
+    },
+    "reinicio_fin": {
+      "fecha_utc": "2026-11-02T04:35:34.605904+00:00",
+      "carga_sistema": [
+        4.24853515625,
+        3.35498046875,
+        2.84814453125
+      ],
+      "energia": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=38076515)\t80%; charging; 0:45 remaining present: true"
+    }
+  },
+  "runtime": {
+    "ultralytics": "8.3.0",
+    "torch": "2.9.0",
+    "torchvision": "0.24.0",
+    "opencv-python": "4.11.0.86",
+    "numpy": "1.26.4"
+  },
+  "checkpoint_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "plazos_sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22",
+  "torch_threads": 2,
+  "imagen": "docs/carro/objeto_taza_centro_cerca.jpg",
+  "imagen_sha256": "670fec5473ceda61b5a6283711596d610d75577dfb1bc9d5ffc8de52c1e9cbcc",
+  "referencia": "resultados/p5-05-aceptacion-2h-a.jsonl",
+  "procedimiento": {
+    "orden": [
+      "control",
+      "supervisado",
+      "reinicio"
+    ],
+    "calentamiento_sintetico": 1,
+    "solicitudes_jpeg_excluidas_por_ruta": 10,
+    "solicitudes_medidas_por_ruta": 50,
+    "reinicios_excluidos": 10,
+    "reinicios_medidos": 50,
+    "reloj": "time.monotonic_ns",
+    "percentil": "numpy.percentile(method=linear)",
+    "control": "antes de _evento_cuadro hasta retorno validado, sin IPC",
+    "supervisado": "antes de solicitar hasta recibir respuesta completa validada",
+    "reinicio": "antes de detener hasta READY verificado"
+  },
+  "muestras_ms": {
+    "control": [
+      33.260042,
+      32.968916,
+      31.474458,
+      32.194083,
+      33.02525,
+      32.393458,
+      31.83825,
+      33.060291,
+      31.433209,
+      31.893583,
+      31.249042,
+      31.743083,
+      31.705041,
+      32.333667,
+      31.384333,
+      31.302625,
+      31.663416,
+      31.51675,
+      31.30075,
+      31.538042,
+      31.418792,
+      31.072583,
+      31.657208,
+      31.902917,
+      31.193333,
+      30.971917,
+      30.953417,
+      31.0755,
+      30.78075,
+      32.049875,
+      31.762667,
+      31.345833,
+      32.102417,
+      31.322417,
+      31.264542,
+      32.09025,
+      31.5155,
+      31.984334,
+      31.782875,
+      31.613458,
+      31.192,
+      31.596292,
+      31.864833,
+      31.374916,
+      31.075375,
+      32.314041,
+      31.230667,
+      30.880375,
+      31.632458,
+      30.887583
+    ],
+    "supervisado": [
+      31.962084,
+      31.213709,
+      30.967125,
+      31.449,
+      31.053833,
+      31.121625,
+      31.691125,
+      31.390417,
+      31.051625,
+      31.066792,
+      31.011667,
+      31.067583,
+      30.993416,
+      31.684625,
+      31.352334,
+      30.9685,
+      31.145875,
+      30.965459,
+      30.963166,
+      31.338083,
+      31.505833,
+      31.146792,
+      31.747375,
+      31.450583,
+      31.851459,
+      31.647833,
+      31.486459,
+      30.932042,
+      31.3245,
+      31.4355,
+      31.173,
+      31.0985,
+      31.363167,
+      31.333625,
+      30.86925,
+      31.391625,
+      31.715166,
+      31.246125,
+      31.344875,
+      31.552167,
+      31.064375,
+      31.495792,
+      31.534917,
+      39.507542,
+      34.593083,
+      33.750333,
+      31.72425,
+      39.22775,
+      40.617,
+      39.655167
+    ]
+  },
+  "solicitudes_sobre_500_ms": {
+    "control": 0,
+    "supervisado": 0
+  },
+  "calentamientos_excluidos_ms": {
+    "control": [
+      49.689417,
+      40.7185,
+      35.925834,
+      34.540666,
+      33.442125,
+      33.404542,
+      32.497916,
+      34.08325,
+      33.671834,
+      33.560208
+    ],
+    "supervisado": [
+      38.338292,
+      31.068083,
+      31.327083,
+      31.411708,
+      31.157291,
+      31.452709,
+      31.326334,
+      31.664667,
+      31.267542,
+      31.321209
+    ]
+  },
+  "stats_ms": {
+    "control": {
+      "media": 31.66374828,
+      "p50": 31.567166999999998,
+      "p95_lineal": 32.9998997,
+      "min": 30.78075,
+      "max": 33.260042
+    },
+    "supervisado": {
+      "media": 32.10488256,
+      "p50": 31.3577505,
+      "p95_lineal": 39.3816356,
+      "min": 30.86925,
+      "max": 40.617
+    },
+    "reinicio": {
+      "media": 1383.75369166,
+      "p50": 1339.8926875,
+      "p95_lineal": 1684.3788791999991,
+      "min": 1289.714792,
+      "max": 2085.822791
+    },
+    "fases_reinicio": {
+      "detencion_ms": {
+        "media": 5.70923338,
+        "p50": 5.1253335,
+        "p95_lineal": 8.081966849999997,
+        "min": 4.802333,
+        "max": 11.531166
+      },
+      "coordinacion_ms": {
+        "media": 0.03373497999998563,
+        "p50": 0.031541499999775624,
+        "p95_lineal": 0.053318899999931064,
+        "min": 0.02275000000008731,
+        "max": 0.06954100000007202
+      },
+      "creacion_proceso": {
+        "media": 3.53224748,
+        "p50": 3.961229,
+        "p95_lineal": 4.589201899999999,
+        "min": 1.713542,
+        "max": 5.855333
+      },
+      "arranque_hijo": {
+        "media": 891.13591168,
+        "p50": 858.925146,
+        "p95_lineal": 1052.8923876499998,
+        "min": 833.885208,
+        "max": 1548.792125
+      },
+      "carga_verificacion": {
+        "media": 41.93415328,
+        "p50": 40.38675,
+        "p95_lineal": 52.831198099999995,
+        "min": 39.020625,
+        "max": 69.070208
+      },
+      "calentamiento": {
+        "media": 441.01627498,
+        "p50": 427.1580835,
+        "p95_lineal": 509.3523607499999,
+        "min": 409.736542,
+        "max": 678.751542
+      },
+      "entrega_ready": {
+        "media": 0.39213588,
+        "p50": 0.293146,
+        "p95_lineal": 0.3997893999999999,
+        "min": 0.2585,
+        "max": 4.764542
+      },
+      "solapamiento_creacion_hijo_ms": {
+        "media": 0.0,
+        "p50": 0.0,
+        "p95_lineal": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    }
+  },
+  "coste_supervision_ipc": {
+    "diferencia_ms": {
+      "p50": -0.20941649999999612,
+      "p95_lineal": 6.3817359000000025
+    },
+    "diferencia_porcentual": {
+      "p50": -0.6633997279515015,
+      "p95_lineal": 19.338652414146587
+    }
+  },
+  "reinicios_excluidos": [
+    {
+      "total_ms": 1635.6995,
+      "detencion_ms": 10.167084,
+      "coordinacion_ms": 0.04183200000011311,
+      "ready": {
+        "generacion": 2,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1625.490584,
+        "fases_ms": {
+          "creacion_proceso": 5.046375,
+          "arranque_hijo": 993.772417,
+          "carga_verificacion": 49.672083,
+          "calentamiento": 576.645625,
+          "entrega_ready": 0.354084
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1564.063666,
+      "detencion_ms": 10.808708,
+      "coordinacion_ms": 0.06683300000008785,
+      "ready": {
+        "generacion": 3,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1553.188125,
+        "fases_ms": {
+          "creacion_proceso": 4.612792,
+          "arranque_hijo": 1038.397208,
+          "carga_verificacion": 42.354167,
+          "calentamiento": 466.03,
+          "entrega_ready": 1.793958
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1482.726083,
+      "detencion_ms": 8.302291,
+      "coordinacion_ms": 0.033167000000048574,
+      "ready": {
+        "generacion": 4,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1474.390625,
+        "fases_ms": {
+          "creacion_proceso": 4.233458,
+          "arranque_hijo": 945.586625,
+          "carga_verificacion": 45.32325,
+          "calentamiento": 478.899125,
+          "entrega_ready": 0.348167
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1343.815625,
+      "detencion_ms": 8.949333,
+      "coordinacion_ms": 0.0413340000000062,
+      "ready": {
+        "generacion": 5,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1334.824958,
+        "fases_ms": {
+          "creacion_proceso": 4.39275,
+          "arranque_hijo": 853.528375,
+          "carga_verificacion": 40.95625,
+          "calentamiento": 435.630833,
+          "entrega_ready": 0.31675
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1399.056375,
+      "detencion_ms": 6.753208,
+      "coordinacion_ms": 0.031207999999878666,
+      "ready": {
+        "generacion": 6,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1392.271959,
+        "fases_ms": {
+          "creacion_proceso": 4.195834,
+          "arranque_hijo": 909.186916,
+          "carga_verificacion": 42.379125,
+          "calentamiento": 436.200709,
+          "entrega_ready": 0.309375
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1356.810416,
+      "detencion_ms": 7.103333,
+      "coordinacion_ms": 0.02874999999994543,
+      "ready": {
+        "generacion": 7,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1349.678333,
+        "fases_ms": {
+          "creacion_proceso": 3.841166,
+          "arranque_hijo": 870.141834,
+          "carga_verificacion": 41.18125,
+          "calentamiento": 434.219375,
+          "entrega_ready": 0.294708
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1332.297583,
+      "detencion_ms": 4.66725,
+      "coordinacion_ms": 0.03787499999998545,
+      "ready": {
+        "generacion": 8,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1327.592458,
+        "fases_ms": {
+          "creacion_proceso": 3.890833,
+          "arranque_hijo": 855.710792,
+          "carga_verificacion": 40.214,
+          "calentamiento": 427.444042,
+          "entrega_ready": 0.332791
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1356.169417,
+      "detencion_ms": 4.821917,
+      "coordinacion_ms": 0.035458000000062384,
+      "ready": {
+        "generacion": 9,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1351.312042,
+        "fases_ms": {
+          "creacion_proceso": 3.967875,
+          "arranque_hijo": 872.106334,
+          "carga_verificacion": 40.707166,
+          "calentamiento": 434.2155,
+          "entrega_ready": 0.315167
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1358.977916,
+      "detencion_ms": 5.923625,
+      "coordinacion_ms": 0.0342080000000351,
+      "ready": {
+        "generacion": 10,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1353.020083,
+        "fases_ms": {
+          "creacion_proceso": 3.887292,
+          "arranque_hijo": 868.390791,
+          "carga_verificacion": 42.253375,
+          "calentamiento": 438.187959,
+          "entrega_ready": 0.300666
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1346.005584,
+      "detencion_ms": 5.231625,
+      "coordinacion_ms": 0.03354200000012497,
+      "ready": {
+        "generacion": 11,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1340.740417,
+        "fases_ms": {
+          "creacion_proceso": 3.815917,
+          "arranque_hijo": 864.221125,
+          "carga_verificacion": 40.031541,
+          "calentamiento": 432.309917,
+          "entrega_ready": 0.361917
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    }
+  ],
+  "reinicios_medidos": [
+    {
+      "total_ms": 1354.721917,
+      "detencion_ms": 5.68325,
+      "coordinacion_ms": 0.029291999999941254,
+      "ready": {
+        "generacion": 12,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1349.009375,
+        "fases_ms": {
+          "creacion_proceso": 3.892417,
+          "arranque_hijo": 872.341916,
+          "carga_verificacion": 40.06625,
+          "calentamiento": 432.412084,
+          "entrega_ready": 0.296708
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1349.449542,
+      "detencion_ms": 5.923084,
+      "coordinacion_ms": 0.03662499999995816,
+      "ready": {
+        "generacion": 13,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1343.489833,
+        "fases_ms": {
+          "creacion_proceso": 4.093917,
+          "arranque_hijo": 862.410333,
+          "carga_verificacion": 40.403125,
+          "calentamiento": 436.253833,
+          "entrega_ready": 0.328625
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1339.788208,
+      "detencion_ms": 5.170916,
+      "coordinacion_ms": 0.048666999999795735,
+      "ready": {
+        "generacion": 14,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1334.568625,
+        "fases_ms": {
+          "creacion_proceso": 4.084166,
+          "arranque_hijo": 858.367292,
+          "carga_verificacion": 42.217375,
+          "calentamiento": 429.520417,
+          "entrega_ready": 0.379375
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1362.458292,
+      "detencion_ms": 7.370084,
+      "coordinacion_ms": 0.03308300000003328,
+      "ready": {
+        "generacion": 15,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1355.055125,
+        "fases_ms": {
+          "creacion_proceso": 4.75625,
+          "arranque_hijo": 882.069166,
+          "carga_verificacion": 40.048375,
+          "calentamiento": 427.888125,
+          "entrega_ready": 0.293209
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1343.241208,
+      "detencion_ms": 5.49825,
+      "coordinacion_ms": 0.03333299999985684,
+      "ready": {
+        "generacion": 16,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1337.709625,
+        "fases_ms": {
+          "creacion_proceso": 3.976,
+          "arranque_hijo": 866.359667,
+          "carga_verificacion": 39.642916,
+          "calentamiento": 427.41275,
+          "entrega_ready": 0.318292
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1337.204375,
+      "detencion_ms": 5.56875,
+      "coordinacion_ms": 0.03258400000004258,
+      "ready": {
+        "generacion": 17,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1331.603041,
+        "fases_ms": {
+          "creacion_proceso": 3.927541,
+          "arranque_hijo": 853.38075,
+          "carga_verificacion": 39.978334,
+          "calentamiento": 434.044625,
+          "entrega_ready": 0.271791
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1351.932417,
+      "detencion_ms": 5.269667,
+      "coordinacion_ms": 0.03537499999993088,
+      "ready": {
+        "generacion": 18,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1346.627375,
+        "fases_ms": {
+          "creacion_proceso": 4.071834,
+          "arranque_hijo": 873.609708,
+          "carga_verificacion": 40.343875,
+          "calentamiento": 428.25725,
+          "entrega_ready": 0.344708
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1328.812209,
+      "detencion_ms": 5.038459,
+      "coordinacion_ms": 0.032999999999901775,
+      "ready": {
+        "generacion": 19,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1323.74075,
+        "fases_ms": {
+          "creacion_proceso": 4.093125,
+          "arranque_hijo": 853.222875,
+          "carga_verificacion": 39.692083,
+          "calentamiento": 426.430334,
+          "entrega_ready": 0.302333
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1342.071167,
+      "detencion_ms": 5.669459,
+      "coordinacion_ms": 0.030833000000029642,
+      "ready": {
+        "generacion": 20,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1336.370875,
+        "fases_ms": {
+          "creacion_proceso": 3.961458,
+          "arranque_hijo": 860.951417,
+          "carga_verificacion": 40.68525,
+          "calentamiento": 430.443416,
+          "entrega_ready": 0.329334
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1341.338,
+      "detencion_ms": 5.573458,
+      "coordinacion_ms": 0.030333999999811567,
+      "ready": {
+        "generacion": 21,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1335.734208,
+        "fases_ms": {
+          "creacion_proceso": 3.795375,
+          "arranque_hijo": 863.892625,
+          "carga_verificacion": 40.939666,
+          "calentamiento": 426.841667,
+          "entrega_ready": 0.264875
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1342.643417,
+      "detencion_ms": 5.104292,
+      "coordinacion_ms": 0.03262500000005275,
+      "ready": {
+        "generacion": 22,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1337.5065,
+        "fases_ms": {
+          "creacion_proceso": 4.457833,
+          "arranque_hijo": 864.430625,
+          "carga_verificacion": 42.082584,
+          "calentamiento": 426.256125,
+          "entrega_ready": 0.279333
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1348.714792,
+      "detencion_ms": 5.134542,
+      "coordinacion_ms": 0.03199999999992542,
+      "ready": {
+        "generacion": 23,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1343.54825,
+        "fases_ms": {
+          "creacion_proceso": 3.947875,
+          "arranque_hijo": 861.587125,
+          "carga_verificacion": 40.390333,
+          "calentamiento": 437.297667,
+          "entrega_ready": 0.32525
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1361.271042,
+      "detencion_ms": 6.126125,
+      "coordinacion_ms": 0.03050000000007458,
+      "ready": {
+        "generacion": 24,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1355.114417,
+        "fases_ms": {
+          "creacion_proceso": 3.942084,
+          "arranque_hijo": 881.956291,
+          "carga_verificacion": 41.699167,
+          "calentamiento": 427.1895,
+          "entrega_ready": 0.327375
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1339.834375,
+      "detencion_ms": 5.116125,
+      "coordinacion_ms": 0.03149999999982356,
+      "ready": {
+        "generacion": 25,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1334.68675,
+        "fases_ms": {
+          "creacion_proceso": 4.007792,
+          "arranque_hijo": 864.815291,
+          "carga_verificacion": 39.801417,
+          "calentamiento": 425.788708,
+          "entrega_ready": 0.273542
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1333.677083,
+      "detencion_ms": 5.095375,
+      "coordinacion_ms": 0.03179099999988466,
+      "ready": {
+        "generacion": 26,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1328.549917,
+        "fases_ms": {
+          "creacion_proceso": 3.884792,
+          "arranque_hijo": 854.313542,
+          "carga_verificacion": 40.346125,
+          "calentamiento": 429.721166,
+          "entrega_ready": 0.284292
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1421.868416,
+      "detencion_ms": 4.90125,
+      "coordinacion_ms": 0.034749000000147134,
+      "ready": {
+        "generacion": 27,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1416.932417,
+        "fases_ms": {
+          "creacion_proceso": 4.098417,
+          "arranque_hijo": 941.577958,
+          "carga_verificacion": 40.5705,
+          "calentamiento": 430.386625,
+          "entrega_ready": 0.298917
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1339.951,
+      "detencion_ms": 7.213125,
+      "coordinacion_ms": 0.031333000000131506,
+      "ready": {
+        "generacion": 28,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1332.706542,
+        "fases_ms": {
+          "creacion_proceso": 4.674458,
+          "arranque_hijo": 858.349959,
+          "carga_verificacion": 41.968833,
+          "calentamiento": 427.432708,
+          "entrega_ready": 0.280584
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1341.087625,
+      "detencion_ms": 5.682333,
+      "coordinacion_ms": 0.03125099999988379,
+      "ready": {
+        "generacion": 29,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1335.374041,
+        "fases_ms": {
+          "creacion_proceso": 4.056833,
+          "arranque_hijo": 854.797833,
+          "carga_verificacion": 40.383167,
+          "calentamiento": 435.84725,
+          "entrega_ready": 0.288958
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1330.487125,
+      "detencion_ms": 4.961333,
+      "coordinacion_ms": 0.03070900000011534,
+      "ready": {
+        "generacion": 30,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1325.495083,
+        "fases_ms": {
+          "creacion_proceso": 3.8885,
+          "arranque_hijo": 859.002375,
+          "carga_verificacion": 41.055958,
+          "calentamiento": 421.24475,
+          "entrega_ready": 0.3035
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1324.033583,
+      "detencion_ms": 5.069458,
+      "coordinacion_ms": 0.04066699999998491,
+      "ready": {
+        "generacion": 31,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1318.923458,
+        "fases_ms": {
+          "creacion_proceso": 3.906333,
+          "arranque_hijo": 851.034709,
+          "carga_verificacion": 39.7355,
+          "calentamiento": 423.937458,
+          "entrega_ready": 0.309458
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1346.821417,
+      "detencion_ms": 4.897167,
+      "coordinacion_ms": 0.03279199999997218,
+      "ready": {
+        "generacion": 32,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1341.891458,
+        "fases_ms": {
+          "creacion_proceso": 3.996416,
+          "arranque_hijo": 859.520167,
+          "carga_verificacion": 40.035375,
+          "calentamiento": 438.050833,
+          "entrega_ready": 0.288667
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1339.321166,
+      "detencion_ms": 4.807041,
+      "coordinacion_ms": 0.029166999999915788,
+      "ready": {
+        "generacion": 33,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1334.484958,
+        "fases_ms": {
+          "creacion_proceso": 3.812833,
+          "arranque_hijo": 862.03525,
+          "carga_verificacion": 41.224875,
+          "calentamiento": 427.126667,
+          "entrega_ready": 0.285333
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1336.040084,
+      "detencion_ms": 4.96375,
+      "coordinacion_ms": 0.02987600000005841,
+      "ready": {
+        "generacion": 34,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1331.046458,
+        "fases_ms": {
+          "creacion_proceso": 4.007125,
+          "arranque_hijo": 859.978,
+          "carga_verificacion": 40.653292,
+          "calentamiento": 426.132291,
+          "entrega_ready": 0.27575
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1426.61775,
+      "detencion_ms": 4.879292,
+      "coordinacion_ms": 0.03158299999972769,
+      "ready": {
+        "generacion": 35,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1421.706875,
+        "fases_ms": {
+          "creacion_proceso": 3.907541,
+          "arranque_hijo": 851.604167,
+          "carga_verificacion": 41.26125,
+          "calentamiento": 524.652417,
+          "entrega_ready": 0.2815
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1455.89675,
+      "detencion_ms": 5.139084,
+      "coordinacion_ms": 0.03445800000008603,
+      "ready": {
+        "generacion": 36,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1450.723208,
+        "fases_ms": {
+          "creacion_proceso": 4.100958,
+          "arranque_hijo": 909.973417,
+          "carga_verificacion": 52.48,
+          "calentamiento": 483.849791,
+          "entrega_ready": 0.319042
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1420.777916,
+      "detencion_ms": 7.617125,
+      "coordinacion_ms": 0.04774999999995089,
+      "ready": {
+        "generacion": 37,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1413.113041,
+        "fases_ms": {
+          "creacion_proceso": 4.030708,
+          "arranque_hijo": 915.994792,
+          "carga_verificacion": 41.394416,
+          "calentamiento": 451.37575,
+          "entrega_ready": 0.317375
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1430.474625,
+      "detencion_ms": 6.951709,
+      "coordinacion_ms": 0.037916000000222994,
+      "ready": {
+        "generacion": 38,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1423.485,
+        "fases_ms": {
+          "creacion_proceso": 4.19775,
+          "arranque_hijo": 936.991667,
+          "carga_verificacion": 41.99875,
+          "calentamiento": 439.979875,
+          "entrega_ready": 0.316958
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1332.434416,
+      "detencion_ms": 5.578166,
+      "coordinacion_ms": 0.03308300000003328,
+      "ready": {
+        "generacion": 39,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1326.823167,
+        "fases_ms": {
+          "creacion_proceso": 4.069958,
+          "arranque_hijo": 855.920209,
+          "carga_verificacion": 40.964041,
+          "calentamiento": 425.5575,
+          "entrega_ready": 0.311459
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1323.628542,
+      "detencion_ms": 4.900917,
+      "coordinacion_ms": 0.033208999999942534,
+      "ready": {
+        "generacion": 40,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1318.694416,
+        "fases_ms": {
+          "creacion_proceso": 4.23275,
+          "arranque_hijo": 849.430625,
+          "carga_verificacion": 40.044541,
+          "calentamiento": 424.683375,
+          "entrega_ready": 0.303125
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1344.982166,
+      "detencion_ms": 4.9075,
+      "coordinacion_ms": 0.033206999999947584,
+      "ready": {
+        "generacion": 41,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1340.041459,
+        "fases_ms": {
+          "creacion_proceso": 4.035584,
+          "arranque_hijo": 863.594166,
+          "carga_verificacion": 41.391792,
+          "calentamiento": 430.722167,
+          "entrega_ready": 0.29775
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1329.720375,
+      "detencion_ms": 5.214541,
+      "coordinacion_ms": 0.029500999999982014,
+      "ready": {
+        "generacion": 42,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1324.476333,
+        "fases_ms": {
+          "creacion_proceso": 3.872958,
+          "arranque_hijo": 853.167917,
+          "carga_verificacion": 40.306458,
+          "calentamiento": 426.837583,
+          "entrega_ready": 0.291417
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1326.350708,
+      "detencion_ms": 4.802333,
+      "coordinacion_ms": 0.02995799999985138,
+      "ready": {
+        "generacion": 43,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1321.518417,
+        "fases_ms": {
+          "creacion_proceso": 3.978,
+          "arranque_hijo": 855.088708,
+          "carga_verificacion": 40.212667,
+          "calentamiento": 421.967583,
+          "entrega_ready": 0.271459
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1341.176417,
+      "detencion_ms": 4.947584,
+      "coordinacion_ms": 0.029749999999921783,
+      "ready": {
+        "generacion": 44,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1336.199083,
+        "fases_ms": {
+          "creacion_proceso": 3.961,
+          "arranque_hijo": 858.847917,
+          "carga_verificacion": 40.250208,
+          "calentamiento": 432.859208,
+          "entrega_ready": 0.28075
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1421.31875,
+      "detencion_ms": 4.918708,
+      "coordinacion_ms": 0.04774999999995089,
+      "ready": {
+        "generacion": 45,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1416.352292,
+        "fases_ms": {
+          "creacion_proceso": 4.188125,
+          "arranque_hijo": 877.97,
+          "carga_verificacion": 43.10075,
+          "calentamiento": 490.652292,
+          "entrega_ready": 0.441125
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 2036.51325,
+      "detencion_ms": 8.462292,
+      "coordinacion_ms": 0.06954100000007202,
+      "ready": {
+        "generacion": 46,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 2027.981417,
+        "fases_ms": {
+          "creacion_proceso": 4.485,
+          "arranque_hijo": 1297.219,
+          "carga_verificacion": 53.118542,
+          "calentamiento": 668.394333,
+          "entrega_ready": 4.764542
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 2085.822791,
+      "detencion_ms": 11.531166,
+      "coordinacion_ms": 0.06674999999995634,
+      "ready": {
+        "generacion": 47,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 2074.224875,
+        "fases_ms": {
+          "creacion_proceso": 5.855333,
+          "arranque_hijo": 1548.792125,
+          "carga_verificacion": 41.914417,
+          "calentamiento": 477.255917,
+          "entrega_ready": 0.407083
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1827.835542,
+      "detencion_ms": 7.028625,
+      "coordinacion_ms": 0.05712500000004184,
+      "ready": {
+        "generacion": 48,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1820.749792,
+        "fases_ms": {
+          "creacion_proceso": 2.506042,
+          "arranque_hijo": 1070.031125,
+          "carga_verificacion": 69.070208,
+          "calentamiento": 678.751542,
+          "entrega_ready": 0.390875
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1509.042958,
+      "detencion_ms": 9.681833,
+      "coordinacion_ms": 0.031874999999899956,
+      "ready": {
+        "generacion": 49,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1499.32925,
+        "fases_ms": {
+          "creacion_proceso": 4.067083,
+          "arranque_hijo": 1031.945042,
+          "carga_verificacion": 40.806958,
+          "calentamiento": 422.231208,
+          "entrega_ready": 0.278959
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1302.65075,
+      "detencion_ms": 7.549291,
+      "coordinacion_ms": 0.02708400000005895,
+      "ready": {
+        "generacion": 50,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1295.074375,
+        "fases_ms": {
+          "creacion_proceso": 2.068,
+          "arranque_hijo": 842.049458,
+          "carga_verificacion": 39.063958,
+          "calentamiento": 411.604292,
+          "entrega_ready": 0.288667
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1296.671458,
+      "detencion_ms": 6.098125,
+      "coordinacion_ms": 0.025624999999990905,
+      "ready": {
+        "generacion": 51,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1290.547708,
+        "fases_ms": {
+          "creacion_proceso": 1.784,
+          "arranque_hijo": 834.620417,
+          "carga_verificacion": 39.110958,
+          "calentamiento": 414.748792,
+          "entrega_ready": 0.283541
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1291.195083,
+      "detencion_ms": 4.892667,
+      "coordinacion_ms": 0.026082999999971435,
+      "ready": {
+        "generacion": 52,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1286.276333,
+        "fases_ms": {
+          "creacion_proceso": 1.824667,
+          "arranque_hijo": 833.885208,
+          "carga_verificacion": 40.360917,
+          "calentamiento": 409.912458,
+          "entrega_ready": 0.293083
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1291.532458,
+      "detencion_ms": 4.894208,
+      "coordinacion_ms": 0.031083999999964362,
+      "ready": {
+        "generacion": 53,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1286.607166,
+        "fases_ms": {
+          "creacion_proceso": 1.758125,
+          "arranque_hijo": 834.757791,
+          "carga_verificacion": 39.086542,
+          "calentamiento": 410.737958,
+          "entrega_ready": 0.26675
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1298.825292,
+      "detencion_ms": 4.846,
+      "coordinacion_ms": 0.02275000000008731,
+      "ready": {
+        "generacion": 54,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1293.956542,
+        "fases_ms": {
+          "creacion_proceso": 1.897333,
+          "arranque_hijo": 837.390792,
+          "carga_verificacion": 39.47225,
+          "calentamiento": 414.918333,
+          "entrega_ready": 0.277834
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1304.669542,
+      "detencion_ms": 5.035375,
+      "coordinacion_ms": 0.02433300000006966,
+      "ready": {
+        "generacion": 55,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1299.609834,
+        "fases_ms": {
+          "creacion_proceso": 1.766792,
+          "arranque_hijo": 834.681833,
+          "carga_verificacion": 39.749459,
+          "calentamiento": 423.15325,
+          "entrega_ready": 0.2585
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1306.389875,
+      "detencion_ms": 5.213834,
+      "coordinacion_ms": 0.025791000000253916,
+      "ready": {
+        "generacion": 56,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1301.15025,
+        "fases_ms": {
+          "creacion_proceso": 1.939042,
+          "arranque_hijo": 849.543375,
+          "carga_verificacion": 39.020625,
+          "calentamiento": 410.344917,
+          "entrega_ready": 0.302291
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1296.094583,
+      "detencion_ms": 4.891167,
+      "coordinacion_ms": 0.02570700000001125,
+      "ready": {
+        "generacion": 57,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1291.177709,
+        "fases_ms": {
+          "creacion_proceso": 1.713542,
+          "arranque_hijo": 838.894542,
+          "carga_verificacion": 40.154083,
+          "calentamiento": 410.138292,
+          "entrega_ready": 0.27725
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1289.714792,
+      "detencion_ms": 4.918375,
+      "coordinacion_ms": 0.02483299999994415,
+      "ready": {
+        "generacion": 58,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1284.771584,
+        "fases_ms": {
+          "creacion_proceso": 1.782334,
+          "arranque_hijo": 833.943125,
+          "carga_verificacion": 39.032583,
+          "calentamiento": 409.736542,
+          "entrega_ready": 0.277
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1298.28575,
+      "detencion_ms": 4.849084,
+      "coordinacion_ms": 0.026458000000047832,
+      "ready": {
+        "generacion": 59,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1293.410208,
+        "fases_ms": {
+          "creacion_proceso": 1.721625,
+          "arranque_hijo": 841.8425,
+          "carga_verificacion": 39.404041,
+          "calentamiento": 410.16575,
+          "entrega_ready": 0.276292
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1330.827917,
+      "detencion_ms": 4.812,
+      "coordinacion_ms": 0.02570800000012241,
+      "ready": {
+        "generacion": 60,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1325.990209,
+        "fases_ms": {
+          "creacion_proceso": 1.82075,
+          "arranque_hijo": 839.101042,
+          "carga_verificacion": 58.69375,
+          "calentamiento": 426.079375,
+          "entrega_ready": 0.295292
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    },
+    {
+      "total_ms": 1311.465667,
+      "detencion_ms": 5.063375,
+      "coordinacion_ms": 0.02575099999990016,
+      "ready": {
+        "generacion": 61,
+        "estado": "ready",
+        "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+        "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+        "torch_threads": 2,
+        "duracion_ms": 1306.376541,
+        "fases_ms": {
+          "creacion_proceso": 1.714,
+          "arranque_hijo": 839.50975,
+          "carga_verificacion": 41.279125,
+          "calentamiento": 423.587,
+          "entrega_ready": 0.286666
+        },
+        "solapamiento_creacion_hijo_ms": 0.0
+      }
+    }
+  ],
+  "detecciones": [
+    {
+      "class_id": 41,
+      "confidence": 0.9552612900733948,
+      "bbox": [
+        200.49513244628906,
+        228.77520751953125,
+        494.0516357421875,
+        460.55670166015625
+      ]
+    }
+  ],
+  "paridad_detecciones": {
+    "control_vs_p5_05": "60 de 60 solicitudes iguales en estado, dimensiones y detecciones",
+    "supervisado_vs_p5_05": "60 de 60 solicitudes iguales en estado, dimensiones y detecciones",
+    "criterio": "igualdad exacta en mismo host y runtime"
+  },
+  "desviaciones": []
+}

@@ -1,0 +1,19 @@
+{
+  "tipo": "observaciones_de_ejecucion_p5_06",
+  "benchmark_sha256": "83e0d2a4bfa8262bf9c7f389ab16ebc101f77db4cbf92cec2d757e8aacda4372",
+  "fecha_utc": "2026-11-02T04:36:36.433582+00:00",
+  "desviaciones": [
+    {
+      "campo": "host.modo_energia y argumento --modo-energia",
+      "registrado": "bateria-descargando",
+      "observado_durante_series": "AC Power, batería cargando",
+      "causa": "el Mac cambió de batería a AC entre el preflight y control_inicio",
+      "tratamiento": "se preservó el JSON bruto y se usa condiciones_series como estado observado de cada etapa; no se repitió la serie"
+    },
+    {
+      "campo": "carga del host",
+      "observado": "preflight mostró Codex Renderer y WindowServer con uso alto de CPU; carga media subió durante reinicios",
+      "tratamiento": "se conservan instantáneas antes y después; no hay atribución de CPU por proceso durante cada muestra"
+    }
+  ]
+}

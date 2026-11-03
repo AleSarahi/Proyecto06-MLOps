@@ -153,6 +153,17 @@ def test_error_de_opencv_al_decodificar_es_error_imagen(tmp_path, monkeypatch):
         _detector_falso([]).inferir(ruta)
 
 
+@pytest.mark.parametrize("error", [FileNotFoundError("ausente"), PermissionError("sin acceso")])
+def test_error_del_sistema_al_leer_jpeg_es_error_imagen(tmp_path, monkeypatch, error):
+    def imread_con_error(_ruta, _modo):
+        raise error
+
+    monkeypatch.setattr(cv2, "imread", imread_con_error)
+    with pytest.raises(ErrorImagenJPEG, match="decodificar") as capturado:
+        _detector_falso([]).inferir(tmp_path / "ausente.jpg")
+    assert capturado.value.__cause__ is error
+
+
 def test_bottle_cup_y_otra_clase_coco(tmp_path):
     ruta = _jpeg(tmp_path / "objetos.jpeg")
     filas = [

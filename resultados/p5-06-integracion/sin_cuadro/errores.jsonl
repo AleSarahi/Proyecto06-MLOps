@@ -1,0 +1,1 @@
+{"run_id": "p506-libre", "frame_id": null, "t_ms": 601.0, "motivo": "watchdog_vencido", "errores": ["601.0 ms sin cuadro nuevo > watchdog_ms 600 ms"]}

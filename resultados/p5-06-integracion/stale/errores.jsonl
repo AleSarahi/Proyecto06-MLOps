@@ -1,0 +1,1 @@
+{"run_id": "p506-stale", "frame_id": "b_fallo", "t_ms": 701.0, "motivo": "stale", "errores": ["status=stale: cuadro de 501.0 ms; se rechaza y se cancela la orden previa"]}

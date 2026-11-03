@@ -1,0 +1,46 @@
+{
+  "tipo": "validacion_funcional_sin_benchmark",
+  "checkpoint": {
+    "archivo": "yolo11n.pt",
+    "bytes": 5613764,
+    "sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+  },
+  "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+  "torch_threads_un_proceso": 2,
+  "ready": {
+    "generacion": 1,
+    "estado": "ready",
+    "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+    "torch_threads": 2,
+    "duracion_ms": 1382.21774995327
+  },
+  "cierre_limpio": true,
+  "jpeg_sinteticos_sha256": {
+    "sintetico_negro": "804d5dcd9e5f52eff21899cd4359cb9a2b06fa14df9b8719319f171d23c3c195",
+    "sintetico_geometria": "82043395f3f67010912dffa326690aff97402d132d3bb0cccaf179a1b469c985"
+  },
+  "conteos": {
+    "un_proceso": 2,
+    "supervisado": 2
+  },
+  "comparacion": [
+    {
+      "frame_id": "sintetico_geometria",
+      "status_un_proceso": "ok",
+      "status_supervisado": "ok",
+      "detections_un_proceso": [],
+      "detections_supervisado": [],
+      "detecciones_iguales": true
+    },
+    {
+      "frame_id": "sintetico_negro",
+      "status_un_proceso": "ok",
+      "status_supervisado": "ok",
+      "detections_un_proceso": [],
+      "detections_supervisado": [],
+      "detecciones_iguales": true
+    }
+  ],
+  "contrato_v1_valido": true
+}

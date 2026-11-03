@@ -11,11 +11,11 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 
-import cv2
-
 from contrato.validador import validar_evento, validar_flujo
 
 from .detector import DetectorJPEG, ErrorImagenJPEG, ErrorSalidaInvalida
+from .plazos import PlazosInfer, cargar_plazos_infer, validar_plazos_infer
+from .reloj import leer_reloj_s
 
 _ID = re.compile(r"[A-Za-z0-9._-]{1,64}\Z")
 _JPEG = {".jpg", ".jpeg"}
@@ -23,6 +23,7 @@ _MENSAJES_ERROR = {
     "unreadable_image": "no se pudo leer o decodificar el JPEG",
     "invalid_output": "salida inválida del detector",
     "detector_exception": "falló la ejecución del detector",
+    "detector_timeout": "se agotó el plazo de la solicitud del detector",
 }
 
 
@@ -68,18 +69,6 @@ def _capturas(
     return salida
 
 
-def _dimensiones_legibles(ruta: Path) -> tuple[int, int] | None:
-    """Recupera dimensiones para un error posterior a la decodificación."""
-    try:
-        imagen = cv2.imread(str(ruta), cv2.IMREAD_COLOR)
-    except cv2.error:
-        return None
-    if imagen is None or imagen.ndim != 3 or imagen.shape[0] < 1 or imagen.shape[1] < 1:
-        return None
-    alto, ancho = imagen.shape[:2]
-    return ancho, alto
-
-
 def _evento_base(
     run_id: str,
     sequence_id: str,
@@ -106,6 +95,28 @@ def _evento_base(
     }
 
 
+def _evento_error(
+    detector: DetectorJPEG,
+    ruta: Path,
+    run_id: str,
+    sequence_id: str,
+    indice: int,
+    frame_id: str,
+    captura: float,
+    transcurrido: Callable[[], float],
+    codigo: str,
+    exc: Exception,
+    dimensiones: tuple[int, int] | None = None,
+) -> dict[str, Any]:
+    # La causa y la ruta quedan en stderr; el evento publicable conserva solo un mensaje seguro.
+    print(f"infer: cuadro {indice} ({ruta}): {type(exc).__name__}: {exc}", file=sys.stderr)
+    evento = _evento_base(run_id, sequence_id, frame_id, captura, transcurrido(), detector)
+    if dimensiones is not None:
+        evento["image_width"], evento["image_height"] = dimensiones
+    evento["error"] = {"code": codigo, "message": _MENSAJES_ERROR[codigo]}
+    return evento
+
+
 def _evento_cuadro(
     detector: DetectorJPEG,
     ruta: Path,
@@ -115,9 +126,34 @@ def _evento_cuadro(
     frame_id: str,
     captura: float,
     transcurrido: Callable[[], float],
+    max_frame_age_ms: float,
+    dimensiones_leidas: Callable[[tuple[int, int]], None] | None = None,
 ) -> dict[str, Any]:
     try:
-        resultado = detector.inferir(ruta)
+        imagen = DetectorJPEG.leer_imagen(ruta)
+    except ErrorImagenJPEG as exc:
+        return _evento_error(
+            detector,
+            ruta,
+            run_id,
+            sequence_id,
+            indice,
+            frame_id,
+            captura,
+            transcurrido,
+            "unreadable_image",
+            exc,
+        )
+    dimensiones = (imagen.shape[1], imagen.shape[0])
+    if dimensiones_leidas is not None:
+        dimensiones_leidas(dimensiones)
+    if transcurrido() - captura > max_frame_age_ms:
+        evento = _evento_base(run_id, sequence_id, frame_id, captura, transcurrido(), detector)
+        evento["image_width"], evento["image_height"] = dimensiones
+        evento["status"] = "stale"
+        return evento
+    try:
+        resultado = detector.inferir(ruta, imagen=imagen)
         if (
             resultado.model_sha256 != detector.cargado.model_sha256
             or resultado.config_sha256 != detector.config.config_sha256
@@ -140,26 +176,25 @@ def _evento_cuadro(
             json.dumps(evento, allow_nan=False)
         except (TypeError, ValueError) as exc:
             raise ErrorSalidaInvalida(f"detecciones no serializables como JSON: {exc}") from exc
+        if transcurrido() - captura > max_frame_age_ms:
+            evento["status"] = "stale"
+            evento["detections"] = []
         return evento
     except Exception as exc:
-        # Los errores del detector son eventos, nunca una vía libre ficticia.
-        codigo = (
-            "unreadable_image"
-            if isinstance(exc, ErrorImagenJPEG)
-            else "invalid_output"
-            if isinstance(exc, ErrorSalidaInvalida)
-            else "detector_exception"
+        codigo = "invalid_output" if isinstance(exc, ErrorSalidaInvalida) else "detector_exception"
+        return _evento_error(
+            detector,
+            ruta,
+            run_id,
+            sequence_id,
+            indice,
+            frame_id,
+            captura,
+            transcurrido,
+            codigo,
+            exc,
+            dimensiones,
         )
-        dimensiones = None if codigo == "unreadable_image" else _dimensiones_legibles(ruta)
-        if dimensiones is None and codigo != "unreadable_image":
-            codigo = "unreadable_image"
-        # El detalle y la ruta quedan en stderr local, nunca en el JSONL publicable.
-        print(f"infer: cuadro {indice} ({ruta}): {type(exc).__name__}: {exc}", file=sys.stderr)
-        evento = _evento_base(run_id, sequence_id, frame_id, captura, transcurrido(), detector)
-        if dimensiones is not None:
-            evento["image_width"], evento["image_height"] = dimensiones
-        evento["error"] = {"code": codigo, "message": _MENSAJES_ERROR[codigo]}
-        return evento
 
 
 def _serializar_evento(evento: dict[str, Any], anteriores: Sequence[dict[str, Any]]) -> str:
@@ -172,6 +207,30 @@ def _serializar_evento(evento: dict[str, Any], anteriores: Sequence[dict[str, An
         raise ErrorRunInfer(f"evento no serializable como JSON estricto: {exc}") from exc
 
 
+def _esperar_reloj(
+    transcurrido: Callable[[], float],
+    dormir: Callable[[float], None],
+    objetivo_ms: float,
+    *,
+    estricto: bool = False,
+) -> float:
+    """Espera tiempo real; falla si diez sleeps seguidos no mueven el reloj."""
+    anterior = transcurrido()
+    sin_progreso = 0
+    while (anterior <= objetivo_ms) if estricto else (anterior < objetivo_ms):
+        restante_ms = max(0.0, objetivo_ms - anterior)
+        dormir(min(max(restante_ms / 1000, 0.001), 0.1))
+        ahora = transcurrido()
+        if ahora <= anterior:
+            sin_progreso += 1
+            if sin_progreso >= 10:
+                raise ErrorRunInfer("el reloj monotónico no avanza durante la espera")
+        else:
+            sin_progreso = 0
+        anterior = ahora
+    return anterior
+
+
 def ejecutar_run(
     detector: DetectorJPEG,
     entrada: Path,
@@ -180,10 +239,22 @@ def ejecutar_run(
     run_id: str,
     sequence_id: str | None = None,
     capture_ms: Sequence[float] | None = None,
-    reloj: Callable[[], float] = time.monotonic,
+    reloj: Callable[[], float] = leer_reloj_s,
     dormir: Callable[[float], None] = time.sleep,
+    plazos: PlazosInfer | None = None,
 ) -> tuple[Path, int, int]:
     """Escribe JSONL validado; en directorios reproduce capturas explícitas."""
+    if plazos is None:
+        plazos = cargar_plazos_infer()
+    elif not isinstance(plazos, PlazosInfer):
+        raise ErrorRunInfer("plazos debe ser PlazosInfer validado")
+    else:
+        plazos = validar_plazos_infer(
+            {
+                "detector_timeout_ms": plazos.detector_timeout_ms,
+                "max_frame_age_ms": plazos.max_frame_age_ms,
+            }
+        )
     if not isinstance(run_id, str) or _ID.fullmatch(run_id) is None:
         raise ErrorRunInfer("run_id debe cumplir [A-Za-z0-9._-]{1,64}")
     archivos, directorio = _archivos(Path(entrada))
@@ -209,22 +280,35 @@ def ejecutar_run(
         return (reloj() - origen) * 1000
 
     errores = 0
+    ultima_captura: float | None = None
     with destino.open("x", encoding="utf-8", newline="\n") as archivo:
         for indice, (ruta, frame_id) in enumerate(zip(archivos, frame_ids, strict=True), start=1):
             if tiempos is None:
                 captura = transcurrido()  # Recepción del JPEG individual en este run.
+                if ultima_captura is not None and captura <= ultima_captura:
+                    captura = _esperar_reloj(transcurrido, dormir, ultima_captura, estricto=True)
             else:
                 captura = tiempos[indice - 1]
-                restante = captura - transcurrido()
-                if restante > 0:
-                    dormir(restante / 1000)
+                _esperar_reloj(transcurrido, dormir, captura)
             evento = _evento_cuadro(
-                detector, ruta, run_id, secuencia, indice, frame_id, captura, transcurrido
+                detector,
+                ruta,
+                run_id,
+                secuencia,
+                indice,
+                frame_id,
+                captura,
+                transcurrido,
+                plazos.max_frame_age_ms,
             )
             evento["t_emit_ms"] = transcurrido()
+            if evento["status"] == "ok" and evento["t_emit_ms"] - captura > plazos.max_frame_age_ms:
+                evento["status"] = "stale"
+                evento["detections"] = []
             linea = _serializar_evento(evento, eventos)
             archivo.write(linea + "\n")
             archivo.flush()
             eventos.append(evento)
+            ultima_captura = captura
             errores += evento["status"] == "error"
     return destino, len(eventos), errores

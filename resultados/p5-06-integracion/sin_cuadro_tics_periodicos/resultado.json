@@ -1,0 +1,75 @@
+[
+  {
+    "frame_id": "a_libre",
+    "evento_a": {
+      "schema_version": "1",
+      "run_id": "p506-libre",
+      "sequence_id": "integracion",
+      "frame_id": "a_libre",
+      "t_capture_ms": 0.0,
+      "t_emit_ms": 0.0,
+      "image_width": 80,
+      "image_height": 60,
+      "model_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "status": "ok",
+      "bbox_format": "xyxy",
+      "bbox_unit": "px",
+      "detections": []
+    },
+    "error_code": null,
+    "esperado": {
+      "action": "AVANZAR"
+    },
+    "observado": {
+      "schema_version": "1",
+      "run_id": "p506-libre",
+      "frame_id": "a_libre",
+      "event": "frame",
+      "state_before": "DETENIDO",
+      "state_after": "AVANZANDO",
+      "t_decision_ms": 0.0,
+      "action": "AVANZAR",
+      "speed": 0.4,
+      "steering": 0.0,
+      "reason": "Centro libre: sin obstáculos en el camino, avanza recto.",
+      "received": true,
+      "t_command_ms": 0.0,
+      "valid_until_ms": 400.0
+    }
+  },
+  {
+    "frame_id": null,
+    "evento_a": null,
+    "error_code": "orden_vencida",
+    "esperado": {
+      "action": "STOP",
+      "reason": "orden_vencida"
+    },
+    "observado": {
+      "schema_version": "1",
+      "run_id": "p506-libre",
+      "frame_id": null,
+      "event": "clock",
+      "state_before": "AVANZANDO",
+      "state_after": "DETENIDO",
+      "t_decision_ms": 500.0,
+      "action": "STOP",
+      "speed": 0,
+      "steering": 0.0,
+      "reason": "orden_vencida",
+      "received": true,
+      "t_command_ms": 500.0,
+      "valid_until_ms": 900.0
+    },
+    "error_b": {
+      "run_id": "p506-libre",
+      "frame_id": null,
+      "t_ms": 500.0,
+      "motivo": "orden_vencida",
+      "errores": [
+        "la orden AVANZAR valía hasta 400.0 ms"
+      ]
+    }
+  }
+]
