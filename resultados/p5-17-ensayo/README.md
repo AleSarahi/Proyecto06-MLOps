@@ -28,31 +28,45 @@ No se suben:
 
 ## Rutas personales
 
-La única depuración fue cambiar el nombre de la cuenta local de Windows por `<usuario>` dentro de las rutas
-(por ejemplo, `C:/Users/<usuario>/p517-ensayo/...`). No cambió nada más: comandos, tiempos, detecciones,
-métricas ni códigos de salida. Fueron **39** sustituciones en 15 archivos; los originales se conservan fuera
-de Git. Con la copia pública, `python -m trazabilidad recalcular salidas/corrida/trazabilidad/` sigue dando
-las mismas cifras que su `resumen.json`.
+Los registros traían rutas de la laptop con el nombre de la cuenta local de Windows. La única depuración fue
+cambiar cada ruta completa por un marcador, para que en el repo no quede ninguna ruta de una máquina (lo pide
+`tests/test_copia_limpia.py`):
+
+| Marcador | Qué era |
+|---|---|
+| `<ensayo>` | La carpeta, fuera del repo, donde se guardaron registros y salidas |
+| `<copia>` | La copia limpia del repo |
+| `<carpeta de uv>` | La carpeta de usuario donde `pip` dejó `uv.exe` (fallo 3 del acta) |
+
+Además, en `salidas/corrida/run.json` la ruta de la entrada apunta a la copia publicada,
+`resultados/p5-17-ensayo/salidas/ensayo-p517.jsonl`, que es el mismo archivo: su SHA-256, `20f9008e…1cc3`,
+es el que ya registraba `run.json`. No cambió nada más: comandos, tiempos, detecciones, métricas ni códigos de
+salida. Fueron **39** sustituciones en 15 archivos; los originales se
+conservan fuera de Git. Con la copia pública, `python -m trazabilidad recalcular salidas/corrida/trazabilidad/`
+sigue dando las mismas cifras que su `resumen.json`.
 
 | Archivo | Sustituciones | SHA-256 original | SHA-256 público |
 |---|---:|---|---|
-| `registros/02-pesos.txt` | 1 | `ba18273ee36916062324f801f9fa0161f51397374a348a7f4da7e478ae94fcb9` | `b08232f9bbf81c72cccec0f3438a266909028085da57f46630615d30ebc6628a` |
-| `registros/05-infer-jpeg.txt` | 6 | `93165bf4167277388da5c6f36b8cebf7b019ae4eccaf4223ca21773492f90d65` | `5a6310608e16a615f974ee1676c3499324d717cbf197a7edf6506ebe8f8d2eda` |
-| `registros/06a-infer-mismo-run-id-FALLA.txt` | 9 | `dfd3648cabbe70175b17685db095c9bb4a2291f586f5cb66d7310076a14d1420` | `7bb15ee4ecb3e8acdb5905433a68b7d021a80f1f25288b9d8b7030a14750e373` |
-| `registros/06b-infer-secuencias.txt` | 9 | `1d7f9a446f6c4f41df1bb5f2d8f3b803bb8672e67275adaf88f4e5c915e62c3e` | `c4633169b402e945beadff8504e1be1c53185dc6d712b25bd5b6c8fa093be765` |
-| `registros/07-metricas.txt` | 1 | `6f04c16e641a16135f50f103a0241fbc015fe2d08232f964b9f8bbc4f2c6b9a8` | `12f951f08278103fc56a80e8ff69d868cfba73e0aa8720605eba225a2654ffd9` |
-| `registros/08-bench.txt` | 1 | `1ac715f033319a64b84dacb6340b75de85c0111e50e76158c0b23fb50365c246` | `53764fa72522a9c76eb5d3ae54926d3eb1de90ff7bdaf24710fc6deb7113165d` |
-| `registros/09-limites.txt` | 2 | `0298c2c92ee10b1187e628d5a634230dbd878c74b01eca34cbee6cfd79f87c00` | `0bbbd25ffce34fa9a043c3cea5d9c1295ee9aa44ace7c1762116e28afe69d286` |
-| `registros/14a-control-unido.txt` | 1 | `ce3f703c86853e9133176293fe892e2ff81e5fa0ddc320138eac8c3b5211e3e7` | `d65567cfa3714c4b707efd06abe906e0a345afc1e4c3dba5434fe5bc279ace57` |
-| `registros/14b-trazabilidad.txt` | 1 | `030ca5e8cd3e183b4db3b9318c053fd88b17e645d6edc267676c4579e0889809` | `668d513abb8be30f3844c1b7be955887ecc685341b3696c1a2d18a651bb02bfe` |
-| `registros/15-powershell-bom.txt` | 1 | `e6d973b21bb2812272517e8cb55258565a0d7d30599fd78f6fd4787e3ee2486c` | `f3fc9f54e2dfb138071f84df79a68bee3228507049103212f7546385f90de67b` |
-| `registros/17-resto-comandos.txt` | 3 | `efe2431687315956c20125ce2489e9ee5d60d391a0778ad04d987d738b58b988` | `b3ce09697ac060ed375a4a88ac65824c79743d80daa0f469ff26068766e57329` |
-| `registros/sinred.sh` | 1 | `4307051dfcab5062104e3d2036c38795d8e7d01a97b8fa94111460425a2d95d3` | `38c324ccc3583104d5af9af59ca4f378fe3f702378de412d1dddbc8afc8aa212` |
-| `salidas/casos/resumen.txt` | 1 | `6f676fe68e02d74595d978e4b126b3fe1690b93f5c9325ae4eb3aa35fecc5387` | `fbb650625e1bc8e2d1b4483246e4f762bc4334371c96fe9b5d312a7652fa4dc5` |
-| `salidas/corrida/run.json` | 1 | `f7609669515f1ab52774177910e5ec66ac46aa2eac021361ea39c7a9ffa627d5` | `3e0c665276b72064a4df57c6e150369ae2d62c5e8eb4a65c24004dfb2c912140` |
-| `salidas/metricas/resumen.json` | 1 | `8d576b902726c497109d636f2431df02b5aea60ed93a3572615fcc71b64be277` | `9e3a5298fbe1ac9dc9f474522a4aead812de07d3bcb2619d22ff33794f4572b7` |
+| `registros/02-pesos.txt` | 1 | `ba18273ee36916062324f801f9fa0161f51397374a348a7f4da7e478ae94fcb9` | `7a89e5d63572d9efe1a92c0b8cf2d99f5a16c842d9b33ae5c32d4e2482f56ad9` |
+| `registros/05-infer-jpeg.txt` | 6 | `93165bf4167277388da5c6f36b8cebf7b019ae4eccaf4223ca21773492f90d65` | `2e7d95dc2d7915f8a03930c5b4617faf6b7ce8bac59196e13b9ea8b3279d9568` |
+| `registros/06a-infer-mismo-run-id-FALLA.txt` | 9 | `dfd3648cabbe70175b17685db095c9bb4a2291f586f5cb66d7310076a14d1420` | `97d2f644ba8776a605b339ba98fade787fd0f5d163afc09dbea7e8fb090ce95c` |
+| `registros/06b-infer-secuencias.txt` | 9 | `1d7f9a446f6c4f41df1bb5f2d8f3b803bb8672e67275adaf88f4e5c915e62c3e` | `f77e996acebed7702206486162756dcb7a65ba5e3dd7c23e2250ed4d08cd4005` |
+| `registros/07-metricas.txt` | 1 | `6f04c16e641a16135f50f103a0241fbc015fe2d08232f964b9f8bbc4f2c6b9a8` | `a20adea8d0a73d70ffdf7fb235ca44d120f7d223e78f5d25960db62985991dcb` |
+| `registros/08-bench.txt` | 1 | `1ac715f033319a64b84dacb6340b75de85c0111e50e76158c0b23fb50365c246` | `0cb7b1702b47b2f0470823deafa16c0ad60599f688da9551a3ed239114629839` |
+| `registros/09-limites.txt` | 2 | `0298c2c92ee10b1187e628d5a634230dbd878c74b01eca34cbee6cfd79f87c00` | `65d70b9ef1713683a08e52ae36eb15876ecabfb22b9ada0caed42428b231ec26` |
+| `registros/14a-control-unido.txt` | 1 | `ce3f703c86853e9133176293fe892e2ff81e5fa0ddc320138eac8c3b5211e3e7` | `6358757ccfbd28bd546660f322bbeb7ea1ed10a7f582f94a51121bdadbe68644` |
+| `registros/14b-trazabilidad.txt` | 1 | `030ca5e8cd3e183b4db3b9318c053fd88b17e645d6edc267676c4579e0889809` | `0d41d98f6b23db1a7787cad7bd10a6686b2090310db9d15423eaf111ca77b6a3` |
+| `registros/15-powershell-bom.txt` | 1 | `e6d973b21bb2812272517e8cb55258565a0d7d30599fd78f6fd4787e3ee2486c` | `b31b82dc2c3cc9b9591de5aa3fc2cdae4fa32fea059986c725a861e979283b5f` |
+| `registros/17-resto-comandos.txt` | 3 | `efe2431687315956c20125ce2489e9ee5d60d391a0778ad04d987d738b58b988` | `f3bdc080c63e809a81007105c9a509506f7e03f508b2e95e828f42548d7f94a2` |
+| `registros/sinred.sh` | 1 | `4307051dfcab5062104e3d2036c38795d8e7d01a97b8fa94111460425a2d95d3` | `e5e12a8bb8941c83841585fc9ad15e739907a6cf337c4c9daa0dbce88f00156a` |
+| `salidas/casos/resumen.txt` | 1 | `6f676fe68e02d74595d978e4b126b3fe1690b93f5c9325ae4eb3aa35fecc5387` | `8cf3f655e31e392f21f8f17c14b2479938b30ae0cbcced1a755bb42636284ecc` |
+| `salidas/corrida/run.json` | 1 | `f7609669515f1ab52774177910e5ec66ac46aa2eac021361ea39c7a9ffa627d5` | `eb5fa27da429bc818e6e6f9f17ece0a2c0489cfd5c5bb852c3b5dda43f98df17` |
+| `salidas/metricas/resumen.json` | 1 | `8d576b902726c497109d636f2431df02b5aea60ed93a3572615fcc71b64be277` | `e8e5d1099011378167469d27a8783e4218076f0431fc8ae34de684077a0504c0` |
 
-Además, 20 archivos de texto escritos en Windows pasaron de fin de línea CRLF a LF, como hace `.gitattributes` con todo el texto del repo; no cambia su contenido. Los SHA-256 públicos de la tabla y de `SHA256SUMS` son de la versión con LF.
+Además, los archivos de texto escritos en Windows pasaron de fin de línea CRLF a LF, como hace
+`.gitattributes` con todo el texto del repo; no cambia su contenido. Los SHA-256 públicos de la tabla y de
+`SHA256SUMS` son de la versión con LF. `registros/10-enlaces-rutas.txt` quedó en la codificación de la
+consola de Windows (cp1252), tal como se escribió.
 
 ## Verificar
 

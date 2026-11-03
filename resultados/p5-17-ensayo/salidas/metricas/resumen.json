@@ -80,7 +80,7 @@
   "advertencias": [],
   "entradas": {
     "detecciones": {
-      "ruta": "C:/Users/<usuario>/p517-ensayo/salidas/ensayo-p517.jsonl",
+      "ruta": "<ensayo>/salidas/ensayo-p517.jsonl",
       "sha256": "20f9008e8a38f9ef8745fedabaca31d078d989a6abf246c86e2e788b7be91cc3"
     },
     "anotaciones": {

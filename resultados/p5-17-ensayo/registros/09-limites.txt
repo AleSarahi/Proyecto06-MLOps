@@ -4,10 +4,10 @@ total_ms + sobrecosto vs max_frame_age_ms: p95=133.33 máx=170.87 / 500 ms: cump
 total_ms + sobrecosto vs periodo_entrada_ms: p95=133.33 máx=170.87 / 200 ms: cumple
 intervalo vs validez_orden_ms: p95=200.00 máx=200.00 / 400 ms: cumple
 intervalo vs watchdog_ms: p95=200.00 máx=200.00 / 600 ms: cumple
-contraste en C:/Users/<usuario>/p517-ensayo/salidas/contraste/contraste.md
+contraste en <ensayo>/salidas/contraste/contraste.md
 codigo=0
 $ comparar con mediciones/final-contraste/
-/c/Users/<usuario>/p517-ensayo/salidas/contraste/:
+<ensayo>/salidas/contraste/:
 contraste.json
 contraste.md
 

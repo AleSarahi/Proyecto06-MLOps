@@ -1,7 +1,7 @@
 $ trazabilidad construir
 TP=71 FP=0 FN=24 F1=0.8554
 107 cuadros, 0 errores registrados
-resultados en C:/Users/<usuario>/p517-ensayo/salidas/corrida/trazabilidad/
+resultados en <ensayo>/salidas/corrida/trazabilidad/
 codigo=0
 $ trazabilidad recalcular
 el recálculo desde por_cuadro.jsonl da las mismas cifras que resumen.json

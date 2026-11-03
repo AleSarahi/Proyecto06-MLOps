@@ -7,12 +7,12 @@ datos/manifiesto.jsonl ya existe: usa --sobrescribir
 codigo=2
 
 $ uv run python -m conjunto manifiesto --salida <ensayo>/manifiesto-regenerado.jsonl
-107 cuadros -> C:/Users/<usuario>/p517-ensayo/salidas/manifiesto-regenerado.jsonl (SHA-256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff)
+107 cuadros -> <ensayo>/salidas/manifiesto-regenerado.jsonl (SHA-256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff)
 codigo=0
 regenerado identico byte a byte al congelado
 
 $ uv run python -m conjunto hojas --salida <ensayo>/hojas
-8 hojas en C:/Users/<usuario>/p517-ensayo/salidas/hojas/
+8 hojas en <ensayo>/salidas/hojas/
 codigo=0
 archivos: S01.png S02.png S03.png S04.png S05.png S06.png S07.png S08.png 
 
@@ -31,7 +31,7 @@ C10   armada   7/7     PASA
 
 7 de 10 casos pasan.
 
-Por qué fallan (detalle en C:\Users\<usuario>\p517-ensayo\salidas\casos\Cn\veredicto.json):
+Por qué fallan (detalle en <ensayo>\salidas\casos\Cn\veredicto.json):
   C2
     - obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida
     - obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida

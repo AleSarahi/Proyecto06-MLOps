@@ -1,5 +1,5 @@
 $ infer S01 (12 JPEG): --capture-ms 0 --capture-ms 281 --capture-ms 594 --capture-ms 797 --capture-ms 1047 --capture-ms 1344 --capture-ms 1609 --capture-ms 1844 --capture-ms 2141 --capture-ms 2500 --capture-ms 2797 --capture-ms 3156 
-C:\Users\<usuario>\p517-ensayo\salidas\seq-S01.jsonl: 12 cuadros, 0 errores
+<ensayo>\salidas\seq-S01.jsonl: 12 cuadros, 0 errores
 codigo=0
 $ infer S02 (12 JPEG): --capture-ms 0 --capture-ms 219 --capture-ms 547 --capture-ms 750 --capture-ms 969 --capture-ms 1219 --capture-ms 1454 --capture-ms 1750 --capture-ms 1954 --capture-ms 2204 --capture-ms 2407 --capture-ms 2657 
 infer: el JSONL o manifiesto del run ya existe
@@ -24,14 +24,14 @@ infer: el JSONL o manifiesto del run ya existe
 codigo=2
 
 $ cat seq-S0*.jsonl > ensayo-p517.jsonl   (Git Bash, sin BOM)
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S02.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S03.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S04.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S05.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S06.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S07.jsonl: No such file or directory
-cat: /c/Users/<usuario>/p517-ensayo/salidas/seq-S08.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S02.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S03.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S04.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S05.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S06.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S07.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S08.jsonl: No such file or directory
 12
    {   "   s
-C:\Users\<usuario>\p517-ensayo\salidas\ensayo-p517.jsonl: OK (12 eventos)
+<ensayo>\salidas\ensayo-p517.jsonl: OK (12 eventos)
 codigo=0

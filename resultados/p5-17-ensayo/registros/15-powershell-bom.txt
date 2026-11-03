@@ -12,5 +12,5 @@ primeros bytes: 239 187 191
 $ [IO.File]::WriteAllLines(..., (Get-Content S0*\detecciones.jsonl))   # UTF-8 sin BOM
 primeros bytes: 123 34 115
 TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
-resultados en C:/Users/<usuario>/p517-ensayo/salidas/m-ps2/
+resultados en <ensayo>/salidas/m-ps2/
 codigo=0

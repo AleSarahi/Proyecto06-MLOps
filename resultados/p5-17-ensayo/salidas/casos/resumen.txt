@@ -12,7 +12,7 @@ C10   armada   7/7     PASA
 
 7 de 10 casos pasan.
 
-Por qué fallan (detalle en C:\Users\<usuario>\p517-ensayo\salidas\casos\Cn\veredicto.json):
+Por qué fallan (detalle en <ensayo>\salidas\casos\Cn\veredicto.json):
   C2
     - obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida
     - obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida
