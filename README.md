@@ -187,15 +187,21 @@ En la copia, `sha256sum -c expectativas.sha256` (dentro de la carpeta, en Git Ba
 ### 5. Recorrido con una secuencia real
 
 Una secuencia filmada con el carro (S09, en `datos/pruebas-b/S09/`) pasa por el detector de A (`infer`) y
-llega al adaptador virtual. Hacen falta los pesos `yolo11n.pt`, que no están en el repo (PEND-11). Se bajan
-una vez, **con red**, de la [release v8.3.0 de Ultralytics](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt),
-y deben dar el SHA-256 `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`
-(`sha256sum yolo11n.pt` en Git Bash, `Get-FileHash yolo11n.pt` en PowerShell). `infer` no carga otros
-pesos. Después, todo corre sin red:
+llega al adaptador virtual. Hacen falta los pesos `yolo11n.pt`, que no están en el repo. Se bajan una
+vez, **con red**, con un solo comando, que los deja en `modelo/descargas/` y comprueba el SHA-256 de
+`config/detector.json` (origen, licencia y detalles en [`modelo/README.md`](modelo/README.md)). `infer` no
+carga otros pesos.
+
+```bash
+uv run --locked python -m infer.descarga
+# .../modelo/descargas/yolo11n.pt: descargado, 5613764 B, SHA-256 0ebbc80d…6ee1 OK
+```
+
+Después, todo corre sin red:
 
 ```bash
 # Un --capture-ms por JPEG: el t_capture_ms de cada línea de datos/pruebas-b/S09/captura.jsonl.
-uv run python -m infer --input datos/pruebas-b/S09 --weights <ruta local>/yolo11n.pt \
+uv run python -m infer --input datos/pruebas-b/S09 --weights modelo/descargas/yolo11n.pt \
   --output resultados/s09/detector.jsonl --run-id s09 --sequence-id S09 \
   --capture-ms 0 --capture-ms 203 --capture-ms 484 --capture-ms 687 --capture-ms 906 --capture-ms 1140 \
   --capture-ms 1390 --capture-ms 1593 --capture-ms 1812 --capture-ms 2031 --capture-ms 2297 --capture-ms 2531
@@ -212,7 +218,7 @@ ya existe; para repetir, usa otra carpeta. Las secuencias que ya se corrieron y 
 en [`docs/recorrido-real.md`](docs/recorrido-real.md).
 
 Con los pesos a la mano, define `P5_05_YOLO11N_PT` con su ruta antes de `uv run pytest -q` (Git Bash:
-`export P5_05_YOLO11N_PT=<ruta local>/yolo11n.pt`; PowerShell: `$env:P5_05_YOLO11N_PT = "<ruta local>\yolo11n.pt"`).
+`export P5_05_YOLO11N_PT=modelo/descargas/yolo11n.pt`; PowerShell: `$env:P5_05_YOLO11N_PT = "modelo\descargas\yolo11n.pt"`).
 Sin esa variable, las pruebas que usan el detector real se saltan (salen como `skipped`), no fallan.
 
 ### Dónde quedan los resultados
