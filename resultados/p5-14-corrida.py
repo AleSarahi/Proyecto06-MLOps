@@ -15,7 +15,9 @@ procesar el cuadro, así que la edad de cada cuadro es real.
 Después corre `python -m control`, `python -m trazabilidad construir` (con los hashes congelados
 en el paso 2 de #13) y `python -m trazabilidad recalcular`, y escribe en `--salida`:
 
-- `infer/Sxx.jsonl`: la salida de cada llamada a `infer`; `detector.jsonl`: las 8 juntas.
+- `infer/Sxx/`: la salida de cada llamada a `infer` (`Sxx.jsonl` y su `<run_id>.infer-run.json`, que
+  `infer` escribe junto al JSONL; por eso cada secuencia va en su carpeta).
+- `detector.jsonl`: las 8 juntas.
 - `corrida/`: lo que escribe `control`.
 - `trazabilidad/`: `por_cuadro.jsonl`, `resumen.json` y lo demás de `construir`.
 - `corrida.json`: cómo se hizo (commit, energía, hardware, desplazamiento de cada secuencia, el
@@ -117,7 +119,8 @@ def _infer(args: argparse.Namespace, temporal: Path, registro: list[dict[str, An
             shutil.copyfile(origen, carpeta / fila["archivo"])
         desplazamiento = inicio - filas[0]["t_capture_ms"]
         tiempos = [fila["t_capture_ms"] + desplazamiento for fila in filas]
-        salida = args.salida / "infer" / f"{secuencia}.jsonl"
+        salida = args.salida / "infer" / secuencia / f"{secuencia}.jsonl"
+        salida.parent.mkdir(parents=True)
         comando = ["infer", "--input", str(carpeta), "--weights", str(args.pesos)]
         comando += ["--output", _arg(salida), "--run-id", args.run_id, "--sequence-id", secuencia]
         for tiempo in tiempos:
@@ -167,7 +170,8 @@ def main(argv: list[str] | None = None) -> int:
     detector = salida / "detector.jsonl"
     with detector.open("w", encoding="utf-8", newline="\n") as archivo:  # NOSONAR (S8707)
         for secuencia in SECUENCIAS:
-            archivo.write((salida / "infer" / f"{secuencia}.jsonl").read_text(encoding="utf-8"))
+            jsonl = salida / "infer" / secuencia / f"{secuencia}.jsonl"
+            archivo.write(jsonl.read_text(encoding="utf-8"))
 
     corrida, trazabilidad = salida / "corrida", salida / "trazabilidad"
     codigos = [r["salida"] for r in registro]
