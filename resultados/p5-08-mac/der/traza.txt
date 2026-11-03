@@ -1,0 +1,63 @@
+S10_f0001 · run p5-08-mac-der · status ok · captura 0.0 ms · llegada 48.376499995356426 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9371986389160156 · bbox [220.43150329589844, 228.18202209472656, 472.931884765625, 425.0716552734375] -> centro, der
+  decisión: DETENIDO -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · Obstáculo en el centro (class_id 41, confianza 0.937199); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 48.376499995356426 ms · vale hasta 448.3764999953564 ms
+
+S10_f0002 · run p5-08-mac-der · status ok · captura 250.0 ms · llegada 310.72495799162425 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.950529158115387 · bbox [218.69589233398438, 228.81541442871094, 473.3588562011719, 427.3385009765625] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.950529); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 310.72495799162425 ms · vale hasta 710.7249579916243 ms
+
+S10_f0003 · run p5-08-mac-der · status ok · captura 500.0 ms · llegada 561.5012920025038 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9322130680084229 · bbox [217.842041015625, 229.24078369140625, 473.09271240234375, 428.12786865234375] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.932213); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 561.5012920025038 ms · vale hasta 961.5012920025038 ms
+
+S10_f0004 · run p5-08-mac-der · status ok · captura 750.0 ms · llegada 811.1758750019362 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9366614818572998 · bbox [215.82704162597656, 228.58863830566406, 471.8756103515625, 429.3907470703125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.936661); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 811.1758750019362 ms · vale hasta 1211.1758750019362 ms
+
+S10_f0005 · run p5-08-mac-der · status ok · captura 985.0 ms · llegada 1039.4262079935288 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9434940218925476 · bbox [215.6864013671875, 228.4524383544922, 471.63690185546875, 429.92852783203125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.943494); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1039.4262079935288 ms · vale hasta 1439.4262079935288 ms
+
+S10_f0006 · run p5-08-mac-der · status ok · captura 1188.0 ms · llegada 1251.656541993725 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9191638231277466 · bbox [213.69891357421875, 229.25430297851562, 471.46405029296875, 431.0044860839844] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.919164); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1251.656541993725 ms · vale hasta 1651.656541993725 ms
+
+S10_f0007 · run p5-08-mac-der · status ok · captura 1391.0 ms · llegada 1453.1194169976516 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9303337335586548 · bbox [212.96546936035156, 229.7513885498047, 472.4866943359375, 431.38189697265625] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.930334); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1453.1194169976516 ms · vale hasta 1853.1194169976516 ms
+
+S10_f0008 · run p5-08-mac-der · status ok · captura 1688.0 ms · llegada 1760.726041989983 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9428032636642456 · bbox [213.42539978027344, 230.0719757080078, 475.473388671875, 432.06927490234375] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.942803); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 1760.726041989983 ms · vale hasta 2160.726041989983 ms
+
+S10_f0009 · run p5-08-mac-der · status ok · captura 1954.0 ms · llegada 2019.9958329903893 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9375045895576477 · bbox [211.19674682617188, 229.6296844482422, 474.7234191894531, 434.08685302734375] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.937505); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2019.9958329903893 ms · vale hasta 2419.9958329903893 ms
+
+S10_f0010 · run p5-08-mac-der · status ok · captura 2157.0 ms · llegada 2218.32841700234 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9371247887611389 · bbox [210.59329223632812, 229.8011016845703, 474.6044006347656, 434.47003173828125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.937125); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2218.32841700234 ms · vale hasta 2618.32841700234 ms
+
+S10_f0011 · run p5-08-mac-der · status ok · captura 2360.0 ms · llegada 2424.1876669984777 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.9447760581970215 · bbox [211.97662353515625, 231.26731872558594, 473.1002197265625, 435.919189453125] -> centro, der
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.944776); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2424.1876669984777 ms · vale hasta 2824.1876669984777 ms
+
+S10_f0012 · run p5-08-mac-der · status ok · captura 2563.0 ms · llegada 2615.280707992497 ms · 640x480 px (xyxy)
+  detección: class_id 41 · confianza 0.882355272769928 · bbox [207.55657958984375, 234.67686462402344, 466.23919677734375, 438.185302734375] -> centro
+  decisión: GIRANDO_IZQ -> GIRANDO_IZQ · GIRAR_IZQ (decidió politica) · esperando_cuadros_libres 0/3: sigue girando hacia la izquierda, que está libre. Obstáculo en el centro (class_id 41, confianza 0.882355); la izquierda está libre: gira hacia allá.
+  comando: GIRAR_IZQ · speed 0.4 · steering -0.5 · t_command 2615.280707992497 ms · vale hasta 3015.280707992497 ms
+
+Órdenes sin cuadro:
+  shutdown a los 2615.280707992497 ms: STOP (cierre)
+Acciones por cuadro: GIRAR_IZQ 12
