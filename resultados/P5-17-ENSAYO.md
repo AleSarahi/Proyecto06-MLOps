@@ -16,7 +16,7 @@ paso están en [`p5-17-ensayo/`](p5-17-ensayo/README.md), con su índice `SHA256
 
 **Sin red:** después de `uv sync --locked` y de bajar los pesos, todo se corrió con `UV_OFFLINE=1` y con
 `HTTP_PROXY`, `HTTPS_PROXY` y `ALL_PROXY` apuntando a `http://127.0.0.1:9`, un puerto donde no escucha nada
-([`sinred.sh`](p5-17-ensayo/registros/sinred.sh)). Antes de seguir se comprobó que una petición a
+([`sinred.sh.txt`](p5-17-ensayo/registros/sinred.sh.txt)). Antes de seguir se comprobó que una petición a
 `https://github.com` fallaba (`URLError`). No se desconectó el Wi-Fi: la red se cortó para uv y Python, no
 para todo el equipo.
 
@@ -42,7 +42,7 @@ trae el comando completo y su código de salida.
 | 13 | Las dos pruebas que fallaban de forma intermitente en Windows antes de #86 | 20 de 20 veces pasan | `13` | Observado |
 | 14 | `control` con las 8 secuencias y `trazabilidad construir`, `recalcular` y `cuadro` | 107 eventos, 108 comandos, 0 errores. La trazabilidad da las mismas cifras que `metricas`; `recalcular` coincide con `resumen.json`; `cuadro S05_f0001` muestra del evento al comando | `14a`, `14b`; `salidas/corrida/` | Observado |
 | 15 | Juntar las 8 salidas en PowerShell 5.1 | `Set-Content -Encoding UTF8` y `>` agregan BOM y `metricas` sale con 2; `[IO.File]::WriteAllLines` no lo agrega y `metricas` da lo mismo que en el paso 7 (fallo 2) | `15` | Observado |
-| 16 | Bloque "Métricas del conjunto completo" del README corregido, copiado y corrido tal cual | Los mismos 107 eventos que el paso 6 y las mismas métricas que el paso 7 | `16`, `bloque.sh` | Observado |
+| 16 | Bloque "Métricas del conjunto completo" del README corregido, copiado y corrido tal cual | Los mismos 107 eventos que el paso 6 y las mismas métricas que el paso 7 | `16`, `bloque.sh.txt` | Observado |
 | 17 | `contrato` con el ejemplo, `conjunto manifiesto` y `hojas`, y `casos/runner.py` | Ejemplo OK (5 eventos). `conjunto manifiesto` sin `--salida` no toca el congelado (código 2, como dice su ayuda); con `--salida` en otra carpeta, el manifiesto regenerado es idéntico byte a byte a `datos/manifiesto.jsonl`. 8 hojas. Runner: 7 de 10, con C2, C5 y C7 fallando por el límite del detector documentado en `docs/casos-reales.md`. La copia de git siguió sin cambios | `17`; `salidas/casos/resumen.txt` | Observado |
 | 18 | `python -m uv` en lugar de `uv` (fallo 3) | `sync`, `run` y `conjunto verificar` funcionan igual | `18` | Observado |
 | 19 | Reproducción conjunta con el equipo B | La hace B3 después de este ensayo | — | No observado |

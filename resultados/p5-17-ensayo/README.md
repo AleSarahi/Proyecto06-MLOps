@@ -8,9 +8,9 @@ originales de esa corrida: no se repitió nada para generarlas.
 - **`registros/`**: lo que se escribió en la terminal en cada paso, con el comando completo y su código de
   salida. La numeración es la de los pasos del acta.
   - `LEEME.txt`: commit, máquina y hora.
-  - `sinred.sh`: las variables con las que se cortó la red.
+  - `sinred.sh.txt`: las variables con las que se cortó la red.
   - `enlaces.py.txt`: la revisión de enlaces y rutas.
-  - `bloque.sh`: el bloque "Métricas del conjunto completo" del README, tal como se corrió.
+  - `bloque.sh.txt`: el bloque "Métricas del conjunto completo" del README, tal como se corrió.
 - **`salidas/`**: lo que escribieron los comandos.
   - `jpeg-*.jsonl` y `ensayo-S0*_f000*.infer-run.json`: los 3 JPEG elegidos por quien verifica.
   - `S01/` a `S08/`: la salida de `infer` de cada secuencia (`detecciones.jsonl`) y su manifiesto de run.
@@ -58,7 +58,7 @@ sigue dando las mismas cifras que su `resumen.json`.
 | `registros/14b-trazabilidad.txt` | 1 | `030ca5e8cd3e183b4db3b9318c053fd88b17e645d6edc267676c4579e0889809` | `0d41d98f6b23db1a7787cad7bd10a6686b2090310db9d15423eaf111ca77b6a3` |
 | `registros/15-powershell-bom.txt` | 1 | `e6d973b21bb2812272517e8cb55258565a0d7d30599fd78f6fd4787e3ee2486c` | `b31b82dc2c3cc9b9591de5aa3fc2cdae4fa32fea059986c725a861e979283b5f` |
 | `registros/17-resto-comandos.txt` | 3 | `efe2431687315956c20125ce2489e9ee5d60d391a0778ad04d987d738b58b988` | `f3bdc080c63e809a81007105c9a509506f7e03f508b2e95e828f42548d7f94a2` |
-| `registros/sinred.sh` | 1 | `4307051dfcab5062104e3d2036c38795d8e7d01a97b8fa94111460425a2d95d3` | `e5e12a8bb8941c83841585fc9ad15e739907a6cf337c4c9daa0dbce88f00156a` |
+| `registros/sinred.sh.txt` | 1 | `4307051dfcab5062104e3d2036c38795d8e7d01a97b8fa94111460425a2d95d3` | `e5e12a8bb8941c83841585fc9ad15e739907a6cf337c4c9daa0dbce88f00156a` |
 | `salidas/casos/resumen.txt` | 1 | `6f676fe68e02d74595d978e4b126b3fe1690b93f5c9325ae4eb3aa35fecc5387` | `8cf3f655e31e392f21f8f17c14b2479938b30ae0cbcced1a755bb42636284ecc` |
 | `salidas/corrida/run.json` | 1 | `f7609669515f1ab52774177910e5ec66ac46aa2eac021361ea39c7a9ffa627d5` | `eb5fa27da429bc818e6e6f9f17ece0a2c0489cfd5c5bb852c3b5dda43f98df17` |
 | `salidas/metricas/resumen.json` | 1 | `8d576b902726c497109d636f2431df02b5aea60ed93a3572615fcc71b64be277` | `e8e5d1099011378167469d27a8783e4218076f0431fc8ae34de684077a0504c0` |
