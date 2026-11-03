@@ -16,8 +16,9 @@ enlaza el contraste.
 - Que cada cuadro de las secuencias produce un evento del contrato v1 y que B responde con el comando que
   dicta su política, incluidos los casos de cuadro viejo, timeout del detector y ausencia de cuadros (C8, C9).
   Del timeout, solo **el lado de B**: responde a un evento `status=error` con `detector_timeout` armado en el
-  caso. Que `infer` lo emita cuando la solicitud pasa `detector_timeout_ms` es de P5-06, que todavía no se
-  fusiona; *pendiente* comprobarlo entonces.
+  caso. Que `infer` lo emita cuando la solicitud pasa `detector_timeout_ms` lo agregó P5-06 (#86), y lo
+  comprobó con trabajadores simulados en Mac: 50 de 50 timeouts forzados se publicaron entre 503 y 526 ms
+  ([`resultados/P5-06-DISENO-Y-ACEPTACION.md`](../resultados/P5-06-DISENO-Y-ACEPTACION.md)).
 - Que todo lo anterior se reproduce desde los archivos del repositorio con los hashes registrados:
   `bench.limites` comprueba que los CSV de la corrida tengan el SHA-256 que registró `resumen.json`.
 
@@ -31,9 +32,9 @@ enlaza el contraste.
   *En una máquina lenta o cargada*). Con una máquina lenta, B puede frenar todo por cuadros viejos.
 - **La cadena completa de la cámara:** el benchmark parte de la imagen en memoria. La lectura y
   decodificación del JPEG se suman aparte (`bench.sobrecosto`), pero no se mide la captura en la ESP32-CAM, la
-  transmisión por WiFi ni lo que agrega P5-06 (#86) al correr el predictor supervisado en otro proceso
-  (comunicación entre procesos, supervisión y publicación del evento), así que la edad real de un cuadro al
-  llegar a B es mayor que la de la tabla.
+  transmisión por WiFi. Lo que agrega P5-06 (#86) al correr el predictor supervisado en otro proceso
+  (comunicación entre procesos, supervisión y publicación del evento) no lo mide este benchmark; P5-06 lo
+  midió aparte (ver *Alcance*). La edad real de un cuadro al llegar a B es mayor que la de la tabla.
 - **Escenas fuera del dominio:** el detector solo se probó con los objetos, la escena y la luz de PEND-04.
 - **C2, C5 y C7 con entradas reales:** fallan por un límite del detector, que en algunos cuadros no ve el
   obstáculo o lo ve por debajo del umbral de 0.5; el control decide bien con lo que recibe, y no se cambió el
@@ -56,8 +57,12 @@ uno). A eso se suma lo que `infer` paga y el arnés no mide: leer el JPEG y la p
 **Alcance (Heri en #82):** todo se midió en un solo proceso, con el detector local de `bench.yolo` y
 `DetectorJPEG`. P5-06 (#86) corre el predictor supervisado en otro proceso, y ni el arnés ni
 `bench.sobrecosto` miden la comunicación entre procesos, la supervisión ni la publicación del evento. Por eso
-este contraste dice cuánto margen deja el lado local; comprobar que la ruta supervisada cumple los plazos queda
-a cargo de P5-06.
+este contraste dice cuánto margen deja el lado local. La ruta supervisada la midió P5-06 en la serie oficial de
+Andy en Windows (conectada, 50 pares intercalados con un mismo JPEG, [`resultados/p5-06-benchmark-windows-andrea/`](../resultados/p5-06-benchmark-windows-andrea/README.md)): p50 49.66, p95 58.98 y máximo
+60.66 ms, 0.72 ms más de p95 que en un solo proceso, y ninguna solicitud normal pasó de 500 ms. Es otro equipo
+y un solo JPEG, no el de PEND-05 ni S01–S08. **Reinicio:** si una solicitud pasa el plazo, `infer` publica
+`detector_timeout` y reinicia el detector; en esa serie, reiniciar tardó p50 4015 y p95 4799 ms (Karen no fijó
+un límite). Mientras reinicia, los cuadros que llegan envejecen y B frena por `cuadro_viejo`.
 
 El sobrecosto **se midió con las 11 fotos de `docs/carro/`, no con S01–S08**: se decidió antes del paso 2 de
 #13, cuando aún no se podía correr el detector sobre el conjunto. Son de celular (~1200×1600) y los cuadros del
@@ -66,7 +71,7 @@ menor. No cambia ningún veredicto.
 
 | Medido | Plazo | Por qué importa |
 |---|---|---|
-| `total_ms` + sobrecosto (la solicitud completa de `infer`) | `detector_timeout_ms` (500) | Según lo planeado para P5-06 (Heri en #13), el timeout de A cubrirá la solicitud entera; si la pasa, A debe emitir `detector_timeout` y B frena (C9). Hoy `infer` no lo aplica: *pendiente* de P5-06. Sin `--sobrecosto` se compara `inferencia_ms`. |
+| `total_ms` + sobrecosto (la solicitud completa de `infer`) | `detector_timeout_ms` (500) | Desde P5-06 (#86), el timeout de A cubre la solicitud entera, del envío a la respuesta; si la pasa, `infer` emite `detector_timeout` y B frena (C9). Sin `--sobrecosto` se compara `inferencia_ms`. |
 | `total_ms` + sobrecosto | `max_frame_age_ms` (500) | El comando sale cuando el cuadro ya tiene al menos esa edad; si pasa el plazo, B lo rechaza (C8). |
 | `total_ms` + sobrecosto | periodo de entrada (200, PEND-09) | Si procesar tarda más que el periodo, los cuadros se acumulan y llegan cada vez más viejos. |
 | intervalo entre comandos | `validez_orden_ms` (400) | Si entre dos comandos pasa más, el adaptador frena por su cuenta. |
@@ -104,7 +109,9 @@ En ms. Casi todos los números de la peor salen de `final-2` (`total_ms` p95 118
 p95 de `politica_ms` sale de `final-3`. El sobrecosto suma p50 12.33, p95 14.70 y máximo 16.49 ms. Lo más
 ajustado es el **periodo de entrada**: el peor cuadro queda a 29 ms de los 200 ms, y el p95 a 67 ms. La edad
 y el timeout quedan a más de 300 ms. La fila del timeout dice que el tiempo medido cabe en los 500 ms de
-`plazos.yaml`, no que `infer` ya los aplique (pendiente de P5-06).
+`plazos.yaml`; que `infer` los aplique lo comprueba P5-06 (ver *Alcance*). `contraste.md` se generó antes de
+que entrara P5-06 y su razón del timeout todavía dice "Hoy infer no lo aplica"; no se regeneró, para que siga
+saliendo idéntico al reproducirlo (P5-17), y vale lo que dice esta página.
 
 Las tres corridas, por separado:
 
@@ -250,5 +257,7 @@ batería).
 - La cadena en vivo ESP32-CAM → detector → B con tiempos medidos de punta a punta.
 - El carro moviéndose con los comandos de B.
 - Otros equipos distintos al de PEND-05.
-- Que `infer` emita `detector_timeout` cuando una solicitud pasa el plazo: llega con P5-06.
-- El p95 de la ruta completa con el predictor supervisado en otro proceso: lo valida P5-06.
+- Que `infer` emita `detector_timeout` con el detector real en el equipo de PEND-05: P5-06 lo comprobó con
+  trabajadores simulados en Mac.
+- El p95 de la ruta supervisada en el equipo de PEND-05 y con S01–S08: P5-06 lo midió con un JPEG en el
+  Windows de Andy.
