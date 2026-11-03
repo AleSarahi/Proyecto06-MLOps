@@ -1,0 +1,15 @@
+$ uv run --locked python -m infer --input datos/cuadros/S05/S05_f0001.jpg --weights modelo/descargas/yolo11n.pt --output .../jpeg-S05_f0001.jsonl --run-id ensayo-S05_f0001
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S05_f0001.jsonl: 1 cuadros, 0 errores
+codigo=0
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S05_f0001.jsonl: OK (1 eventos)
+ status ok detecciones [(41, 0.851), (39, 0.632), (39, 0.439)]
+$ uv run --locked python -m infer --input datos/cuadros/S07/S07_f0003.jpg --weights modelo/descargas/yolo11n.pt --output .../jpeg-S07_f0003.jsonl --run-id ensayo-S07_f0003
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S07_f0003.jsonl: 1 cuadros, 0 errores
+codigo=0
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S07_f0003.jsonl: OK (1 eventos)
+ status ok detecciones [(41, 0.33)]
+$ uv run --locked python -m infer --input datos/cuadros/S01/S01_f0001.jpg --weights modelo/descargas/yolo11n.pt --output .../jpeg-S01_f0001.jsonl --run-id ensayo-S01_f0001
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S01_f0001.jsonl: 1 cuadros, 0 errores
+codigo=0
+C:\Users\<usuario>\p517-ensayo\salidas\jpeg-S01_f0001.jsonl: OK (1 eventos)
+ status ok detecciones []

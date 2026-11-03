@@ -1,0 +1,50 @@
+$ uv run python -m contrato config/contrato/ejemplos/flujo.jsonl
+config\contrato\ejemplos\flujo.jsonl: OK (5 eventos)
+codigo=0
+
+$ uv run python -m conjunto manifiesto   (sin --salida: no toca el congelado)
+datos/manifiesto.jsonl ya existe: usa --sobrescribir
+codigo=2
+
+$ uv run python -m conjunto manifiesto --salida <ensayo>/manifiesto-regenerado.jsonl
+107 cuadros -> C:/Users/<usuario>/p517-ensayo/salidas/manifiesto-regenerado.jsonl (SHA-256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff)
+codigo=0
+regenerado identico byte a byte al congelado
+
+$ uv run python -m conjunto hojas --salida <ensayo>/hojas
+8 hojas en C:/Users/<usuario>/p517-ensayo/salidas/hojas/
+codigo=0
+archivos: S01.png S02.png S03.png S04.png S05.png S06.png S07.png S08.png 
+
+$ uv run python casos/runner.py --salida <ensayo>/casos
+Caso  Entrada  Tramos  Resultado
+C1    real     1/1     PASA
+C2    real     0/1     FALLA
+C3    real     1/1     PASA
+C4    real     1/1     PASA
+C5    real     0/1     FALLA
+C6    armada   2/2     PASA
+C7    real     3/5     FALLA
+C8    armada   3/3     PASA
+C9    armada   4/4     PASA
+C10   armada   7/7     PASA
+
+7 de 10 casos pasan.
+
+Por qué fallan (detalle en C:\Users\<usuario>\p517-ensayo\salidas\casos\Cn\veredicto.json):
+  C2
+    - obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida
+    - obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida
+    - obstaculo: orden 3 (AVANZAR, event=frame, frame_id=S02_f0003): AVANZAR está prohibida
+    - obstaculo: orden 4 (AVANZAR, event=frame, frame_id=S02_f0004): AVANZAR está prohibida
+    - obstaculo: orden 5 (AVANZAR, event=frame, frame_id=S02_f0005): AVANZAR está prohibida
+    - obstaculo: orden 6 (GIRAR_IZQ, event=frame, frame_id=S02_f0006): sale a los 1312 ms; el plazo es 500
+  C5
+    - sin_zona_libre: orden 1 (GIRAR_IZQ, event=frame, frame_id=S05_f0001): GIRAR_IZQ está prohibida
+  C7
+    - bloqueo: orden 2 (AVANZAR, event=frame, frame_id=S06_f0002): AVANZAR está prohibida
+    - bloqueo_otra_vez: orden 7 (AVANZAR, event=frame, frame_id=S06_f0007): AVANZAR está prohibida
+codigo=1
+
+$ git status --short
+(vacio = la copia no cambio)

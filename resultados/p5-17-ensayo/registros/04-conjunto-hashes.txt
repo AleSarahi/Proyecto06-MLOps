@@ -1,0 +1,23 @@
+$ uv run --locked python -m conjunto verificar --sha256 8a75e271...
+cuadros: 107, secuencias: 8, con_objetos: 71, sin_objetos: 36
+SHA-256 del manifiesto: 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff
+OK con 0 excepciones
+codigo=0
+
+$ sha256sum (Git Bash)
+8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff *datos/manifiesto.jsonl
+7e842784a9240e0e4244252117de010fc9037287eaf7e7045bf716e8c4f4a051 *datos/anotaciones.jsonl
+0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1 *modelo/descargas/yolo11n.pt
+
+$ config_sha256 segun infer
+6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08
+
+$ git tags
+config-detector-v1
+datos-evaluacion-v1
+9b8dc08b728c5a69dfac2b6fdcc552fa602b651a
+baa3a9de847f58b4e6c0257ebce4f202e07c6473
+$ datos/ igual al tag?
+(vacio = igual)
+$ config igual al tag?
+(vacio = igual)

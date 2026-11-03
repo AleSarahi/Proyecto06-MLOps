@@ -1,0 +1,31 @@
+$ infer S01 -> S01/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S01\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S02 -> S02/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S02\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S03 -> S03/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S03\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S04 -> S04/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S04\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S05 -> S05/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S05\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S06 -> S06/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S06\detecciones.jsonl: 20 cuadros, 0 errores
+codigo=0
+$ infer S07 -> S07/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S07\detecciones.jsonl: 15 cuadros, 0 errores
+codigo=0
+$ infer S08 -> S08/detecciones.jsonl
+C:\Users\<usuario>\p517-ensayo\salidas\S08\detecciones.jsonl: 12 cuadros, 0 errores
+codigo=0
+
+$ cat S0*/detecciones.jsonl > ensayo-p517.jsonl   (Git Bash)
+lineas=107
+primeros bytes: {"
+C:\Users\<usuario>\p517-ensayo\salidas\ensayo-p517.jsonl: OK (107 eventos)
+codigo=0
+run_id {'ensayo-p517'} status Counter({'ok': 107})

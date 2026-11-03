@@ -120,6 +120,11 @@ done
 cat resultados/conjunto/S0{1..8}/detecciones.jsonl > resultados/conjunto/conjunto.jsonl
 uv run --locked python -m contrato resultados/conjunto/conjunto.jsonl
 # resultados/conjunto/conjunto.jsonl: OK (107 eventos)
+uv run --locked python -m metricas --detecciones resultados/conjunto/conjunto.jsonl \
+  --anotaciones datos/anotaciones.jsonl --salida resultados/conjunto/metricas/ \
+  --model-sha256 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1 \
+  --config-sha256 6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08
+# TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
 ```
 
 `metricas` rechaza un archivo con BOM. En PowerShell 5.1, `>` y `Set-Content -Encoding UTF8` lo agregan;

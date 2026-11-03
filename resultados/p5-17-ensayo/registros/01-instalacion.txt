@@ -1,0 +1,5 @@
+$ uv sync --locked
+ + ultralytics==8.3.0
+ + ultralytics-thop==2.2.3
+ + urllib3==2.8.0
+codigo=0
