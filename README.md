@@ -130,6 +130,10 @@ uv run --locked python -m metricas --detecciones resultados/conjunto/conjunto.js
 `metricas` rechaza un archivo con BOM. En PowerShell 5.1, `>` y `Set-Content -Encoding UTF8` lo agregan;
 si se junta ahí, que sea sin BOM:
 `[IO.File]::WriteAllLines("$PWD\resultados\conjunto\conjunto.jsonl", [string[]](Get-Content resultados\conjunto\S0*\detecciones.jsonl -Encoding UTF8))`.
+Ese archivo queda con CRLF: su SHA-256 no es el de `cat`, pero las métricas son las mismas.
+
+Para repetir el bloque, borra antes `resultados/conjunto`. Si no, los 8 `infer` fallan (`el JSONL o manifiesto
+del run ya existe`), pero el bloque sigue y vuelve a medir las salidas anteriores sin avisar.
 
 ### Versión de entrega
 

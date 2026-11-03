@@ -1,0 +1,13 @@
+$ mismo bloque otra vez, sin borrar resultados/conjunto
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+infer: el JSONL o manifiesto del run ya existe
+resultados\conjunto\conjunto.jsonl: OK (107 eventos)
+TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
+resultados en resultados/conjunto/metricas/
+codigo=0

@@ -1,0 +1,11 @@
+$ PowerShell 5.1.26100.9711, línea del README de #97 copiada tal cual:
+$ [IO.File]::WriteAllLines("$PWD\resultados\conjunto\conjunto.jsonl", [string[]](Get-Content resultados\conjunto\S0*\detecciones.jsonl -Encoding UTF8))
+primeros bytes: 123 34 115
+lineas: 107
+$ uv run --locked python -m contrato resultados/conjunto/conjunto.jsonl
+resultados\conjunto\conjunto.jsonl: OK (107 eventos)
+codigo=0
+$ uv run --locked python -m metricas --detecciones resultados/conjunto/conjunto.jsonl --anotaciones datos/anotaciones.jsonl --salida resultados/conjunto/metricas-ps/ --model-sha256 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1 --config-sha256 6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08
+TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
+resultados en resultados/conjunto/metricas-ps/
+codigo=0

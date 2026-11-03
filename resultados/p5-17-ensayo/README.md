@@ -1,12 +1,14 @@
 # Evidencia del ensayo P5-17
 
 Registros y salidas del ensayo descrito en [`../P5-17-ENSAYO.md`](../P5-17-ENSAYO.md). Son las salidas
-originales de esa corrida: no se repitió nada para generarlas.
+originales de esa corrida: no se repitió nada para generarlas. Los registros `19a` a `19c` son del paso 19,
+corrido después (2026-11-03, 15:59) en la misma copia; sus salidas no se suben (dan las mismas métricas que
+el paso 16).
 
 ## Qué hay
 
-- **`registros/`**: lo que se escribió en la terminal en cada paso, con el comando completo y su código de
-  salida. La numeración es la de los pasos del acta.
+- **`registros/`**: lo que se escribió en la terminal en cada paso, con su código de salida. Algunos traen el
+  comando abreviado; el acta dice cuáles. La numeración es la de los pasos del acta.
   - `LEEME.txt`: commit, máquina y hora.
   - `sinred.sh.txt`: las variables con las que se cortó la red.
   - `enlaces.py.txt`: la revisión de enlaces y rutas.

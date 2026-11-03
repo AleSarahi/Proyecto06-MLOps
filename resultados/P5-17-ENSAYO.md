@@ -7,7 +7,7 @@ paso están en [`p5-17-ensayo/`](p5-17-ensayo/README.md), con su índice `SHA256
 | Qué | Valor |
 |---|---|
 | Quién | Andrea Arevalo (A2) |
-| Cuándo | Del 2026-11-02 a las 23:08 al 2026-11-03 a las 00:04, hora del centro de México (UTC−6) |
+| Cuándo | Del 2026-11-02 a las 23:08 al 2026-11-03 a las 00:04, hora del centro de México (UTC−6). El paso 19 se agregó el 2026-11-03 a las 15:59, en la misma copia, a pedido de Karen |
 | Commit | `f06e6f48032afaf7d9d3f2938fd2e8ed59cb4394` (`main` con #86, #87, #92 y #93) |
 | Máquina | Laptop con Windows 11 Home Single Language 10.0.26200, x64; AMD Ryzen 7 8845HS (8 núcleos, 16 hilos); 62 GB de RAM; solo CPU |
 | Terminales | PowerShell 5.1 y Git Bash (git 2.46.0) |
@@ -23,7 +23,15 @@ para todo el equipo.
 ## Pasos
 
 Los registros están en `p5-17-ensayo/registros/` y las salidas, en `p5-17-ensayo/salidas/`. Cada registro
-trae el comando completo y su código de salida.
+trae su código de salida, pero **no todos traen el comando completo**: se escribieron así durante el ensayo y no
+se reconstruyen después.
+
+- **Completo:** `01`, `02`, `09`, `12`, `17` y `19c`; `16`, `19a` y `19b` remiten a `bloque.sh.txt`, que es el
+  bloque completo.
+- **Abreviado:** `04`, `05`, `07` y `18` acortan hashes o rutas con `...` (los hashes son los de "Versión de
+  entrega" y salen completos en la salida del mismo registro o en `salidas/metricas/resumen.json`); `06a`,
+  `06b`, `13`, `14a`, `14b` y `15` solo describen el comando. Para esos pasos, el comando es el del README que
+  dice la tabla "Comandos del README".
 
 | # | Paso (README) | Resultado | Registro | Estado |
 |---|---|---|---|---|
@@ -40,12 +48,13 @@ trae el comando completo y su código de salida.
 | 11 | Rutas personales dentro de los 3 ZIP de `resultados/` | 0 en los tres | `11` | Observado |
 | 12 | `ruff check`, `ruff format --check` y `pytest` con `P5_05_YOLO11N_PT` | Ruff limpio; 1280 pasan, 19 saltadas, 0 fallan | `12` | Observado |
 | 13 | Las dos pruebas que fallaban de forma intermitente en Windows antes de #86 | 20 de 20 veces pasan | `13` | Observado |
-| 14 | `control` con las 8 secuencias y `trazabilidad construir`, `recalcular` y `cuadro` | 107 eventos, 108 comandos, 0 errores. La trazabilidad da las mismas cifras que `metricas`; `recalcular` coincide con `resumen.json`; `cuadro S05_f0001` muestra del evento al comando | `14a`, `14b`; `salidas/corrida/` | Observado |
+| 14 | `control` con las 8 secuencias y `trazabilidad construir`, `recalcular` y `cuadro` | 107 eventos, 108 comandos, 0 errores. La trazabilidad da las mismas cifras que `metricas`; `recalcular` coincide con `resumen.json`; `cuadro S05_f0001` muestra del evento al comando. **Los comandos no son los de cada secuencia** (fallo 9) | `14a`, `14b`; `salidas/corrida/` | Observado, con fallo |
 | 15 | Juntar las 8 salidas en PowerShell 5.1 | `Set-Content -Encoding UTF8` y `>` agregan BOM y `metricas` sale con 2; `[IO.File]::WriteAllLines` no lo agrega y `metricas` da lo mismo que en el paso 7 (fallo 2) | `15` | Observado |
 | 16 | Bloque "Métricas del conjunto completo" del README corregido, copiado y corrido tal cual | Los mismos 107 eventos que el paso 6 y las mismas métricas que el paso 7 | `16`, `bloque.sh.txt` | Observado |
 | 17 | `contrato` con el ejemplo, `conjunto manifiesto` y `hojas`, y `casos/runner.py` | Ejemplo OK (5 eventos). `conjunto manifiesto` sin `--salida` no toca el congelado (código 2, como dice su ayuda); con `--salida` en otra carpeta, el manifiesto regenerado es idéntico byte a byte a `datos/manifiesto.jsonl`. 8 hojas. Runner: 7 de 10, con C2, C5 y C7 fallando por el límite del detector documentado en `docs/casos-reales.md`. La copia de git siguió sin cambios | `17`; `salidas/casos/resumen.txt` | Observado |
 | 18 | `python -m uv` en lugar de `uv` (fallo 3) | `sync`, `run` y `conjunto verificar` funcionan igual | `18` | Observado |
-| 19 | Reproducción conjunta con el equipo B | La hace B3 después de este ensayo | — | No observado |
+| 19 | El bloque del README otra vez desde cero, después la línea de PowerShell 5.1 del README copiada tal cual, y el bloque repetido sin borrar `resultados/conjunto` | Bloque: 107 eventos y las mismas métricas que el paso 7. Línea de PowerShell: sin BOM, 107 líneas, contrato OK y las mismas métricas; solo cambia el SHA-256 de la entrada, porque escribe CRLF. Bloque repetido: los 8 `infer` fallan, pero el bloque termina con código 0 midiendo las salidas anteriores (fallo 10) | `19a`, `19b`, `19c` | Observado |
+| 20 | Reproducción conjunta con el equipo B | La hace B3 después de este ensayo | — | No observado |
 
 Las 19 pruebas saltadas son propias de Windows: crear enlaces simbólicos (pide modo de desarrollador,
 `WinError 1314`), FIFO y permisos POSIX. Las que usan los pesos reales sí corrieron.
@@ -63,7 +72,7 @@ se corrieron tal como están, y también los de la instalación y la tabla gener
 | Grupo A | `python -m conjunto verificar --sha256 …` | 4 |
 | Grupo A | `python -m infer` con un JPEG | 5 |
 | Grupo A | `python -m infer` con una secuencia | 6 |
-| Grupo A | "Métricas del conjunto completo" (agregado en este PR) | 6, 15, 16 |
+| Grupo A | "Métricas del conjunto completo" (agregado en este PR) | 6, 15, 16, 19 |
 | Grupo A | `python -m metricas` | 7 |
 | Grupo A | `python -m bench` | 8 |
 | General | `pytest`, `ruff check`, `ruff format --check` | 12 |
@@ -73,7 +82,7 @@ se corrieron tal como están, y también los de la instalación y la tabla gener
 | General | `python -m conjunto manifiesto`, `verificar`, `hojas` | 4, 17 |
 | General | `python -m control` | 14 |
 | General | `casos/runner.py` | 17 |
-| General | `python -m captura` | **No observado:** necesita el carro encendido y su stream por red, y el ensayo es sin red. Las secuencias ya capturadas se verificaron en el paso 4 |
+| General | `python -m captura` | **No observado:** necesita el carro encendido y su stream por red, y el ensayo es sin red. Las secuencias ya capturadas se verificaron en el paso 4. Karen (PM A) aceptó cerrar #20 con este paso sin observar, 3 de noviembre |
 
 Las secciones 1 a 5 del grupo B son de B; los comandos que comparten con la tabla general (`contrato`,
 `control`, `runner`) se observaron arriba, y el resto lo cubre la reproducción conjunta de B3.
@@ -89,12 +98,14 @@ Las secciones 1 a 5 del grupo B son de B; los comandos que comparten con la tabl
 | 5 | "Traspasos" decía S9 y S10; las carpetas son S09 y S10 (Karen) | **Corregido** |
 | 6 | "Inferir una secuencia" no traía los tiempos (Karen, opcional) | **Corregido.** Ahora trae los 12 `--capture-ms` de S01, los mismos del paso 6 |
 | 7 | `bench` sale con código 1 porque la laptop estaba en batería | **Declarado.** Es el comportamiento documentado en `mediciones/README.md`; las 100 mediciones salieron sin fallos. Este ensayo no reemplaza las corridas oficiales `final-1` a `final-3` |
-| 8 | En el repo no hay una corrida publicada de detecciones y métricas de S01–S08: E6 se puede regenerar con el README, pero no se compara contra un resultado subido | **Declarado** para PM A y A3. Las salidas de este ensayo quedan en `p5-17-ensayo/salidas/` como referencia, no como resultado oficial |
+| 8 | Al hacer el ensayo no había en el repo una corrida publicada de detecciones y métricas de S01–S08 para comparar | **Declarado** para PM A y A3. Ahora la publica #98 (`resultados/p5-14/`, P5-14) con las mismas métricas: TP 71, FP 0, FN 24, F1 0.8554. Las salidas de este ensayo quedan en `p5-17-ensayo/salidas/` como referencia, no como resultado oficial |
+| 9 | En el paso 14, `control` recibió las 8 secuencias unidas sin desplazar sus tiempos: `t_capture_ms` vuelve a 0 al empezar cada secuencia, así que el reloj de control retrocede 7 veces (de `S01_f0012` a `S02_f0001`, y así hasta `S08_f0001`), y el estado de B pasa de una secuencia a la siguiente | **Declarado** (Karen). Las métricas y la trazabilidad no cambian, porque no dependen de los comandos, pero `salidas/corrida/comandos.jsonl` no da la orden de cada secuencia por separado. La corrida de entrega de #98 desplaza los tiempos de cada secuencia y explica el estado entre secuencias; la acción por caso la da el runner (paso 17) |
+| 10 | Si se repite el bloque "Métricas del conjunto completo" sin borrar `resultados/conjunto`, los 8 `infer` fallan (`el JSONL o manifiesto del run ya existe`) pero el bloque sigue, junta las salidas anteriores y termina con código 0 | **Corregido.** El README avisa que, para repetir el bloque, hay que borrar `resultados/conjunto` antes (paso 19) |
 
 ## Criterios de #19
 
-- **Todo corre sin pedir ayuda, sin secretos y sin tokens:** sí, con las correcciones 1 a 6.
-- **Los fallos quedan corregidos o declarados:** sí; los ocho de la tabla de arriba.
+- **Todo corre sin pedir ayuda, sin secretos y sin tokens:** sí, con las correcciones 1 a 6 y 10.
+- **Los fallos quedan corregidos o declarados:** sí; los diez de la tabla de arriba.
 - **Modelo, clases, transformaciones, datos congelados, métricas y benchmark auditables desde el README:**
   se pudo seguir cada uno desde el README, con sus registros en `p5-17-ensayo/`; la validación final es del
   PM A.
