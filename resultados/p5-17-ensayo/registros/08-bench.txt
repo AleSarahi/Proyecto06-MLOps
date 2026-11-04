@@ -1,0 +1,12 @@
+$ uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida bench/ --equipo "laptop de A2 (ensayo P5-17)" --detector bench.yolo --opcion pesos=modelo/descargas/yolo11n.pt --model-sha256 0ebbc80d... --config-sha256 6428a259...
+advertencia: el equipo está en batería: la frecuencia puede bajar; conéctalo
+total: p50=80.64 ms p95=93.22 ms máx=98.56 ms | 100 mediciones, 0 fallos
+resultados en <ensayo>/salidas/bench/
+
+real	0m17.876s
+user	0m0.061s
+sys	0m0.093s
+codigo=1
+ejecuciones.csv
+fallos.csv
+resumen.json

@@ -1,0 +1,35 @@
+$ trazabilidad construir
+TP=71 FP=0 FN=24 F1=0.8554
+107 cuadros, 0 errores registrados
+resultados en <ensayo>/salidas/corrida/trazabilidad/
+codigo=0
+$ trazabilidad recalcular
+el recálculo desde por_cuadro.jsonl da las mismas cifras que resumen.json
+codigo=0
+$ trazabilidad cuadro S05_f0001
+{
+  "run_id": "ensayo-p517",
+  "frame_id": "S05_f0001",
+  "sequence_id": "S05",
+  "orden_evento": 48,
+  "orden_anotacion": 48,
+  "evento": {
+    "schema_version": "1",
+    "run_id": "ensayo-p517",
+    "sequence_id": "S05",
+    "frame_id": "S05_f0001",
+    "t_capture_ms": 0.0,
+    "t_emit_ms": 97.91450000193436,
+    "image_width": 640,
+    "image_height": 480,
+    "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+    "status": "ok",
+    "bbox_format": "xyxy",
+    "bbox_unit": "px",
+    "detections": [
+      {
+        "class_id": 41,
+        "confidence": 0.85069739818573,
+        "bbox": [
+codigo=0

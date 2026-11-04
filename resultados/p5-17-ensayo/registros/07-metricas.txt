@@ -1,0 +1,8 @@
+$ uv run --locked python -m metricas --detecciones ensayo-p517.jsonl --anotaciones datos/anotaciones.jsonl --salida metricas/ --model-sha256 0ebbc80d... --config-sha256 6428a259...
+TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
+resultados en <ensayo>/salidas/metricas/
+codigo=0
+
+detalle.csv
+por_cuadro.csv
+resumen.json

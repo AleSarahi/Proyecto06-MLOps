@@ -1,0 +1,27 @@
+Caso  Entrada  Tramos  Resultado
+C1    real     1/1     PASA
+C2    real     0/1     FALLA
+C3    real     1/1     PASA
+C4    real     1/1     PASA
+C5    real     0/1     FALLA
+C6    armada   2/2     PASA
+C7    real     3/5     FALLA
+C8    armada   3/3     PASA
+C9    armada   4/4     PASA
+C10   armada   7/7     PASA
+
+7 de 10 casos pasan.
+
+Por qué fallan (detalle en <ensayo>\salidas\casos\Cn\veredicto.json):
+  C2
+    - obstaculo: orden 1 (AVANZAR, event=frame, frame_id=S02_f0001): AVANZAR está prohibida
+    - obstaculo: orden 2 (AVANZAR, event=frame, frame_id=S02_f0002): AVANZAR está prohibida
+    - obstaculo: orden 3 (AVANZAR, event=frame, frame_id=S02_f0003): AVANZAR está prohibida
+    - obstaculo: orden 4 (AVANZAR, event=frame, frame_id=S02_f0004): AVANZAR está prohibida
+    - obstaculo: orden 5 (AVANZAR, event=frame, frame_id=S02_f0005): AVANZAR está prohibida
+    - obstaculo: orden 6 (GIRAR_IZQ, event=frame, frame_id=S02_f0006): sale a los 1312 ms; el plazo es 500
+  C5
+    - sin_zona_libre: orden 1 (GIRAR_IZQ, event=frame, frame_id=S05_f0001): GIRAR_IZQ está prohibida
+  C7
+    - bloqueo: orden 2 (AVANZAR, event=frame, frame_id=S06_f0002): AVANZAR está prohibida
+    - bloqueo_otra_vez: orden 7 (AVANZAR, event=frame, frame_id=S06_f0007): AVANZAR está prohibida

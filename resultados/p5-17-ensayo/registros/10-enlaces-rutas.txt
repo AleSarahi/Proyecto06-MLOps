@@ -1,0 +1,5 @@
+ENLACES ROTOS: 0
+
+
+RUTAS ABSOLUTAS PERSONALES: 1
+resultados/p5-06-benchmark-mac-2026-11-01/README.md: /Users/…

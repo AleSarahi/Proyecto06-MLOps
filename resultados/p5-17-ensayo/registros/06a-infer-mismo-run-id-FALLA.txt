@@ -1,0 +1,37 @@
+$ infer S01 (12 JPEG): --capture-ms 0 --capture-ms 281 --capture-ms 594 --capture-ms 797 --capture-ms 1047 --capture-ms 1344 --capture-ms 1609 --capture-ms 1844 --capture-ms 2141 --capture-ms 2500 --capture-ms 2797 --capture-ms 3156 
+<ensayo>\salidas\seq-S01.jsonl: 12 cuadros, 0 errores
+codigo=0
+$ infer S02 (12 JPEG): --capture-ms 0 --capture-ms 219 --capture-ms 547 --capture-ms 750 --capture-ms 969 --capture-ms 1219 --capture-ms 1454 --capture-ms 1750 --capture-ms 1954 --capture-ms 2204 --capture-ms 2407 --capture-ms 2657 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S03 (12 JPEG): --capture-ms 0 --capture-ms 281 --capture-ms 547 --capture-ms 765 --capture-ms 1031 --capture-ms 1250 --capture-ms 1469 --capture-ms 1687 --capture-ms 1906 --capture-ms 2140 --capture-ms 2344 --capture-ms 2547 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S04 (12 JPEG): --capture-ms 0 --capture-ms 265 --capture-ms 578 --capture-ms 812 --capture-ms 1094 --capture-ms 1297 --capture-ms 1578 --capture-ms 1781 --capture-ms 1984 --capture-ms 2234 --capture-ms 2484 --capture-ms 2703 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S05 (12 JPEG): --capture-ms 0 --capture-ms 219 --capture-ms 422 --capture-ms 734 --capture-ms 953 --capture-ms 1187 --capture-ms 1500 --capture-ms 1890 --capture-ms 2125 --capture-ms 2328 --capture-ms 2609 --capture-ms 2812 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S06 (20 JPEG): --capture-ms 0 --capture-ms 297 --capture-ms 593 --capture-ms 890 --capture-ms 1156 --capture-ms 1406 --capture-ms 1687 --capture-ms 2015 --capture-ms 2328 --capture-ms 2593 --capture-ms 2875 --capture-ms 3203 --capture-ms 3453 --capture-ms 3797 --capture-ms 4047 --capture-ms 4312 --capture-ms 4562 --capture-ms 4828 --capture-ms 5125 --capture-ms 5390 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S07 (15 JPEG): --capture-ms 0 --capture-ms 265 --capture-ms 500 --capture-ms 734 --capture-ms 984 --capture-ms 1218 --capture-ms 1468 --capture-ms 1703 --capture-ms 1953 --capture-ms 2171 --capture-ms 2421 --capture-ms 2671 --capture-ms 2906 --capture-ms 3140 --capture-ms 3406 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+$ infer S08 (12 JPEG): --capture-ms 0 --capture-ms 281 --capture-ms 484 --capture-ms 765 --capture-ms 1000 --capture-ms 1203 --capture-ms 1422 --capture-ms 1640 --capture-ms 1859 --capture-ms 2094 --capture-ms 2328 --capture-ms 2562 
+infer: el JSONL o manifiesto del run ya existe
+codigo=2
+
+$ cat seq-S0*.jsonl > ensayo-p517.jsonl   (Git Bash, sin BOM)
+cat: <ensayo>/salidas/seq-S02.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S03.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S04.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S05.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S06.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S07.jsonl: No such file or directory
+cat: <ensayo>/salidas/seq-S08.jsonl: No such file or directory
+12
+   {   "   s
+<ensayo>\salidas\ensayo-p517.jsonl: OK (12 eventos)
+codigo=0

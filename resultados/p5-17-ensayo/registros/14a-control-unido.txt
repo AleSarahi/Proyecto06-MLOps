@@ -1,0 +1,3 @@
+$ control con las 8 secuencias unidas
+<ensayo>\salidas\corrida: 107 eventos, 108 comandos, 0 errores
+codigo=0

@@ -1,0 +1,28 @@
+import re, sys, pathlib, subprocess, unicodedata
+raiz = pathlib.Path(sys.argv[1])
+archivos = subprocess.run(["git","ls-files"],cwd=raiz,capture_output=True,text=True,encoding="utf-8").stdout.splitlines()
+def slug(t):
+    t = re.sub(r"[`*_]", "", t.strip().lower())
+    t = re.sub(r"[^\w\- ]", "", t)
+    return t.replace(" ", "-")
+rotos=[]; abs_=[]
+pat_abs = re.compile(r"(?:[A-Za-z]:\\?Users\\?[^\s\"'`<>]+|/Users/(?!<REDACTED>)[^\s\"'`<>/]+|/home/[^\s\"'`<>/]+)")
+for rel in archivos:
+    p = raiz/rel
+    if p.suffix.lower() not in {".md",".py",".yaml",".yml",".json",".jsonl",".toml",".txt",".csv",".ps1",".sh"}: continue
+    try: s = p.read_text(encoding="utf-8")
+    except Exception: continue
+    for m in pat_abs.finditer(s):
+        abs_.append(f"{rel}: {m.group(0)[:90]}")
+    if p.suffix.lower()!=".md": continue
+    for m in re.finditer(r"\[[^\]]*\]\(([^)\s]+)\)", s):
+        url = m.group(1)
+        if re.match(r"^(https?:|mailto:)", url): continue
+        ruta, _, ancla = url.partition("#")
+        dest = (p.parent/ruta).resolve() if ruta else p
+        if ruta and not dest.exists(): rotos.append(f"{rel}: {url} (no existe)"); continue
+        if ancla and dest.suffix==".md" and dest.is_file():
+            heads = [slug(h) for h in re.findall(r"^#+\s+(.*)$", dest.read_text(encoding="utf-8"), re.M)]
+            if ancla.lower() not in heads: rotos.append(f"{rel}: {url} (ancla no encontrada)")
+print("ENLACES ROTOS:", len(rotos)); print("\n".join(rotos))
+print("\nRUTAS ABSOLUTAS PERSONALES:", len(abs_)); print("\n".join(abs_))

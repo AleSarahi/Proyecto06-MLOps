@@ -1,0 +1,9 @@
+$ python -m uv --version
+uv 0.12.13 (0ebbd9274 2026-09-10 x86_64-pc-windows-msvc)
+codigo=0
+$ python -m uv sync --locked
+Checked 50 packages in 8ms
+codigo=0
+$ python -m uv run --locked python -m conjunto verificar --sha256 8a75e271...
+OK con 0 excepciones
+codigo=0

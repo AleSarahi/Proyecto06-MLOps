@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "corrida": {
+    "run_id": "ensayo-p517",
+    "archivos": {
+      "detecciones.jsonl": "db5b3efa7ed27d08e062a57c127add4201254d8fd2358ca2f721f4437c056458",
+      "decisiones.jsonl": "df469402f8679f2213da111d360511b95a4225db9611158d3e5a7957af3f90d3",
+      "comandos.jsonl": "b672260c9761695c2a5bec86547182df4da2f5c63a4d261c7ba33844dd1d8933",
+      "errores.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "run.json": "f7609669515f1ab52774177910e5ec66ac46aa2eac021361ea39c7a9ffa627d5"
+    },
+    "config_b": {
+      "plazos.yaml": {
+        "ruta": "config/control/plazos.yaml",
+        "sha256": "bd51e1c1d97d4d196eb476fbaefc37baf627c8de769b2aad0d9213a56b561e22"
+      },
+      "politica.yaml": {
+        "ruta": "config/control/politica.yaml",
+        "sha256": "847209f797953c397cc754cb82aee24a304161defbdc190ed6d2319963a85f65"
+      }
+    }
+  },
+  "anotaciones": {
+    "archivo": "anotaciones.jsonl",
+    "sha256": "7e842784a9240e0e4244252117de010fc9037287eaf7e7045bf716e8c4f4a051",
+    "secuencias": null
+  },
+  "esperado": {
+    "model_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "config_sha256": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"
+  },
+  "archivos": {
+    "por_cuadro.jsonl": "598837096313c87320f476e320508e2ba6f8edf5f9b8cd4de17cf038ecbce14b",
+    "ordenes_sin_cuadro.jsonl": "0b7951bf7d50ff6ea1f381f655d0066d5ee47c4fe052e5e3dad76a187d0afae1",
+    "errores_sin_cuadro.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "metricas": {
+    "version": 1,
+    "umbral_iou": 0.5,
+    "particion": {
+      "evaluacion": "todo el conjunto",
+      "ajuste": "no hubo (D-06)",
+      "umbral_y_nms": "congelados antes de correr sobre los cuadros; ver config_sha256"
+    },
+    "procedencia": {
+      "run_id": "ensayo-p517",
+      "model_sha256": [
+        "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+      ],
+      "model_sha256_esperado": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "config_sha256": [
+        "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"
+      ],
+      "config_sha256_esperado": "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08",
+      "comprobada": true
+    },
+    "conjunto": {
+      "cuadros": 107,
+      "secuencias": 8,
+      "con_objetos": 71,
+      "sin_objetos": 36,
+      "minimos_e3": {
+        "cuadros": 60,
+        "secuencias": 6,
+        "con_objetos": 20,
+        "sin_objetos": 20
+      },
+      "cumple_minimos_e3": true
+    },
+    "cuadros": {
+      "ok": 107,
+      "sin_evento": [],
+      "error_o_stale": [],
+      "secuencia_distinta": [],
+      "dimensiones_distintas": [],
+      "eventos_sin_anotacion": []
+    },
+    "micro": {
+      "tp": 71,
+      "fp": 0,
+      "fn": 24,
+      "precision": 1.0,
+      "recall": 0.7473684210526316,
+      "f1": 0.8554216867469879,
+      "sin_soporte": []
+    },
+    "por_clase": {
+      "39": {
+        "tp": 34,
+        "fp": 0,
+        "fn": 14,
+        "precision": 1.0,
+        "recall": 0.7083333333333334,
+        "f1": 0.8292682926829268,
+        "sin_soporte": [],
+        "soporte": 48
+      },
+      "41": {
+        "tp": 37,
+        "fp": 0,
+        "fn": 10,
+        "precision": 1.0,
+        "recall": 0.7872340425531915,
+        "f1": 0.8809523809523809,
+        "sin_soporte": [],
+        "soporte": 47
+      }
+    },
+    "criterio_1_4": {
+      "formula": "floor(12 * F1 micro) / 2",
+      "puntaje": 5.0,
+      "puntaje_con_tope_e3": 5.0,
+      "procedencia_comprobada": true,
+      "cobertura_completa": true
+    },
+    "advertencias": []
+  },
+  "conteo_por_cuadro": {
+    "distintos": []
+  },
+  "conteos": {
+    "cuadros": 107,
+    "por_secuencia": {
+      "S01": {
+        "acciones": {
+          "AVANZAR": 12
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      },
+      "S02": {
+        "acciones": {
+          "AVANZAR": 5,
+          "GIRAR_IZQ": 7
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      },
+      "S03": {
+        "acciones": {
+          "AVANZAR": 10,
+          "GIRAR_IZQ": 2
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      },
+      "S04": {
+        "acciones": {
+          "AVANZAR": 12
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      },
+      "S05": {
+        "acciones": {
+          "GIRAR_IZQ": 1,
+          "STOP": 11
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      },
+      "S06": {
+        "acciones": {
+          "AVANZAR": 11,
+          "GIRAR_IZQ": 3,
+          "STOP": 6
+        },
+        "estados": {
+          "ok": 20
+        },
+        "errores": {}
+      },
+      "S07": {
+        "acciones": {
+          "AVANZAR": 2,
+          "GIRAR_IZQ": 13
+        },
+        "estados": {
+          "ok": 15
+        },
+        "errores": {}
+      },
+      "S08": {
+        "acciones": {
+          "AVANZAR": 10,
+          "GIRAR_IZQ": 2
+        },
+        "estados": {
+          "ok": 12
+        },
+        "errores": {}
+      }
+    },
+    "errores": [],
+    "errores_sin_cuadro": {},
+    "sin_decision": [],
+    "sin_comando": [],
+    "ordenes_sin_cuadro": {
+      "shutdown:STOP": 1
+    }
+  },
+  "detector": {
+    "model_sha256": [
+      "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+    ],
+    "config_sha256": [
+      "6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08"
+    ]
+  },
+  "advertencias": []
+}
