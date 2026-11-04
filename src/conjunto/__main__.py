@@ -150,7 +150,9 @@ def _hojas(args: argparse.Namespace) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     for flujo in (sys.stdout, sys.stderr):
         if hasattr(flujo, "reconfigure"):
-            flujo.reconfigure(encoding="utf-8")  # acentos legibles en la consola de Windows
+            # Acentos legibles en la consola de Windows. Sin `errors`, reconfigure deja el flujo
+            # en strict, y un byte inválido de otro proceso rompe la captura de pytest.
+            flujo.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(
         prog="python -m conjunto",
         description=__doc__,

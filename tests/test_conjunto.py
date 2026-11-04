@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import os
+import sys
 from functools import lru_cache
 from pathlib import Path
 
@@ -345,6 +346,16 @@ def test_falla_sin_los_minimos_de_e3(tmp_path):
 
 
 # --- comando -------------------------------------------------------------------------------
+
+
+def test_el_comando_no_deja_estrictas_la_salida_ni_los_errores(monkeypatch):
+    """Si los deja en strict, en Windows un acento en cp1252 rompe la captura de pytest."""
+    flujos = [io.TextIOWrapper(io.BytesIO(), encoding="cp1252", errors="replace") for _ in "ab"]
+    monkeypatch.setattr(sys, "stdout", flujos[0])
+    monkeypatch.setattr(sys, "stderr", flujos[1])
+    with pytest.raises(SystemExit):
+        cli.main(["--help"])
+    assert [(f.encoding, f.errors) for f in flujos] == [("utf-8", "replace")] * 2
 
 
 def test_comando_arma_verifica_y_congela(tmp_path, capsys):
