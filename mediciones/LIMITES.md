@@ -38,7 +38,8 @@ enlaza el contraste.
 - **Escenas fuera del dominio:** el detector solo se probó con los objetos, la escena y la luz de PEND-04.
 - **C2, C5 y C7 con entradas reales:** fallan por un límite del detector, que en algunos cuadros no ve el
   obstáculo o lo ve por debajo del umbral de 0.5; el control decide bien con lo que recibe, y no se cambió el
-  detector ni el umbral ([`docs/casos-reales.md`](../docs/casos-reales.md), T20: 7 de 10).
+  detector ni el umbral ([`docs/casos-reales.md`](../docs/casos-reales.md), T20: 7 de 10). Por la regla de la
+  rúbrica (comando inseguro), esos tres casos valen 0.
 
 ## Contraste con los plazos
 
