@@ -96,9 +96,8 @@ Cómo aplica a esta entrega (lectura del equipo, no asesoría legal):
 - Los pesos no se redistribuyen: cada quien los baja de la release oficial con `infer.descarga`.
 - No hay servicio en red: todo corre offline en CPU, así que la cláusula de acceso por red de la
   AGPL-3.0 (sección 13) no entra en juego.
-- El repo es público y contiene todo el código fuente del proyecto, pero no declara licencia propia.
-  Si se distribuyera junto con Ultralytics como una sola obra, la AGPL-3.0 pediría ofrecer ese código
-  bajo AGPL-3.0. Elegir la licencia del repo les toca a las PM, no a este ticket.
+- El repo es público y contiene todo el código fuente del proyecto. Se publica bajo AGPL-3.0, igual que
+  Ultralytics (ver [`LICENSE`](../LICENSE)).
 - Atribución: Glenn Jocher y Jing Qiu, *Ultralytics YOLO11* (2024),
   <https://github.com/ultralytics/ultralytics>, AGPL-3.0.
 
