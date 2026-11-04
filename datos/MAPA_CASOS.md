@@ -73,9 +73,11 @@ de cuadros del conjunto, y en `datos/` no hay ningún JPEG truncado real del str
 `otras_dimensiones.jpg` no es un error para `infer`: el contrato pide los píxeles del cuadro original. Lo
 detectan `captura` y las métricas, que avisan si el tamaño no coincide con la anotación.
 
-Un JPEG que no existe no necesita fixture: basta una ruta inexistente. `infer` publica un evento
-`status=error` con `unreadable_image`; también lo hace para una entrada individual `.jpg` que no
-sea un archivo regular, como una FIFO. Un directorio se trata como entrada de secuencia.
+Un JPEG que no existe no necesita fixture: basta una ruta inexistente. Desde P5-06 (#86), `infer` publica
+`status=error` con `unreadable_image` (`test_cli_jpeg_individual_inexistente_publica_evento`); en
+`config-detector-v1` terminaba con código 2 y sin evento. Desde #96 hace lo mismo con una entrada
+individual `.jpg` que no sea un archivo regular, como una FIFO
+(`test_fifo_jpeg_publica_unreadable_image_sin_leerlo`). Un directorio se trata como entrada de secuencia.
 La validación previa exige SOI, un EOI posterior y decodificación completa con Pillow antes de
 pasar los mismos bytes a OpenCV. Acepta JPEG progresivos válidos y bytes de relleno después de EOI.
 
@@ -88,12 +90,16 @@ de reinicio también pueden ser rechazados por `captura`, una limitación de ese
 
 ### `error.code` del contrato
 
-| `error.code` | Cómo se produce | Estado |
+| `error.code` | Cómo se produce | Dónde se fuerza (P5-06, #86) |
 |---|---|---|
-| `unreadable_image` | Fixtures ilegibles de arriba, JPEG inexistente o ruta no regular | Comprobado en el flujo de `infer` |
-| `detector_exception` | Se fuerza una excepción en el detector | Comprobado con pruebas; no hay JPEG que la provoque por sí solo |
-| `invalid_output` | Se fuerza una salida inválida del detector | Comprobado con pruebas; no hay JPEG que la provoque por sí solo |
-| `detector_timeout` | Se fuerza un tiempo agotado | Comprobado con pruebas del trabajador |
+| `unreadable_image` | Fixtures ilegibles de arriba, un JPEG que no existe o una ruta no regular | Fixtures, `tests/test_detector_jpeg.py` y `tests/test_infer_eventos.py` |
+| `detector_exception` | El detector lanza una excepción, o el trabajador reiniciado no pasa la verificación de hash, configuración o hilos | `test_prioridad_error_y_stale_durante_inferencia` y `test_reinicio_rechaza_hash_o_hilos_invalidos` (`tests/test_infer_trabajador.py`) |
+| `invalid_output` | El detector devuelve NaN o infinito, una confianza fuera de [0, 1], una clase fuera de rango, una caja invertida o sin área dentro de la imagen (una que solo se sale se recorta y sigue `ok`), o un hash de resultado inconsistente | `tests/test_detector_jpeg.py` y `tests/test_infer_eventos.py` (`test_deteccion_no_finita_emite_invalid_output_sin_json_especial`, `test_hash_de_resultado_inconsistente_emite_invalid_output`) |
+| `detector_timeout` | La solicitud pasa de `detector_timeout_ms` (500 ms): el trabajador se termina y se reinicia | `test_timeout_real_reinicia_y_cuadro_viejo_no_se_infiere` y `test_timeout_llega_a_b_como_stop` (`tests/test_infer_trabajador.py`) |
+
+Estos tres últimos no tienen archivo de entrada: no hay un JPEG que los provoque, así que las pruebas
+sustituyen al detector por un doble que falla. Por eso C9 sigue usando eventos armados en
+`casos/C9/entrada.jsonl`, con los cuatro `error.code` de esta tabla.
 
 C8 no necesita archivos: el hueco sin cuadros y los cuadros viejos (`status=stale`, o `status=ok` con
 `t_emit_ms − t_capture_ms` mayor que `max_frame_age_ms`) son eventos armados en `casos/C8/entrada.jsonl`.
@@ -101,4 +107,6 @@ C10 puede usar cualquier secuencia.
 
 ## Falta
 
-- [ ] B3 confirma que el mapa le sirve para armar C1–C9.
+- [x] Lista de errores de A1: cómo se fuerza `detector_exception`, `invalid_output` y `detector_timeout` (P5-06, #86).
+- [x] Corrección del JPEG inexistente en `infer` (P5-06, #86).
+- [x] B3 confirma que el mapa le sirve para armar C1–C9 (Luis, en #14, 2026-11-02).
