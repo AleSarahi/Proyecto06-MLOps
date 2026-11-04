@@ -11,6 +11,14 @@ motores** (`config/ejecucion.yaml`).
 Versión: `0.1.0` (`pyproject.toml`). Responsables y comandos: [Grupo A · Percepción y datos](#grupo-a--percepción-y-datos) y
 [Grupo B · Control y verificación](#grupo-b--control-y-verificación).
 
+## Estado de la entrega
+
+Los casos dan **7 de 10**. **C2, C5 y C7 valen 0:** con el detector congelado, en algunos cuadros no ve el
+obstáculo o lo ve debajo de 0.5, y el control avanza o gira hacia él (comando inseguro para la escena). El
+control decide bien con lo que recibe; el límite es del detector. No se cambiaron el umbral, el modelo ni las
+expectativas. Detalle por cuadro: [`docs/casos-reales.md`](docs/casos-reales.md) y
+[`mediciones/LIMITES.md`](mediciones/LIMITES.md).
+
 ## Instalación
 
 Requiere [uv](https://docs.astral.sh/uv/) (el CI usa la 0.12.13). Python 3.12 queda fijado en `.python-version`
