@@ -47,7 +47,7 @@ WiFiUDP udp;
 Lado izq, der;
 
 // Estado de la placa (solo lo toca la tarea de órdenes).
-uint64_t sesionActiva = 0;  // 0 = ninguna: la primera orden aceptada tiene que ser STOP
+uint64_t sesionActiva = 0;  // 0 = ninguna (recién encendida): cualquier STOP abre sesión
 uint64_t ultimaSeq = 0;
 bool hayVencimiento = false;
 uint32_t venceMs = 0;
@@ -205,7 +205,8 @@ void procesar(char* texto, int largo, IPAddress ip, uint16_t puerto) {
   Motivo m = leerOrden(texto, largo, o, conIds);
   if (m == OK) {
     if (o.sesion != sesionActiva) {
-      if (o.accion != STOP) {
+      // Las sesiones solo crecen: un STOP atrasado de una sesión anterior no la revive.
+      if (o.accion != STOP || o.sesion < sesionActiva) {
         m = SESION;
       } else {
         sesionActiva = o.sesion;
