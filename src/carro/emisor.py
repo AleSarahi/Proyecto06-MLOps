@@ -4,13 +4,16 @@ Sirve para probar el firmware (y el carro simulado de P5-22) antes de conectar e
 datagrama enviado y cada respuesta se escriben en una bitácora JSONL opcional.
 
 Al abrir una sesión nueva lo primero que se manda es un STOP (la placa solo acepta una sesión
-nueva con STOP) y al cerrar se manda STOP otra vez, aunque sea por Ctrl+C o por un error.
+nueva con STOP y mayor que la activa) y al cerrar se manda STOP otra vez, aunque sea por Ctrl+C
+o por un error.
+
+Solo se aceptan respuestas que vengan de la IP y el puerto del carro y que correspondan a algo
+que este emisor mandó; las demás se anotan en la bitácora como "ajena" y se ignoran.
 """
 
 from __future__ import annotations
 
 import json
-import secrets
 import socket
 import time
 from collections.abc import Callable
@@ -34,6 +37,23 @@ GIRO = 0.5  # giro de config/control/politica.yaml
 STOPS_AL_CERRAR = 3  # UDP puede perder uno
 
 
+_ultima_sesion = 0
+
+
+def nueva_sesion(reloj_s: Callable[[], float] = time.time) -> int:
+    """Sesión creciente: segundos desde 1970, y nunca menor o igual que la anterior del proceso.
+
+    La placa solo abre una sesión mayor que la activa, así que un STOP atrasado de una sesión
+    anterior no la revive (docs/carro/protocolo.md, regla 4).
+    """
+    global _ultima_sesion
+    sesion = int(reloj_s()) % (MAX_U32 + 1)
+    if sesion <= _ultima_sesion:
+        sesion = _ultima_sesion + 1
+    _ultima_sesion = min(sesion, MAX_U32)
+    return _ultima_sesion
+
+
 def _ahora_ms() -> float:
     # perf_counter y no monotonic: en Windows monotonic avanza en saltos de ~15 ms y el rtt sale 0.
     return time.perf_counter() * 1000
@@ -55,8 +75,8 @@ class Emisor:
         sesion: int | None = None,
         reloj: Callable[[], float] = _ahora_ms,
     ) -> None:
-        self.destino = (ip, puerto)
-        self.sesion = sesion if sesion is not None else secrets.randbelow(MAX_U32) + 1
+        self.destino = (socket.gethostbyname(ip), puerto)
+        self.sesion = sesion if sesion is not None else nueva_sesion()
         self.seq = 0
         self.reloj = reloj
         self._enviados: dict[tuple[int, int], float] = {}
@@ -102,7 +122,7 @@ class Emisor:
             # Con espera 0 el socket queda sin bloqueo: se vacía lo que ya llegó y se sale.
             self._sock.settimeout(max(limite - self.reloj(), 0) / 1000)
             try:
-                datos, _ = self._sock.recvfrom(256)
+                datos, origen = self._sock.recvfrom(256)
             except (TimeoutError, BlockingIOError):
                 break
             except ConnectionResetError:  # Windows: ICMP "puerto inalcanzable"
@@ -114,16 +134,34 @@ class Emisor:
                 "tipo": "recibido",
                 "datos": datos.decode("ascii", "replace"),
             }
-            if r is None:
-                registro["error"] = "respuesta ilegible"
+            ajena = self._ajena(origen[:2], r)
+            if ajena is not None:
+                registro["tipo"] = "ajena"
+                registro["motivo"] = ajena
+                registro["origen"] = f"{origen[0]}:{origen[1]}"
                 self._anotar(registro)
                 continue
+            assert r is not None
             enviado = self._enviados.get((r.sesion, r.seq))
             rtt = t - enviado if enviado is not None and r.motivo != "VENCIDA" else None
             registro["rtt_ms"] = rtt
             self._anotar(registro)
             recibidas.append(Recibida(r, t, rtt))
         return recibidas
+
+    def _ajena(self, origen: tuple[str, int], r: Respuesta | None) -> str | None:
+        """Por qué se ignora una respuesta, o `None` si es de este emisor."""
+        if tuple(origen) != self.destino:
+            return "otro origen"
+        if r is None:
+            return "respuesta inválida"
+        if (r.sesion, r.seq) in self._enviados:
+            return None
+        if (r.sesion, r.seq) == (0, 0) and r.motivo == "MAL_FORMADA":
+            return None  # la placa no pudo leer qué le mandamos
+        if r.motivo == "VENCIDA" and r.sesion == self.sesion:
+            return None
+        return "no corresponde a una orden de este emisor"
 
     # -- cierre ------------------------------------------------------------------------
     def cerrar(self) -> None:
@@ -263,6 +301,19 @@ def prueba_sesion_ajena(em: Emisor, mover_ms: float = 300) -> Resultado:
     return _rechazo(em, "sesion_ajena", o, "SESION", mover_ms)
 
 
+def prueba_sesion_vieja(em: Emisor, mover_ms: float = 300) -> Resultado:
+    """STOP atrasado de una sesión anterior: no debe abrirla (después vendría su AVANZAR)."""
+    o = _OrdenDiferida(lambda: Orden(max(em.sesion - 1, 1), 1, "STOP", 0.0, 0.0, VIGENCIA_MS))
+    return _rechazo(em, "sesion_vieja", o, "SESION", mover_ms)
+
+
+def detener(em: Emisor, durante_ms: float, periodo_ms: float = PERIODO_MS) -> list[Recibida]:
+    """Mientras el carro deba estar quieto se sigue mandando STOP en cada periodo, no uno solo:
+    si uno se pierde, el siguiente (con seq mayor) lo reemplaza y deja como SEQ_VIEJA cualquier
+    orden de movimiento atrasada (docs/carro/protocolo.md, garantías)."""
+    return sostener(em, "STOP", 0.0, 0.0, durante_ms, periodo_ms)
+
+
 PRUEBAS: dict[str, Callable[..., Resultado]] = {
     "corte": prueba_corte,
     "repetida": prueba_repetida,
@@ -271,4 +322,5 @@ PRUEBAS: dict[str, Callable[..., Resultado]] = {
     "fuera_rango": prueba_fuera_rango,
     "inconsistente": prueba_inconsistente,
     "sesion_ajena": prueba_sesion_ajena,
+    "sesion_vieja": prueba_sesion_vieja,
 }

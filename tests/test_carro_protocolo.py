@@ -185,3 +185,50 @@ def test_stop_cancela_sin_aviso_de_vencida():
     p.recibir(_o(seq=2), 0)
     assert p.recibir(_o("STOP", 0, 0, seq=3), 100).estado == "DETENIDO"
     assert p.tick(1000) is None
+
+
+def test_stop_atrasado_de_sesion_anterior_no_la_revive():
+    """Regresión de la revisión del #102: S7 STOP/AVANZAR, S8 STOP, luego llegan tarde de S7."""
+    p = Placa()
+    assert p.recibir(_o("STOP", 0, 0, seq=1, sesion=7), 0).motivo == "OK"
+    assert p.recibir(_o(seq=2, sesion=7), 10).estado == "MOVIENDO"
+    assert p.recibir(_o("STOP", 0, 0, seq=1, sesion=8), 20).motivo == "OK"
+    r = p.recibir(_o("STOP", 0, 0, seq=1, sesion=7), 30)
+    assert (r.motivo, r.estado) == ("SESION", "DETENIDO")
+    r = p.recibir(_o(seq=3, sesion=7), 40)
+    assert (r.motivo, r.estado) == ("SESION", "DETENIDO")
+    assert p.sesion == 8
+    assert p.recibir(_o(seq=2, sesion=8), 50).motivo == "OK"  # la sesión 8 sigue viva
+
+
+def test_sesion_nueva_tiene_que_ser_mayor():
+    p = _placa_en_sesion(100)
+    assert p.recibir(_o("STOP", 0, 0, seq=1, sesion=99), 0).motivo == "SESION"
+    assert p.recibir(_o("STOP", 0, 0, seq=1, sesion=101), 0).motivo == "OK"
+
+
+def test_recien_encendida_acepta_cualquier_stop():
+    assert Placa().recibir(_o("STOP", 0, 0, seq=1, sesion=1), 0).motivo == "OK"
+
+
+@pytest.mark.parametrize(
+    "datos",
+    [
+        b"P5R1,7,2,OK,MOVIENDO,256,118,1",  # PWM fuera de 0 a 255
+        b"P5R1,7,2,OK,MOVIENDO,-1,118,1",
+        b"P5R1,7,2,OK,MOVIENDO,0,0,1",  # moviendo sin motores
+        b"P5R1,7,2,OK,DETENIDO,104,0,1",  # detenido con motores
+        b"P5R1,7,2,VENCIDA,MOVIENDO,104,118,1",  # vencida pero moviendo
+        b"P5R1,7,2,SEQ_VIEJA,MOVIENDO,104,118,1",  # todo rechazo frena
+    ],
+)
+def test_respuestas_incoherentes_se_rechazan(datos):
+    assert decodificar_respuesta(datos) is None
+
+
+def test_placa_siempre_contesta_coherente():
+    p = _placa_en_sesion()
+    for datos in (_o(seq=2), _o("GIRAR_IZQ", 0.4, -1, seq=3), b"basura", _o(seq=3)):
+        assert decodificar_respuesta(codificar_respuesta(p.recibir(datos, 0))) is not None
+    p.recibir(_o(seq=9), 0)
+    assert decodificar_respuesta(codificar_respuesta(p.tick(1000))) is not None

@@ -26,6 +26,7 @@ from .emisor import (
     VIGENCIA_MS,
     Emisor,
     Recibida,
+    detener,
     sostener,
 )
 from .protocolo import ACCIONES, PUERTO, Orden, codificar_orden
@@ -132,8 +133,7 @@ def _pruebas(em: Emisor, nombre: str) -> int:
         res = PRUEBAS[n](em)
         fallas += not res.pasa
         print(f"{'PASA ' if res.pasa else 'FALLA'} {n:<14} {res.detalle}")
-        em.stop()
-        em.recibir(200)
+        detener(em, 200)
     return 1 if fallas else 0
 
 
