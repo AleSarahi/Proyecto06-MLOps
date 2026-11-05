@@ -184,17 +184,22 @@ class Placa:
             sesion, seq, motivo, self.estado, self.pwm_izq, self.pwm_der, int(ahora_ms)
         )
 
+    def _motivo(self, datos: bytes) -> tuple[Orden | None, str]:
+        """Reglas 1 a 5 de docs/carro/protocolo.md; una sesión nueva con STOP se adopta aquí."""
+        orden, motivo = decodificar_orden(datos)
+        if motivo != "OK" or orden is None:
+            return orden, motivo
+        if orden.sesion != self.sesion:
+            if orden.accion != "STOP":
+                return orden, "SESION"
+            self.sesion, self.ultima_seq = orden.sesion, 0
+        if orden.seq <= self.ultima_seq:
+            return orden, "SEQ_VIEJA"
+        return orden, "OK"
+
     def recibir(self, datos: bytes, ahora_ms: float) -> Respuesta:
         """Aplica un datagrama. Todo rechazo frena los motores."""
-        orden, motivo = decodificar_orden(datos)
-        if motivo == "OK" and orden is not None:
-            if orden.sesion != self.sesion:
-                if orden.accion != "STOP":
-                    motivo = "SESION"
-                else:
-                    self.sesion, self.ultima_seq = orden.sesion, 0
-            if motivo == "OK" and orden.seq <= self.ultima_seq:
-                motivo = "SEQ_VIEJA"
+        orden, motivo = self._motivo(datos)
         if motivo != "OK" or orden is None:
             self._frenar()
             sesion, seq = (orden.sesion, orden.seq) if orden is not None else (0, 0)

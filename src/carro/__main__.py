@@ -101,31 +101,40 @@ def main(argv: list[str] | None = None) -> int:
         for r in em.recibir(200):
             _imprimir(r)
         if args.comando == "orden":
-            giro = args.giro if args.giro is not None else GIRO_POR_ACCION[args.accion]
-            recibidas = sostener(
-                em,
-                args.accion,
-                args.velocidad,
-                giro,
-                args.durante_ms,
-                args.periodo_ms,
-                args.vigencia_ms,
-                al_recibir=_imprimir,
-            )
-            if not recibidas:
-                print("sin respuestas: revisa IP, puerto y que la placa esté en la misma red")
-                return 1
-        elif args.comando == "prueba":
-            nombres = list(PRUEBAS) if args.nombre == "todas" else [args.nombre]
-            fallas = 0
-            for nombre in nombres:
-                res = PRUEBAS[nombre](em)
-                fallas += not res.pasa
-                print(f"{'PASA ' if res.pasa else 'FALLA'} {nombre:<14} {res.detalle}")
-                em.stop()
-                em.recibir(200)
-            return 1 if fallas else 0
+            return _orden(em, args)
+        if args.comando == "prueba":
+            return _pruebas(em, args.nombre)
     return 0
+
+
+def _orden(em: Emisor, args: argparse.Namespace) -> int:
+    giro = args.giro if args.giro is not None else GIRO_POR_ACCION[args.accion]
+    recibidas = sostener(
+        em,
+        args.accion,
+        args.velocidad,
+        giro,
+        args.durante_ms,
+        args.periodo_ms,
+        args.vigencia_ms,
+        al_recibir=_imprimir,
+    )
+    if not recibidas:
+        print("sin respuestas: revisa IP, puerto y que la placa esté en la misma red")
+        return 1
+    return 0
+
+
+def _pruebas(em: Emisor, nombre: str) -> int:
+    nombres = list(PRUEBAS) if nombre == "todas" else [nombre]
+    fallas = 0
+    for n in nombres:
+        res = PRUEBAS[n](em)
+        fallas += not res.pasa
+        print(f"{'PASA ' if res.pasa else 'FALLA'} {n:<14} {res.detalle}")
+        em.stop()
+        em.recibir(200)
+    return 1 if fallas else 0
 
 
 if __name__ == "__main__":

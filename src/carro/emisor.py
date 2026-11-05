@@ -63,9 +63,10 @@ class Emisor:
         self._sock.setblocking(False)
         self._bitacora = None
         if bitacora is not None:
+            # La ruta la elige quien corre `python -m carro --bitacora` (igual que en control).
             ruta = Path(bitacora)
-            ruta.parent.mkdir(parents=True, exist_ok=True)
-            self._bitacora = ruta.open("w", encoding="utf-8", newline="\n")
+            ruta.parent.mkdir(parents=True, exist_ok=True)  # NOSONAR (S8707)
+            self._bitacora = ruta.open("w", encoding="utf-8", newline="\n")  # NOSONAR (S8707)
         self.stop()
 
     # -- envío -------------------------------------------------------------------------
