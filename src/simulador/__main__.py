@@ -39,6 +39,12 @@ def _parser() -> argparse.ArgumentParser:
     g.add_argument("--perdida", type=_fraccion, default=0.0, help="fracción de órdenes perdidas")
     g.add_argument("--duplicar", action="store_true", help="cada orden llega dos veces")
     g.add_argument("--desordenar", action="store_true", help="cada par de órdenes llega al revés")
+    g.add_argument(
+        "--espera-desorden-ms",
+        type=float,
+        default=Fallos.espera_desorden_ms,
+        help="con --desordenar, cuánto se retiene una orden esperando la siguiente",
+    )
     g.add_argument("--semilla", type=int, help="semilla de la pérdida, para repetir una corrida")
     return p
 
@@ -67,6 +73,7 @@ def main(argv: list[str] | None = None) -> int:
         perdida=args.perdida,
         duplicar=args.duplicar,
         desordenar=args.desordenar,
+        espera_desorden_ms=args.espera_desorden_ms,
     )
     carro = CarroSimulado(
         host=args.host,

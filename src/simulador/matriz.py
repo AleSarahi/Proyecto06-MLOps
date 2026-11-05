@@ -1,8 +1,10 @@
 """P5-22 parte 3: matriz de fallos contra el carro simulado.
 
 Cada fallo corre el lazo de la PC con el supervisor, la política y los plazos reales de
-`control` (config/control/), el puente UDP (`puente.AdaptadorPuente`) y el carro simulado. Se
-mide, con el reloj de la placa, cuánto pasa desde el fallo hasta que el carro queda en
+`control`: los plazos de config/control/ y la política como la va a usar el carro
+(`cargar_politica_vivo`, con el `umbral_lateral` de config/vivo.yaml). Del lado de la PC va el
+puente UDP (`puente.AdaptadorPuente`) y del otro, el carro simulado. Se mide, con el reloj de la
+placa, cuánto pasa desde el fallo hasta que el carro queda en
 `DETENIDO`. El límite es el watchdog del proyecto (`watchdog_ms`, 600 ms).
 
 `python -m simulador.matriz` imprime la tabla y, con `--salida`, guarda `matriz.json` y las
@@ -28,7 +30,7 @@ from typing import Any
 import yaml
 
 from control import Supervisor
-from control.config import cargar_config_politica
+from control.config import cargar_politica_vivo
 from control.politica import decidir
 from control.supervisor import CODIGOS_DE_ERROR
 
@@ -77,9 +79,7 @@ class Lazo:
         self.adaptador = AdaptadorPuente(
             carpeta, self.plazos["validez_orden_ms"], ip, puerto, al_avisar=self.avisos.append
         )
-        self.supervisor = Supervisor(
-            politica, self.adaptador, self.plazos, cargar_config_politica()
-        )
+        self.supervisor = Supervisor(politica, self.adaptador, self.plazos, cargar_politica_vivo())
         self._t0 = time.perf_counter()
         self._n = 0
         self._ultimo_tick = -math.inf
@@ -286,27 +286,50 @@ def f3_detector(carpeta: Path) -> Resultado:
 
 
 def f4_carro_no_responde(carpeta: Path) -> Resultado:
-    lazo = Lazo(carpeta)
-    try:
-        lazo.arrancar()
-        t = lazo.t_placa()
-        # El carro deja de oír y de contestar; la PC sigue viendo vía libre y mandando AVANZAR.
-        lazo.carro.fallos.perdida = 1.0
-        medido = lazo.esperar_detenido(t, lazo.plazos["watchdog_ms"], cuadros=True)
-        lazo.correr(300)  # tiempo para que el puente note el silencio
-        avisos = [a["motivo"] for a in lazo.avisos]
-        ok = "carro_sin_respuesta" in avisos
-        return _resultado(
-            4,
-            "El carro no responde",
-            "la PC registra y avisa; el carro para solo por su paro automático",
-            lazo.plazos["watchdog_ms"],
-            medido,
-            [f"avisos de la PC: {avisos}", "paro: VENCIDA de la placa, sin STOP de la PC"],
-            ok,
-        )
-    finally:
-        lazo.cerrar()
+    """Dos variantes: el carro no oye (no le llega nada) y el carro oye pero no contesta."""
+    medidos, detalle, ok = [], [], True
+    limite = 0.0
+    for variante in ("no_oye", "mudo"):
+        lazo = Lazo(carpeta / variante)
+        try:
+            lazo.arrancar()
+            t = lazo.t_placa()
+            # La PC sigue viendo vía libre: la política sigue proponiendo AVANZAR.
+            if variante == "no_oye":
+                lazo.carro.fallos.perdida = 1.0
+            else:
+                lazo.carro.fallos.mudo = True
+            medido = lazo.esperar_detenido(t, lazo.plazos["watchdog_ms"], cuadros=True)
+            lazo.correr(3 * PERIODO_CUADRO_MS)  # con cuadros libres, ¿vuelve a arrancar?
+            limite = lazo.plazos["watchdog_ms"]
+            despues = [r for r in lazo.carro.registro if r["t_placa_ms"] >= t]
+            vencida = any(r["evento"] == "vencida" for r in despues)
+            stop_de_la_pc = any(
+                r["evento"] == "orden" and r["motivo"] == "OK" and ",STOP," in r["datos"]
+                for r in despues
+            )
+            avisos = sorted({a["motivo"] for a in lazo.avisos})
+            quieto = lazo.carro.estado["estado"] == "DETENIDO"
+            ok &= "carro_sin_respuesta" in avisos and quieto
+            # Sin oír, solo lo para la placa; oyendo, lo para el STOP que manda la PC.
+            ok &= vencida if variante == "no_oye" else stop_de_la_pc
+            medidos.append(medido)
+            como = "VENCIDA de la placa" if variante == "no_oye" else "STOP de la PC tras el aviso"
+            detalle.append(
+                f"{variante}: {_redondear(medido)} ms, paro por {como}; avisos {avisos}; "
+                f"{'sigue DETENIDO' if quieto else 'SE VOLVIÓ A MOVER'} con cuadros libres"
+            )
+        finally:
+            lazo.cerrar()
+    return _resultado(
+        4,
+        "El carro no responde",
+        "la PC avisa y manda STOP; si el carro no oye, para solo por su paro automático",
+        limite,
+        _peor(medidos),
+        detalle,
+        ok,
+    )
 
 
 def f5_repetida_o_desordenada(carpeta: Path) -> Resultado:
@@ -317,8 +340,6 @@ def f5_repetida_o_desordenada(carpeta: Path) -> Resultado:
         try:
             lazo.arrancar()
             t = lazo.t_placa()
-            # A 5 fps las órdenes salen cada 200 ms: el desorden retiene hasta que llegue otra.
-            lazo.carro.fallos.espera_desorden_ms = 1.5 * PERIODO_CUADRO_MS
             setattr(lazo.carro.fallos, fallo, True)
             lazo.correr(3 * PERIODO_CUADRO_MS)
             limite = lazo.plazos["watchdog_ms"]
@@ -460,7 +481,8 @@ def f8_cierre(carpeta: Path) -> Resultado:
     ok &= lazo.comandos()[-1]["reason"] == "cierre"
     detalle.append(f"cierre: {lazo.comandos()[-1]['reason']} y 3 STOP del emisor")
     lazo.carro.detener()
-    # b) Excepción en el lazo: el `finally` del programa manda STOP antes de salir.
+    # b) Excepción en el lazo: el `finally` del programa manda STOP antes de salir. Este
+    # `finally` lo escribe la matriz; el del lazo de P5-21 se prueba en sus propias pruebas.
     lazo = Lazo(carpeta / "excepcion")
     t = 0.0
     try:
@@ -468,7 +490,7 @@ def f8_cierre(carpeta: Path) -> Resultado:
         t = lazo.t_placa()
         raise RuntimeError("falla inyectada en el lazo")
     except RuntimeError as exc:
-        detalle.append(f"excepción: {exc}")
+        detalle.append(f"excepción: {exc} (el finally es de la matriz, no del lazo de P5-21)")
     finally:
         lazo.supervisor.cerrar(lazo.ahora())
         lazo.adaptador.cerrar()

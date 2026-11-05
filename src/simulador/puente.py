@@ -5,9 +5,17 @@ en `comandos.jsonl`, con su vigencia) y además lo manda al carro por UDP con el
 Así la matriz prueba el supervisor y la política reales contra el carro simulado sin esperar al
 lazo en vivo. Cuando P5-21 exista, la matriz se puede correr también con ese adaptador.
 
-Si el carro deja de contestar, el puente lo anota en `avisos.jsonl` (`carro_sin_respuesta`) y
-avisa una vez por hueco: la PC no puede frenar un carro que no la oye, así que lo que lo detiene
-es su paro automático.
+Si el carro deja de contestar, el puente lo anota en `avisos.jsonl` (`carro_sin_respuesta`),
+avisa una vez por hueco y **manda STOP**. Mientras siga sin contestar, cambia cada orden de
+movimiento por STOP (`orden_cambiada_por_stop`). Hay dos casos:
+
+- El carro no oye (red caída o sin paquetes): el STOP no le llega, y lo detiene su paro
+  automático al vencer la orden.
+- El carro oye pero no contesta (`mudo`): sin este STOP seguiría obedeciendo los AVANZAR y no
+  pararía nunca. Con él, para en cuanto llega.
+
+Cuando vuelve a contestar, se reanudan las órdenes normales. El lazo de P5-21 tiene que hacer lo
+mismo; está acordado como propuesta en el #104 (fallo 4 de docs/carro/emergencia.md).
 """
 
 from __future__ import annotations
@@ -51,7 +59,12 @@ class AdaptadorPuente(AdaptadorVirtual):
         registrado = super().enviar(comando, ahora_ms)
         if self._cerrado:
             return registrado
-        orden = formato.orden_de_comando(self._emisor, registrado, int(self.validez_orden_ms))
+        comando = registrado
+        if self._avisado and registrado["action"] != "STOP":
+            # Un carro que no contesta no recibe órdenes de movimiento: puede estar oyendo.
+            comando = {**registrado, "action": "STOP", "speed": 0, "steering": 0.0}
+            self._avisar(ahora_ms, "orden_cambiada_por_stop", None, registrado["action"])
+        orden = formato.orden_de_comando(self._emisor, comando, int(self.validez_orden_ms))
         self._emisor.enviar(orden)
         if self._sin_respuesta_desde is None:
             self._sin_respuesta_desde = ahora_ms
@@ -62,7 +75,8 @@ class AdaptadorPuente(AdaptadorVirtual):
         """Lee las respuestas que ya llegaron y avisa si el carro lleva rato sin contestar."""
         if self._cerrado:
             return
-        recibidas = self._emisor.recibir(0)
+        # El aviso VENCIDA no prueba que el carro oiga: lo manda solo, aunque no le llegue nada.
+        recibidas = [r for r in self._emisor.recibir(0) if r.respuesta.motivo != "VENCIDA"]
         if recibidas:
             self.ultima_respuesta = recibidas[-1].respuesta
             self._sin_respuesta_desde = None
@@ -75,6 +89,7 @@ class AdaptadorPuente(AdaptadorVirtual):
             return
         self._avisado = True
         self._avisar(ahora_ms, "carro_sin_respuesta", ahora_ms - desde)
+        self._emisor.enviar(self._emisor.orden("STOP"))
 
     def cerrar(self) -> None:
         """Manda los STOP de cierre del emisor y suelta el socket."""
@@ -82,8 +97,16 @@ class AdaptadorPuente(AdaptadorVirtual):
             self._cerrado = True
             self._emisor.cerrar()
 
-    def _avisar(self, ahora_ms: float, motivo: str, sin_respuesta_ms: float | None) -> None:
+    def _avisar(
+        self,
+        ahora_ms: float,
+        motivo: str,
+        sin_respuesta_ms: float | None,
+        accion_original: str | None = None,
+    ) -> None:
         aviso = {"t_ms": ahora_ms, "motivo": motivo, "sin_respuesta_ms": sin_respuesta_ms}
+        if accion_original is not None:
+            aviso["accion_original"] = accion_original
         with self.ruta_avisos.open("a", encoding="utf-8", newline="\n") as f:
             f.write(json.dumps(aviso, ensure_ascii=False) + "\n")
         if self._al_avisar is not None:

@@ -24,6 +24,9 @@ from typing import Any
 from . import formato
 
 PERIODO_REVISION_MS = 5  # el firmware revisa vencimientos cada 10 ms o menos
+# UDP no pasa de 65 507 bytes de datos. Con un búfer menor, Windows lanza OSError en vez de
+# truncar, y el datagrama largo no llegaría a la placa como MAL_FORMADA.
+MAX_DATAGRAMA = 65535
 
 
 def _ahora_ms() -> float:
@@ -42,12 +45,14 @@ class Fallos:
     perdida: float = 0.0
     """Fracción (0 a 1) de datagramas entrantes que se pierden antes de llegar a la placa."""
     duplicar: bool = False
-    """Cada datagrama entrante llega dos veces seguidas."""
+    """Cada datagrama entrante llega dos veces seguidas. Con `desordenar` a la vez, manda
+    `desordenar` y no se duplica nada."""
     desordenar: bool = False
     """Cada par de datagramas entrantes llega al revés."""
-    espera_desorden_ms: float = 50.0
+    espera_desorden_ms: float = 250.0
     """Con `desordenar`, cuánto se retiene un datagrama esperando al siguiente. Si no llega
-    otro, el retenido se entrega solo (tarde)."""
+    otro, el retenido se entrega solo (tarde). Por omisión es más que el periodo del lazo
+    (200 ms a 5 fps), para que de verdad lleguen dos y se inviertan."""
     wifi_cortado: bool = False
     """No entra ni sale nada. Al cortarse, la placa frena de inmediato."""
 
@@ -169,18 +174,22 @@ class CarroSimulado:
     def _leer_entrantes(self) -> None:
         while True:
             try:
-                datos, origen = self._sock.recvfrom(256)
+                datos, origen = self._sock.recvfrom(MAX_DATAGRAMA)
             except (BlockingIOError, InterruptedError):
                 return
             except ConnectionResetError:  # Windows: ICMP de una respuesta que no llegó
                 continue
-            except OSError:  # socket cerrado por matar()
+            except OSError as exc:
+                if self._parar.is_set() or self._sock.fileno() == -1:
+                    return  # socket cerrado por matar() o detener()
+                # Otro error de red: se anota y se sigue; el paro automático no se detiene.
+                self._anotar({"evento": "error_red", "error": f"{type(exc).__name__}: {exc}"})
                 return
             self._llega(datos, origen)
 
     def _llega(self, datos: bytes, origen: tuple[str, int]) -> None:
         f = self.fallos
-        texto = datos.decode("ascii", "replace")
+        texto = datos.decode("ascii", "backslashreplace")
         if f.wifi_cortado:
             self._anotar({"evento": "descartado_sin_wifi", "datos": texto})
             return
@@ -217,7 +226,7 @@ class CarroSimulado:
         self._anotar(
             {
                 "evento": "orden",
-                "datos": datos.decode("ascii", "replace"),
+                "datos": datos.decode("ascii", "backslashreplace"),
                 "de": f"{origen[0]}:{origen[1]}",
                 "sesion": r.sesion,
                 "seq": r.seq,
@@ -250,6 +259,7 @@ class CarroSimulado:
             with self._candado:
                 formato.frenar(self._placa)
             self._pendientes.clear()
+            self._retenido = None  # lo que venía en camino tampoco llega
         self._anotar({"evento": "wifi_cortado" if cortado else "wifi_vuelve", **self._motores()})
 
     def _contestar(self, r: formato.Respuesta, destino: tuple[str, int]) -> None:
@@ -266,8 +276,8 @@ class CarroSimulado:
         listos = [p for p in self._pendientes if p[0] <= ahora]
         self._pendientes = [p for p in self._pendientes if p[0] > ahora]
         for _, datos, destino in listos:
-            if self.fallos.wifi_cortado:
-                return
+            if self.fallos.wifi_cortado or self.fallos.mudo:
+                return  # mudo también calla lo que ya estaba en cola por retardo_ms
             try:
                 self._sock.sendto(datos, destino)
             except OSError:
@@ -286,4 +296,8 @@ class CarroSimulado:
             self._bitacora.write(json.dumps(registro, ensure_ascii=False) + "\n")
             self._bitacora.flush()
         if self._al_registrar is not None:
-            self._al_registrar(registro)
+            try:
+                self._al_registrar(registro)
+            except Exception:  # NOSONAR: nada de quien escucha puede tumbar el bucle del carro
+                # Si tumbara el hilo, el carro dejaría de contestar y de frenar al vencer.
+                self._al_registrar = None

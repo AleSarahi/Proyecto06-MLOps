@@ -227,13 +227,38 @@ def test_desordenadas_la_vieja_no_se_aplica(carro, emisor):
         (vieja.seq, "SEQ_VIEJA"),
     ]
     assert carro.estado["ultima_seq"] == nueva.seq
+    assert carro.estado["estado"] == "DETENIDO"  # la vieja no se aplica y además frena
 
 
 def test_retenido_sin_pareja_se_entrega(carro, emisor):
     carro.fallos.desordenar = True
     emisor.enviar(emisor.orden("STOP"))
-    r = emisor.recibir(150)
+    assert emisor.recibir(150) == []  # sigue retenido
+    r = emisor.recibir(250)
     assert [x.respuesta.motivo for x in r] == ["OK"]
+
+
+def test_desordenar_por_omision_invierte_ordenes_a_5_fps(carro, emisor):
+    carro.fallos.desordenar = True
+    for _ in range(4):
+        emisor.enviar(emisor.orden("AVANZAR", 0.4, 0.0))
+        time.sleep(0.2)
+    emisor.recibir(300)
+    motivos = [r["motivo"] for r in carro.registro if r["evento"] == "orden"]
+    assert "SEQ_VIEJA" in motivos
+
+
+def test_wifi_cortado_descarta_lo_retenido(carro, emisor):
+    carro.fallos.desordenar = True
+    emisor.enviar(emisor.orden("AVANZAR", 0.4, 0.0))
+    assert _esperar(lambda: carro.registro[-1]["evento"] == "retenido", 50)
+    carro.fallos.wifi_cortado = True
+    time.sleep(0.35)  # más que espera_desorden_ms
+    assert carro.estado["estado"] == "DETENIDO"
+    assert not any(
+        r["evento"] == "orden" and r["motivo"] == "OK" and "AVANZAR" in r["datos"]
+        for r in carro.registro
+    )
 
 
 def test_wifi_cortado_frena_de_inmediato_y_no_contesta(carro, emisor):
@@ -246,6 +271,41 @@ def test_wifi_cortado_frena_de_inmediato_y_no_contesta(carro, emisor):
     assert _esperar(lambda: carro.registro[-1]["evento"] == "wifi_vuelve", 50)
     emisor.enviar(emisor.orden("STOP"))
     assert emisor.recibir(50)[-1].respuesta.motivo == "OK"
+
+
+def test_mudo_calla_tambien_lo_que_estaba_en_cola(carro, emisor):
+    carro.fallos.retardo_ms = 100
+    emisor.enviar(emisor.orden("STOP"))
+    time.sleep(0.02)
+    carro.fallos.mudo = True
+    assert emisor.recibir(200) == []
+
+
+def test_datagrama_largo_es_mal_formada_y_frena(carro, emisor):
+    _avanzar(emisor)
+    emisor.enviar(b"P5C1," + b"9" * 295)  # 300 bytes: en Windows no cabía en el búfer de 256
+    r = emisor.recibir(50)[-1].respuesta
+    assert (r.motivo, r.estado) == ("MAL_FORMADA", "DETENIDO")
+    assert carro.estado["estado"] == "DETENIDO"
+
+
+def test_byte_no_ascii_y_quien_escucha_falla_no_lo_dejan_sordo():
+    def falla(_registro):
+        raise UnicodeEncodeError("cp1252", "�", 0, 1, "como print en Windows")
+
+    with CarroSimulado(puerto=0, al_registrar=falla) as c:
+        e = Emisor(*c.direccion, sesion=4)
+        try:
+            e.recibir(50)
+            e.enviar(bytes([0xFF]))
+            assert e.recibir(50)[-1].respuesta.motivo == "MAL_FORMADA"
+            assert c.registro[-1]["datos"] == "\\xff"  # backslashreplace: siempre ASCII
+            e.enviar(e.orden("AVANZAR", 0.4, 0.0, 200))
+            assert e.recibir(50)[-1].respuesta.motivo == "OK"
+            # El paro automático sigue corriendo en el hilo del carro.
+            assert _esperar(lambda: c.estado["estado"] == "DETENIDO", 200 + MARGEN_MS + 50)
+        finally:
+            e.cerrar()
 
 
 def test_cerrarse_de_golpe(carro, emisor):
