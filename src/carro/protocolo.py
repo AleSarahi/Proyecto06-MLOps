@@ -134,7 +134,7 @@ def decodificar_respuesta(datos: bytes) -> Respuesta | None:
         return None
     if m is None or m.group(3) not in MOTIVOS or m.group(4) not in ESTADOS:
         return None
-    return Respuesta(
+    r = Respuesta(
         sesion=int(m.group(1)),
         seq=int(m.group(2)),
         motivo=m.group(3),
@@ -143,6 +143,16 @@ def decodificar_respuesta(datos: bytes) -> Respuesta | None:
         pwm_der=int(m.group(6)),
         t_placa_ms=int(m.group(7)),
     )
+    return r if respuesta_coherente(r) else None
+
+
+def respuesta_coherente(r: Respuesta) -> bool:
+    """PWM de 0 a 255, el estado de acuerdo con los motores y todo lo que no es OK, DETENIDO."""
+    if not (0 <= r.pwm_izq <= 255 and 0 <= r.pwm_der <= 255):
+        return False
+    if (r.estado == "MOVIENDO") != (r.pwm_izq > 0 or r.pwm_der > 0):
+        return False
+    return r.motivo == "OK" or r.estado == "DETENIDO"
 
 
 def lados(velocidad: float, giro: float) -> tuple[float, float]:
@@ -165,7 +175,7 @@ class Placa:
     def __init__(self, techo: int = TECHO_PWM, minimo: int = MINIMO_PWM) -> None:
         self.techo = techo
         self.minimo = minimo
-        self.sesion = 0  # 0 = ninguna; la primera orden aceptada tiene que ser STOP
+        self.sesion = 0  # 0 = ninguna (recién encendida): cualquier STOP abre sesión
         self.ultima_seq = 0
         self.vence_ms: float | None = None
         self.pwm_izq = 0
@@ -190,7 +200,8 @@ class Placa:
         if motivo != "OK" or orden is None:
             return orden, motivo
         if orden.sesion != self.sesion:
-            if orden.accion != "STOP":
+            # Las sesiones solo crecen: un STOP atrasado de una sesión anterior no la revive.
+            if orden.accion != "STOP" or orden.sesion < self.sesion:
                 return orden, "SESION"
             self.sesion, self.ultima_seq = orden.sesion, 0
         if orden.seq <= self.ultima_seq:

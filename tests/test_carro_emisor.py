@@ -12,8 +12,8 @@ from contextlib import contextmanager
 import pytest
 
 import carro.__main__ as cli
-from carro.emisor import PRUEBAS, Emisor, sostener
-from carro.protocolo import Placa, codificar_respuesta
+from carro.emisor import PRUEBAS, Emisor, detener, sostener
+from carro.protocolo import Placa, Respuesta, codificar_respuesta
 
 
 @contextmanager
@@ -132,3 +132,73 @@ def test_cli_prueba_contra_la_placa_falsa(capsys, monkeypatch):
     salida = capsys.readouterr().out
     assert codigo == 0, salida
     assert salida.count("PASA ") == len(PRUEBAS)
+
+
+def test_sesiones_crecen_aunque_el_reloj_no_avance():
+    from carro import emisor
+
+    a = emisor.nueva_sesion(lambda: 1_800_000_000)
+    b = emisor.nueva_sesion(lambda: 1_800_000_000)
+    c = emisor.nueva_sesion(lambda: 1_700_000_000)  # reloj hacia atrás
+    assert a < b < c
+
+
+def _par_falso():
+    """Socket que hace de "carro" sin contestar solo, para mandar respuestas a mano."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(("127.0.0.1", 0))
+    return s
+
+
+def test_respuesta_de_otro_origen_se_ignora(tmp_path):
+    carro, intruso = _par_falso(), _par_falso()
+    bitacora = tmp_path / "b.jsonl"
+    try:
+        with Emisor("127.0.0.1", carro.getsockname()[1], bitacora) as em:
+            mio = ("127.0.0.1", em._sock.getsockname()[1])
+            r = codificar_respuesta(Respuesta(em.sesion, 1, "OK", "DETENIDO", 0, 0, 5))
+            intruso.sendto(r, mio)
+            assert em.recibir(100) == []
+            carro.sendto(r, mio)
+            (buena,) = em.recibir(100)
+            assert buena.rtt_ms is not None
+    finally:
+        carro.close()
+        intruso.close()
+    ajenas = [json.loads(x) for x in bitacora.read_text(encoding="utf-8").splitlines()]
+    assert [x["motivo"] for x in ajenas if x["tipo"] == "ajena"] == ["otro origen"]
+
+
+def test_respuesta_que_no_corresponde_se_ignora():
+    carro = _par_falso()
+    try:
+        with Emisor("127.0.0.1", carro.getsockname()[1]) as em:
+            mio = ("127.0.0.1", em._sock.getsockname()[1])
+            otras = [
+                Respuesta(em.sesion, 999, "OK", "DETENIDO", 0, 0, 5),  # seq no enviada
+                Respuesta(em.sesion + 1, 1, "OK", "DETENIDO", 0, 0, 5),  # otra sesión
+                Respuesta(em.sesion + 1, 1, "VENCIDA", "DETENIDO", 0, 0, 5),
+            ]
+            for r in otras:
+                carro.sendto(codificar_respuesta(r), mio)
+            carro.sendto(b"P5R1,1,1,OK,MOVIENDO,0,0,5", mio)  # incoherente
+            assert em.recibir(100) == []
+            validas = [
+                Respuesta(0, 0, "MAL_FORMADA", "DETENIDO", 0, 0, 5),
+                Respuesta(em.sesion, 1, "VENCIDA", "DETENIDO", 0, 0, 5),
+            ]
+            for r in validas:
+                carro.sendto(codificar_respuesta(r), mio)
+            recibidas = em.recibir(100)
+            assert [x.respuesta.motivo for x in recibidas] == ["MAL_FORMADA", "VENCIDA"]
+            assert all(x.rtt_ms is None for x in recibidas)
+    finally:
+        carro.close()
+
+
+def test_detener_manda_stop_en_cada_periodo():
+    with placa_falsa() as (puerto, placa), Emisor("127.0.0.1", puerto) as em:
+        recibidas = detener(em, 350)
+        assert len(recibidas) >= 3
+        assert all(r.respuesta.estado == "DETENIDO" for r in recibidas)
+        assert placa.ultima_seq == em.seq
