@@ -1,0 +1,41 @@
+# Lazo en vivo (P5-21). Cámara → detector → política → carro.
+#
+# Aquí solo viven los parámetros propios del lazo en vivo. Los plazos salen de
+# config/control/plazos.yaml, la política de config/control/politica.yaml y el detector de
+# config/detector.json: no se repiten, para que el lazo en vivo use lo mismo que lo calificado.
+#
+# La IP del carro NO va aquí ni en ningún archivo del repo: se da con --ip o con la variable de
+# entorno P5_CARRO_IP. No hay credenciales: el stream y el UDP del carro no piden ninguna.
+
+# Hashes del run calificado. Si el detector que arranca no los trae, el lazo no corre.
+# model_sha256: yolo11n.pt (P5-04/P5-07). config_sha256: config/detector.json (P5-05).
+model_sha256: 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1
+config_sha256: 6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08
+
+# Stream MJPEG de la ESP32-CAM: http://<ip>:<puerto_stream><ruta_stream>
+puerto_stream: 81
+ruta_stream: /stream
+
+# Puerto UDP de la placa (docs/carro/protocolo.md).
+puerto_carro: 4210
+
+# Cuánto espera el stream sin mandar bytes antes de darlo por caído, en segundos. La lectura
+# se corta y se vuelve a conectar; mientras tanto el watchdog (plazos.yaml) ya dio STOP.
+espera_stream_s: 2.0
+
+# Pausa entre intentos de reconexión al stream, en segundos.
+reconexion_s: 1.0
+
+# Tamaño máximo de un cuadro del stream, en bytes (el mismo tope que la captura).
+max_cuadro_bytes: 1048576
+
+# sequence_id de los eventos del run.
+sequence_id: vivo
+
+# Palabra que hay que escribir para mandar órdenes a los motores (con --enviar).
+confirmacion: MOVER
+
+# Teclas del paro. Cualquier otra tecla se ignora.
+tecla_emergencia: e
+tecla_rearme: r
+tecla_salida: q
