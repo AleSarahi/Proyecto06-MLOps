@@ -35,7 +35,8 @@ STOPS_AL_CERRAR = 3  # UDP puede perder uno
 
 
 def _ahora_ms() -> float:
-    return time.monotonic() * 1000
+    # perf_counter y no monotonic: en Windows monotonic avanza en saltos de ~15 ms y el rtt sale 0.
+    return time.perf_counter() * 1000
 
 
 @dataclass
