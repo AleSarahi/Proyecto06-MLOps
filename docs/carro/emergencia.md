@@ -18,14 +18,15 @@ mano si algo sale mal con el carro real. El protocolo PC → carro está en
 
 **Si el carro hace algo inesperado**, en este orden:
 
-1. **La tecla de emergencia del lazo** (P5-21). Llama a `Supervisor.emergencia()`: `STOP`
-   inmediato y enclavado. *Pendiente: anotar aquí la tecla cuando el lazo exista.*
+1. **Tecla `e`** en la terminal de `python -m vivo` (P5-21, `tecla_emergencia` de
+   `config/vivo.yaml`). Llama a `Supervisor.emergencia()`: `STOP` inmediato y enclavado. `r`
+   rearma y `q` sale.
 2. Si no frena en menos de un segundo, o la PC no responde: **levantar el carro** del piso.
 3. **Desconectar la batería de motores.** La placa y la cámara pueden seguir encendidas; los
    motores ya no.
 4. Cerrar el lazo con Ctrl+C. Al salir manda `STOP` (fallo 8 de la matriz).
 
-**Para volver a arrancar después de una emergencia:** el rearme es explícito y pide un cuadro
+**Para volver a arrancar después de una emergencia:** el rearme es explícito (tecla `r`) y pide un cuadro
 fresco de la cámara (fallo 7). Primero se rearma y después, con cuadros libres, el carro vuelve a
 moverse. Antes de rearmar, revisar por qué se activó.
 

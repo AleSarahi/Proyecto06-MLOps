@@ -116,12 +116,16 @@ byte por byte (`tests/test_umbral_lateral.py`).
     umbral lateral 0.25: no se gira hacia allá.`
   - En la histéresis, si venía girando hacia un lado que queda sin comprobar, deja de girar.
 - **Dónde va:** solo en la sección `politica` de `config/vivo.yaml` (0.25). Se carga con
-  `cargar_config_vivo()`. `vivo.yaml` solo puede agregar claves opcionales; los valores
+  `cargar_politica_vivo()`. `vivo.yaml` solo puede agregar claves opcionales; los valores
   calificados se cambian en `politica.yaml`.
 - **Sin la clave:** vale lo mismo que `umbral_confianza` y la política se porta exactamente igual.
-- **Con 0.25, en S01 a S10:** cambia un solo cuadro, `S05_f0001`, de `GIRAR_IZQ` a `STOP`. C5
-  pasa y C1, C3, C4 y C6 siguen pasando. Para correr los casos así, se arma una carpeta con
-  `plazos.yaml` y el resultado de `datos_config_vivo()` como `politica.yaml`, y se pasa con
+- **Con 0.25, en S01 a S10:** solo cambia S05.
+  - La acción cambia en un solo cuadro: `S05_f0001` pasa de `GIRAR_IZQ` a `STOP`.
+  - `S05_f0002` llega con `state_before` `DETENIDO` en vez de `GIRANDO_IZQ`.
+  - Otros cuadros de S05 siguen en `STOP`, pero su `reason` ya no dice "la izquierda está
+    libre".
+  - C5 pasa y C1, C3, C4 y C6 siguen pasando. Para correr los casos así, se arma una carpeta con
+  `plazos.yaml` y el resultado de `datos_politica_vivo()` como `politica.yaml`, y se pasa con
   `casos/runner.py --config <carpeta>`.
 - **No cambia el modelo ni sus hashes.** Que la botella salga con 0.44 sigue siendo un límite del
   detector: el umbral lateral solo hace que la política no se arriesgue con ese lado.

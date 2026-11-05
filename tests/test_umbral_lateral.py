@@ -24,8 +24,8 @@ from control.config import (
     RUTA_CONFIG_POLITICA,
     ErrorConfigPolitica,
     cargar_config_politica,
-    cargar_config_vivo,
-    datos_config_vivo,
+    cargar_politica_vivo,
+    datos_politica_vivo,
     validar_config_politica,
 )
 from control.politica import ESTADO_INICIAL, decidir
@@ -34,7 +34,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 CONFIG = RAIZ / "config" / "control"
 CASOS = RAIZ / "casos"
 BASE = cargar_config_politica()
-VIVO = cargar_config_vivo()
+VIVO = cargar_politica_vivo()
 CENTRO, IZQ, DER = [270.0, 220.0, 420.0, 360.0], [20.0, 40.0, 140.0, 350.0], [490, 30, 610, 340]
 
 # Corridas guardadas (entrada de control → carpeta con lo que dejó). S01 a S08 de P5-14, S09 y S10
@@ -86,13 +86,13 @@ def test_vivo_no_puede_cambiar_valores_calificados(tmp_path):
     vivo = tmp_path / "vivo.yaml"
     vivo.write_text("politica:\n  umbral_confianza: 0.25\n", encoding="utf-8")
     with pytest.raises(ErrorConfigPolitica, match=r"politica.yaml"):
-        cargar_config_vivo(vivo)
+        cargar_politica_vivo(vivo)
 
 
 def test_vivo_sin_seccion_politica_es_la_configuracion_base(tmp_path):
     vivo = tmp_path / "vivo.yaml"
     vivo.write_text("lazo:\n  ip: 127.0.0.1\n", encoding="utf-8")
-    assert cargar_config_vivo(vivo) == BASE
+    assert cargar_politica_vivo(vivo) == BASE
 
 
 # -- decisiones con detecciones sintéticas ----------------------------------------------
@@ -177,12 +177,13 @@ def test_corridas_s01_a_s10_identicas_byte_por_byte(nombre, tmp_path):
         assert (salida / archivo).read_bytes() == (guardada / archivo).read_bytes(), archivo
 
 
-def test_con_vivo_solo_cambia_s05_f0001(tmp_path):
+def _comandos_con_vivo(tmp_path: Path) -> dict[str, list[tuple[dict, dict]]]:
+    """Por corrida: pares (comando guardado, comando con vivo.yaml), línea por línea."""
     config = tmp_path / "config"
     config.mkdir()
     (config / "plazos.yaml").write_bytes((CONFIG / "plazos.yaml").read_bytes())
-    (config / "politica.yaml").write_text(yaml.safe_dump(datos_config_vivo()), encoding="utf-8")
-    cambios = []
+    (config / "politica.yaml").write_text(yaml.safe_dump(datos_politica_vivo()), encoding="utf-8")
+    pares = {}
     for nombre, (entrada, guardada) in sorted(CORRIDAS.items()):
         salida = tmp_path / nombre
         correr_control(
@@ -190,11 +191,47 @@ def test_con_vivo_solo_cambia_s05_f0001(tmp_path):
         )
         antes = (RAIZ / guardada / "comandos.jsonl").read_text(encoding="utf-8").splitlines()
         despues = (salida / "comandos.jsonl").read_text(encoding="utf-8").splitlines()
-        assert len(antes) == len(despues)
-        for a, d in zip(map(json.loads, antes), map(json.loads, despues), strict=True):
-            if a["action"] != d["action"]:
-                cambios.append((nombre, a["frame_id"], a["action"], d["action"]))
-    assert cambios == [("S01-S08", "S05_f0001", "GIRAR_IZQ", "STOP")]
+        pares[nombre] = list(zip(map(json.loads, antes), map(json.loads, despues), strict=True))
+    return pares
+
+
+def test_con_vivo_solo_cambia_s05(tmp_path):
+    """Línea completa, no solo la acción: fuera de S05 todo queda igual, y en S05 solo cambia
+    lo que explica el umbral lateral."""
+    cambios = {}
+    for nombre, pares in _comandos_con_vivo(tmp_path).items():
+        for antes, despues in pares:
+            if antes != despues:
+                campos = sorted(k for k in antes if antes[k] != despues[k])
+                cambios[(nombre, antes["frame_id"])] = (campos, antes, despues)
+
+    # Fuera de S05, ninguna línea cambia en ningún campo.
+    assert {nombre for nombre, _ in cambios} == {"S01-S08"}
+    assert all(frame.startswith("S05_") for _, frame in cambios)
+
+    # S05_f0001: la única acción que cambia. Ya no gira hacia la botella de 0.44.
+    campos, antes, despues = cambios.pop(("S01-S08", "S05_f0001"))
+    assert campos == ["action", "reason", "speed", "state_after", "steering"]
+    assert (antes["action"], antes["steering"]) == ("GIRAR_IZQ", -0.5)
+    assert despues["action"] == "STOP"
+    assert (despues["speed"], despues["steering"], despues["state_after"]) == (0, 0, "DETENIDO")
+    assert (
+        "No comprobado libre: la izquierda (class_id 39, confianza 0.439228)" in (despues["reason"])
+    )
+
+    # S05_f0002: llega DETENIDO en vez de GIRANDO_IZQ, consecuencia del cuadro anterior.
+    campos, antes, despues = cambios.pop(("S01-S08", "S05_f0002"))
+    assert campos == ["reason", "state_before"]
+    assert (antes["state_before"], despues["state_before"]) == ("GIRANDO_IZQ", "DETENIDO")
+
+    # El resto de S05: mismo STOP, misma velocidad y giro; solo el reason, que ya no dice que la
+    # izquierda está libre.
+    assert cambios, "se esperaban cuadros de S05 con solo el reason distinto"
+    for (_, frame), (campos, antes, despues) in cambios.items():
+        assert campos == ["reason"], frame
+        assert antes["action"] == despues["action"] == "STOP", frame
+        assert "la izquierda está libre" in antes["reason"], frame
+        assert "No comprobado libre" in despues["reason"], frame
 
 
 def test_expectativas_sin_cambios():
@@ -218,7 +255,7 @@ def test_runner_con_vivo_c5_pasa_y_c1_c3_c4_c6_siguen(tmp_path):
     config = tmp_path / "config"
     config.mkdir()
     (config / "plazos.yaml").write_bytes((CONFIG / "plazos.yaml").read_bytes())
-    (config / "politica.yaml").write_text(yaml.safe_dump(datos_config_vivo()), encoding="utf-8")
+    (config / "politica.yaml").write_text(yaml.safe_dump(datos_politica_vivo()), encoding="utf-8")
     salida = tmp_path / "salida"
     casos = ["C1", "C3", "C4", "C5", "C6"]
     assert runner.main([*casos, "--config", str(config), "--salida", str(salida)]) == 0

@@ -4,7 +4,7 @@
 esté en su rango y devuelve un `ConfigPolitica` inmutable. Si algo no cumple, lanza
 `ErrorConfigPolitica` con todos los problemas juntos, para corregirlos de una vez.
 
-`cargar_config_vivo()` (P5-22) es la misma configuración más la sección `politica` de
+`cargar_politica_vivo()` (P5-22) es la misma configuración más la sección `politica` de
 `config/vivo.yaml`, que solo puede agregar claves opcionales (`umbral_lateral`). Las corridas
 calificadas usan `politica.yaml` sin esas claves, y la política se porta igual que siempre.
 """
@@ -198,7 +198,7 @@ def cargar_config_politica(ruta: Path | str = RUTA_CONFIG_POLITICA) -> ConfigPol
     return validar_config_politica(_leer_yaml(Path(ruta)))
 
 
-def datos_config_vivo(
+def datos_politica_vivo(
     ruta_vivo: Path | str = RUTA_CONFIG_VIVO, ruta_politica: Path | str = RUTA_CONFIG_POLITICA
 ) -> dict[str, Any]:
     """`politica.yaml` más la sección `politica` de `vivo.yaml`, todavía sin revisar.
@@ -224,8 +224,8 @@ def datos_config_vivo(
     return {**datos, **extra}
 
 
-def cargar_config_vivo(
+def cargar_politica_vivo(
     ruta_vivo: Path | str = RUTA_CONFIG_VIVO, ruta_politica: Path | str = RUTA_CONFIG_POLITICA
 ) -> ConfigPolitica:
     """La configuración de la política para el lazo en vivo (P5-21 a P5-23)."""
-    return validar_config_politica(datos_config_vivo(ruta_vivo, ruta_politica))
+    return validar_config_politica(datos_politica_vivo(ruta_vivo, ruta_politica))
