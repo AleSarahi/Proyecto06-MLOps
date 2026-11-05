@@ -24,7 +24,6 @@ from typing import Any
 from . import formato
 
 PERIODO_REVISION_MS = 5  # el firmware revisa vencimientos cada 10 ms o menos
-ESPERA_DESORDEN_MS = 50  # si no llega otro datagrama, el retenido se entrega solo
 
 
 def _ahora_ms() -> float:
@@ -46,6 +45,9 @@ class Fallos:
     """Cada datagrama entrante llega dos veces seguidas."""
     desordenar: bool = False
     """Cada par de datagramas entrantes llega al revés."""
+    espera_desorden_ms: float = 50.0
+    """Con `desordenar`, cuánto se retiene un datagrama esperando al siguiente. Si no llega
+    otro, el retenido se entrega solo (tarde)."""
     wifi_cortado: bool = False
     """No entra ni sale nada. Al cortarse, la placa frena de inmediato."""
 
@@ -203,7 +205,7 @@ class CarroSimulado:
         if self._retenido is None:
             return
         t, datos, origen = self._retenido
-        if not self.fallos.desordenar or self.reloj_ms() - t >= ESPERA_DESORDEN_MS:
+        if not self.fallos.desordenar or self.reloj_ms() - t >= self.fallos.espera_desorden_ms:
             self._retenido = None
             self._aplicar(datos, origen)
 
