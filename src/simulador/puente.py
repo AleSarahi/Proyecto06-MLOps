@@ -21,6 +21,7 @@ mismo; está acordado como propuesta en el #104 (fallo 4 de docs/carro/emergenci
 from __future__ import annotations
 
 import json
+import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -30,7 +31,12 @@ from control import AdaptadorVirtual
 from . import formato
 
 NOMBRE_AVISOS = "avisos.jsonl"
-ESPERA_RESPUESTA_MS = 150  # más de un ciclo de 100 ms sin respuesta ya es un aviso
+# Más que un periodo del lazo (200 ms a 5 fps): un solo paquete perdido no debe frenar el carro.
+ESPERA_RESPUESTA_MS = 250
+
+
+def _ahora_ms() -> float:
+    return time.perf_counter() * 1000
 
 
 class AdaptadorPuente(AdaptadorVirtual):
@@ -42,6 +48,7 @@ class AdaptadorPuente(AdaptadorVirtual):
         puerto: int = formato.PUERTO,
         espera_respuesta_ms: float = ESPERA_RESPUESTA_MS,
         al_avisar: Callable[[dict[str, Any]], None] | None = None,
+        reloj: Callable[[], float] = _ahora_ms,
     ) -> None:
         super().__init__(carpeta_salida, validez_orden_ms)
         self.espera_respuesta_ms = espera_respuesta_ms
@@ -50,6 +57,9 @@ class AdaptadorPuente(AdaptadorVirtual):
         self.ruta_avisos.write_text("", encoding="utf-8")  # NOSONAR (S8707)
         # Sin pendientes: el emisor manda su STOP inicial al crearse.
         self._emisor = formato.Emisor(ip, puerto)
+        # El silencio se mide con el reloj propio desde el envío real, no con el `ahora_ms` del
+        # supervisor: ese se toma antes de procesar el cuadro, y el primero tarda ~300 ms.
+        self._reloj = reloj
         self._sin_respuesta_desde: float | None = None
         self._avisado = False
         self._cerrado = False
@@ -67,7 +77,7 @@ class AdaptadorPuente(AdaptadorVirtual):
         orden = formato.orden_de_comando(self._emisor, comando, int(self.validez_orden_ms))
         self._emisor.enviar(orden)
         if self._sin_respuesta_desde is None:
-            self._sin_respuesta_desde = ahora_ms
+            self._sin_respuesta_desde = self._reloj()
         self.revisar(ahora_ms)
         return registrado
 
@@ -85,10 +95,11 @@ class AdaptadorPuente(AdaptadorVirtual):
             self._avisado = False
             return
         desde = self._sin_respuesta_desde
-        if desde is None or self._avisado or ahora_ms - desde < self.espera_respuesta_ms:
+        silencio = None if desde is None else self._reloj() - desde
+        if silencio is None or self._avisado or silencio < self.espera_respuesta_ms:
             return
         self._avisado = True
-        self._avisar(ahora_ms, "carro_sin_respuesta", ahora_ms - desde)
+        self._avisar(ahora_ms, "carro_sin_respuesta", silencio)
         self._emisor.enviar(self._emisor.orden("STOP"))
 
     def cerrar(self) -> None:

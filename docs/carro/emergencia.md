@@ -55,7 +55,7 @@ uv run python -m simulador.matriz 4 9 --salida m/      # algunos, y guarda matri
 | 1 | Cámara cortada | STOP por watchdog o por orden vencida | Dejan de llegar cuadros | Último cuadro | 418 ms | 600 ms |
 | 2 | Cuadro con más de 500 ms de edad | STOP al recibirlo (`cuadro_viejo` o `stale`) | Un `ok` de 600 ms de edad y un `stale` | Llegada del cuadro | 4 ms | 600 ms |
 | 3 | Detector con excepción, timeout, imagen ilegible o salida inválida | STOP (`error_detector:<code>`) | Un evento `error` con cada uno de los 4 códigos del contrato | Llegada del error | 12 ms | 600 ms |
-| 4 | El carro no responde | La PC anota y avisa (`avisos.jsonl`) y manda STOP; si el carro no oye, para solo | Dos variantes: el carro deja de recibir (`perdida=1`) y el carro oye pero no contesta (`mudo`), con la PC viendo vía libre | Inicio del fallo | 225 ms | 600 ms |
+| 4 | El carro no responde | La PC anota y avisa (`avisos.jsonl`) y manda STOP; si el carro no oye, para solo | Dos variantes: el carro deja de recibir (`perdida=1`) y el carro oye pero no contesta (`mudo`), con la PC viendo vía libre | Inicio del fallo | 289 ms | 600 ms |
 | 5 | Orden repetida o fuera de orden | La vieja no se aplica y frena (`SEQ_VIEJA`) | Duplicar y desordenar datagramas | Inicio del fallo | 173 ms | 600 ms |
 | 6 | Comando fuera de rango o no finito | Se rechaza y hay STOP | Política que da velocidad 1.5, NaN o infinito, y una orden de 1.5 directo a la placa | Llegada del cuadro | 6 ms | 600 ms |
 | 7 | Emergencia | STOP inmediato y enclavado hasta un rearme explícito con percepción fresca | `Supervisor.emergencia()`, cuadros libres, rearme con un cuadro viejo y luego con uno fresco | Emergencia | 1 ms | 600 ms |
@@ -70,14 +70,19 @@ prueba solo exige que no pasen de 600 ms.
 
 - **Fallo 1 (418 ms):** el carro ya frenó solo cuando venció la orden (400 ms desde que llegó). El
   supervisor manda además su STOP de reloj (`orden_vencida`).
-- **Fallo 4 (225 ms), dos variantes:**
+- **Fallo 4 (289 ms), dos variantes:**
   - *El carro no oye:* el STOP de la PC no le llega. Lo detiene su paro automático cuando vence la
     última orden aceptada, que ya llevaba unos 200 ms cuando empezó el fallo.
-  - *El carro oye pero no contesta (`mudo`):* en ~160 ms. Sin el STOP de la PC, este caso **no
+  - *El carro oye pero no contesta (`mudo`):* en 266 a 289 ms (8 corridas). El peor caso es un
+    periodo del lazo más la espera: si el fallo empieza justo después de una respuesta, la
+    siguiente orden sale a los 200 ms y el aviso llega 250 ms después, unos 450 ms. Sin el STOP de la PC, este caso **no
     paraba nunca**, porque el carro seguía obedeciendo los `AVANZAR` (lo encontró Angel en la
-    revisión del #104). Por eso, después de 150 ms sin respuesta, el puente avisa, manda STOP y
+    revisión del #104). Por eso, después de 250 ms sin respuesta (más que un periodo de 200 ms,
+    para que un solo paquete perdido no frene el carro), el puente avisa, manda STOP y
     cambia por STOP cada orden de movimiento hasta que el carro vuelva a contestar.
   - El aviso `VENCIDA` no cuenta como respuesta: el carro lo manda aunque no oiga nada.
+  - El silencio se mide desde el envío real, con el reloj del puente. Con el `ahora_ms` del
+    supervisor, el primer cuadro (~300 ms en procesarse) daba un aviso falso al arrancar.
   - **P5-21 tiene que hacer lo mismo** en su adaptador. Está acordado con Heri como propuesta, para
     integrarlo después del #105.
 - **Fallo 5 (173 ms):** es lo que tarda en llegar el siguiente datagrama, a 5 fps.

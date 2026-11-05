@@ -339,3 +339,26 @@ def test_cli_rechaza_techo_invalido(capsys):
 def test_cli_rechaza_perdida_fuera_de_rango():
     with pytest.raises(SystemExit):
         main(["--perdida", "1.5"])
+
+
+# -- puente de la matriz ---------------------------------------------------------------
+def test_puente_mide_el_silencio_desde_el_envio_real(carro, tmp_path):
+    """El `ahora_ms` del supervisor se toma antes de procesar el cuadro (el primero tarda
+    ~300 ms): con él, el puente avisaba sin que el carro hubiera dejado de contestar."""
+    from simulador.puente import AdaptadorPuente
+
+    avisos = []
+    puente = AdaptadorPuente(tmp_path, 400, *carro.direccion, al_avisar=avisos.append)
+    try:
+        stop = {"action": "STOP", "speed": 0, "steering": 0.0}
+        puente.enviar(stop, ahora_ms=0.0)  # un ahora_ms muy atrasado
+        time.sleep(0.05)
+        puente.revisar(ahora_ms=10_000.0)
+        assert avisos == []
+        carro.fallos.mudo = True
+        puente.enviar(stop, ahora_ms=10_000.0)
+        assert _esperar(lambda: (puente.revisar(0.0), avisos)[1] != [], 400)
+        assert avisos[0]["motivo"] == "carro_sin_respuesta"
+        assert avisos[0]["sin_respuesta_ms"] >= 250
+    finally:
+        puente.cerrar()
