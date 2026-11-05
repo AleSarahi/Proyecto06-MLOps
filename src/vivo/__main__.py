@@ -45,7 +45,7 @@ from control.__main__ import (
     cargar_plazos,
 )
 from control.config import ErrorConfigPolitica, cargar_config_politica
-from infer.config import RUTA_CONFIG_DETECTOR, ErrorConfigDetector
+from infer.config import RUTA_CONFIG_DETECTOR
 from infer.cuadro import DetectorEnVivo
 from infer.eventos import ErrorRunInfer
 from infer.reloj import leer_reloj_s
@@ -124,7 +124,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             sequence_id=vivo.sequence_id,
             origen_s=origen_s,
         )
-    except (OSError, ValueError, ErrorConfigDetector, ErrorRunInfer) as exc:
+    except (OSError, ValueError) as exc:  # incluye ErrorConfigDetector y ErrorRunInfer
         print(f"vivo: no se pudo preparar el detector: {exc}", file=sys.stderr)
         return 2
     if (detector.model_sha256, detector.config_sha256) != (vivo.model_sha256, vivo.config_sha256):

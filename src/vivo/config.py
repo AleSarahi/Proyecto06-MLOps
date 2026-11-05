@@ -119,7 +119,8 @@ def cargar_config_vivo(ruta: Path | str = RUTA_CONFIG_VIVO) -> ConfigVivo:
     """Lee `config/vivo.yaml` y lo revisa."""
     ruta = Path(ruta)
     try:
-        datos = yaml.safe_load(ruta.read_text(encoding="utf-8"))
+        # La ruta la elige quien corre `python -m vivo --config-vivo` (solo lectura).
+        datos = yaml.safe_load(ruta.read_text(encoding="utf-8"))  # NOSONAR (S8707)
     except OSError as exc:
         raise ErrorConfigVivo(f"no se pudo leer {ruta}: {exc}") from exc
     except yaml.YAMLError as exc:
