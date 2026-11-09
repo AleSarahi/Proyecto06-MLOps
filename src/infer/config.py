@@ -140,8 +140,15 @@ def _entero_positivo(valor: Any, nombre: str) -> int:
     return valor
 
 
-def validar_config_detector(datos: Any, *, raiz: Path = RAIZ) -> ConfigDetector:
-    """Valida estructura, runtime y combinaciones; normaliza los parámetros efectivos."""
+def validar_config_detector(
+    datos: Any, *, raiz: Path = RAIZ, clases_aprobadas: frozenset[int] | set[int] | None = None
+) -> ConfigDetector:
+    """Valida estructura, runtime y combinaciones; normaliza los parámetros efectivos.
+
+    ``clases_aprobadas`` es el catálogo admitido en ``class_ids``: por defecto el dominio de P5
+    (botella y taza). El Proyecto 6 pasa las clases COCO que aparecen en su video.
+    """
+    aprobadas = _CLASES_APROBADAS if clases_aprobadas is None else set(clases_aprobadas)
     raiz_config = _claves(datos, {"artifacts", "effective"}, "config")
     artefactos = _claves(
         raiz_config["artifacts"], {"weights_path", "expected_model_sha256"}, "artifacts"
@@ -188,9 +195,11 @@ def validar_config_detector(datos: Any, *, raiz: Path = RAIZ) -> ConfigDetector:
         or not clases
         or any(type(clase) is not int for clase in clases)
         or len(set(clases)) != len(clases)
-        or not set(clases) <= _CLASES_APROBADAS
+        or not set(clases) <= aprobadas
     ):
-        raise ErrorConfigDetector("postprocess.class_ids: subconjunto no vacío de [39, 41]")
+        raise ErrorConfigDetector(
+            f"postprocess.class_ids: subconjunto no vacío de {sorted(aprobadas)}"
+        )
 
     normalizado = {
         "model": modelo,
@@ -221,7 +230,11 @@ def _rechazar_constante(valor: str) -> None:
     raise ErrorConfigDetector(f"JSON no permite {valor}")
 
 
-def cargar_config_detector(ruta: str | Path = RUTA_CONFIG_DETECTOR) -> ConfigDetector:
+def cargar_config_detector(
+    ruta: str | Path = RUTA_CONFIG_DETECTOR,
+    *,
+    clases_aprobadas: frozenset[int] | set[int] | None = None,
+) -> ConfigDetector:
     """Carga JSON estricto. Una ruta de pesos relativa se resuelve desde la raíz del repo."""
     try:
         datos = json.loads(
@@ -229,7 +242,7 @@ def cargar_config_detector(ruta: str | Path = RUTA_CONFIG_DETECTOR) -> ConfigDet
         )
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ErrorConfigDetector(f"no se pudo leer config del detector: {exc}") from exc
-    return validar_config_detector(datos)
+    return validar_config_detector(datos, clases_aprobadas=clases_aprobadas)
 
 
 def verificar_versiones_runtime(config: ConfigDetector) -> None:
