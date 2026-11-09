@@ -3,7 +3,7 @@
 Solo usa la biblioteca estándar y los archivos exportados de la corrida; no importa `monitor`.
 Recalcula desde los datos primarios y compara con lo que guardó el sistema:
 
-- G1–G7 de la corrida (metricas.json -> corrida) y G4 por ventana;
+- G1-G7 de la corrida (metricas.json -> corrida) y G4 por ventana;
 - la proporción de baja confianza de cada ventana, recontando zonas desde los scores de cada
   candidata con los umbrales de run.json (no usa las zonas guardadas);
 - que cada alerta de baja confianza corresponda a una ventana suficiente que cumple su regla;
@@ -100,17 +100,32 @@ def recalcular(carpeta: Path) -> list[str]:
     for c in caps:
         archivo = carpeta / c["ruta"]
         ev = next((e for e in eventos if e["event_id"] == c["event_id"]), None)
-        if (archivo.is_file() and hashlib.sha256(archivo.read_bytes()).hexdigest() == c["sha256"]
-                and ev is not None and ev["image_ref"] == c["ruta"]):
+        if (
+            archivo.is_file()
+            and hashlib.sha256(archivo.read_bytes()).hexdigest() == c["sha256"]
+            and ev is not None
+            and ev["image_ref"] == c["ruta"]
+        ):
             validas += 1
-    comparar("G5 imágenes vinculadas", validas / len(caps) if caps else None,
-             met["G5"]["corrida"]["valor"], 1e-4)
-    ok6 = sum(1 for e in eventos if e["model_ref"] == run["model_ref_esperado"]
-              and e["config_ref"] == run["config_ref"])
-    comparar("G6 versión", ok6 / len(eventos) if eventos else None,
-             met["G6"]["corrida"]["valor"], 1e-4)
-    comparar("G7 máx. alertas activas", max((v["alertas_activas"] for v in ventanas), default=None),
-             met["G7"]["corrida"]["valor"])
+    comparar(
+        "G5 imágenes vinculadas",
+        validas / len(caps) if caps else None,
+        met["G5"]["corrida"]["valor"],
+        1e-4,
+    )
+    ok6 = sum(
+        1
+        for e in eventos
+        if e["model_ref"] == run["model_ref_esperado"] and e["config_ref"] == run["config_ref"]
+    )
+    comparar(
+        "G6 versión", ok6 / len(eventos) if eventos else None, met["G6"]["corrida"]["valor"], 1e-4
+    )
+    comparar(
+        "G7 máx. alertas activas",
+        max((v["alertas_activas"] for v in ventanas), default=None),
+        met["G7"]["corrida"]["valor"],
+    )
 
     # Alertas de baja confianza: su ventana debe ser suficiente y cumplir la regla.
     reglas = {r["rule_id"]: r for r in cfg["reglas"]}
@@ -122,8 +137,10 @@ def recalcular(carpeta: Path) -> list[str]:
                 cumple = v["estado"] == "suficiente" and v["proporcion_baja"] >= regla["umbral"]
             else:
                 ref = run["referencia"]["proporcion_baja"]
-                cumple = (v["estado"] == "suficiente"
-                          and v["proporcion_baja"] - ref >= regla["tolerancia"])
+                cumple = (
+                    v["estado"] == "suficiente"
+                    and v["proporcion_baja"] - ref >= regla["tolerancia"]
+                )
             print(f"  {'OK ' if cumple else 'DIF'} alerta {a['alert_id']} ventana {w['indice']}")
             if not cumple:
                 difs.append(f"alerta {a['alert_id']}")
