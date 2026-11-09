@@ -1,0 +1,19 @@
+== evidencias/p6/escenarios/c2-baja-confianza
+  OK  ventana 0 candidatas: recalculado=79 guardado=79
+  OK  ventana 0 proporcion_baja: recalculado=0.7974683544303798 guardado=0.7974683544303798
+  OK  G4 ventana 0: recalculado=0.7975 guardado=0.7975
+  OK  ventana 1 candidatas: recalculado=43 guardado=43
+  OK  ventana 1 proporcion_baja: recalculado=0.8372093023255814 guardado=0.8372093023255814
+  OK  G4 ventana 1: recalculado=0.8372 guardado=0.8372
+  OK  ventana 2 candidatas: recalculado=19 guardado=19
+  OK  ventana 2 proporcion_baja: recalculado=0.9473684210526315 guardado=0.9473684210526315
+  OK  G4 ventana 2: recalculado=0.9474 guardado=0.9474
+  OK  G1 p95 ms: recalculado=484.422 guardado=484.42
+  OK  G2 fps: recalculado=1.030664059430151 guardado=1.0307
+  OK  G3 RAM MiB: recalculado=377.18359375 guardado=377.18
+  OK  G4 corrida: recalculado=0.8297872340425532 guardado=0.8298
+  OK  G5 imágenes vinculadas: recalculado=1.0 guardado=1.0
+  OK  G6 versión: recalculado=1.0 guardado=1.0
+  OK  G7 máx. alertas activas: recalculado=1 guardado=1
+  OK  alerta c2-20261109T042757Z-baja-confianza-v1-v000 ventana 0
+  resultado: todo coincide

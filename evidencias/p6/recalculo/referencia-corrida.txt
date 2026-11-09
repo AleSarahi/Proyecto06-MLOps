@@ -1,0 +1,36 @@
+== evidencias/p6/referencia/corrida
+  OK  ventana 0 candidatas: recalculado=136 guardado=136
+  OK  ventana 0 proporcion_baja: recalculado=0.35294117647058826 guardado=0.35294117647058826
+  OK  G4 ventana 0: recalculado=0.3529 guardado=0.3529
+  OK  ventana 1 candidatas: recalculado=115 guardado=115
+  OK  ventana 1 proporcion_baja: recalculado=0.3565217391304348 guardado=0.3565217391304348
+  OK  G4 ventana 1: recalculado=0.3565 guardado=0.3565
+  OK  ventana 2 candidatas: recalculado=142 guardado=142
+  OK  ventana 2 proporcion_baja: recalculado=0.3028169014084507 guardado=0.3028169014084507
+  OK  G4 ventana 2: recalculado=0.3028 guardado=0.3028
+  OK  ventana 3 candidatas: recalculado=213 guardado=213
+  OK  ventana 3 proporcion_baja: recalculado=0.3192488262910798 guardado=0.3192488262910798
+  OK  G4 ventana 3: recalculado=0.3192 guardado=0.3192
+  OK  ventana 4 candidatas: recalculado=296 guardado=296
+  OK  ventana 4 proporcion_baja: recalculado=0.4864864864864865 guardado=0.4864864864864865
+  OK  G4 ventana 4: recalculado=0.4865 guardado=0.4865
+  OK  ventana 5 candidatas: recalculado=315 guardado=315
+  OK  ventana 5 proporcion_baja: recalculado=0.526984126984127 guardado=0.526984126984127
+  OK  G4 ventana 5: recalculado=0.527 guardado=0.527
+  OK  ventana 6 candidatas: recalculado=240 guardado=240
+  OK  ventana 6 proporcion_baja: recalculado=0.32083333333333336 guardado=0.32083333333333336
+  OK  G4 ventana 6: recalculado=0.3208 guardado=0.3208
+  OK  ventana 7 candidatas: recalculado=154 guardado=154
+  OK  ventana 7 proporcion_baja: recalculado=0.2857142857142857 guardado=0.2857142857142857
+  OK  G4 ventana 7: recalculado=0.2857 guardado=0.2857
+  OK  ventana 8 candidatas: recalculado=104 guardado=104
+  OK  ventana 8 proporcion_baja: recalculado=0.21153846153846154 guardado=0.21153846153846154
+  OK  G4 ventana 8: recalculado=0.2115 guardado=0.2115
+  OK  G1 p95 ms: recalculado=653.072 guardado=653.07
+  OK  G2 fps: recalculado=1.0036205611744369 guardado=1.0036
+  OK  G3 RAM MiB: recalculado=383.453125 guardado=383.45
+  OK  G4 corrida: recalculado=0.3807580174927114 guardado=0.3808
+  OK  G5 imágenes vinculadas: recalculado=1.0 guardado=1.0
+  OK  G6 versión: recalculado=1.0 guardado=1.0
+  OK  G7 máx. alertas activas: recalculado=0 guardado=0
+  resultado: todo coincide

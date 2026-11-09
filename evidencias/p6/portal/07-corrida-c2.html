@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrida c2-20261109T042757Z · Centro de monitoreo P6</title>
+<style>
+:root{--fondo:#f6f7f9;--texto:#1d2330;--sutil:#5d6675;--borde:#d8dde5;--panel:#fff;
+--baja:#b42318;--duda:#b54708;--aceptada:#067647;--neutro:#475467;--enlace:#1849a9}
+@media (prefers-color-scheme:dark){:root{--fondo:#12151b;--texto:#e6e9ef;--sutil:#9aa3b2;
+--borde:#2c323d;--panel:#1a1e26;--baja:#f97066;--duda:#fdb022;--aceptada:#47cd89;--neutro:#98a2b3;
+--enlace:#84adff}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,sans-serif;background:var(--fondo);
+color:var(--texto)}header{background:var(--panel);border-bottom:1px solid var(--borde);
+padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header b{font-size:16px}nav a{margin-right:14px}a{color:var(--enlace)}
+main{max-width:1200px;margin:0 auto;padding:16px}
+.panel{background:var(--panel);border:1px solid var(--borde);border-radius:8px;padding:14px;
+margin-bottom:14px;overflow-x:auto}table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--borde);vertical-align:top}
+th{color:var(--sutil);font-weight:600;font-size:13px}
+.z{font-weight:600;padding:1px 8px;border-radius:10px;border:1px solid currentColor;
+white-space:nowrap;font-size:13px}.baja,.critica{color:var(--baja)}.duda,.advertencia{color:var(--duda)}
+.aceptada{color:var(--aceptada)}.neutro,.info,.sin_detecciones,.error{color:var(--neutro)}
+.vacio{color:var(--sutil);padding:24px;text-align:center}
+.err{border-color:var(--baja)}.mono{font-family:ui-monospace,monospace;font-size:13px;
+word-break:break-all}form{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+label{font-size:13px;color:var(--sutil);display:flex;flex-direction:column;gap:2px}
+select,button{font:inherit;padding:4px 8px}img.mini{height:54px;border-radius:4px}
+.figura{position:relative;max-width:100%}.figura svg{position:absolute;inset:0;width:100%;height:100%}
+.figura img{display:block;max-width:100%;height:auto}dl{display:grid;grid-template-columns:
+max-content 1fr;gap:4px 14px;margin:0}dt{color:var(--sutil)}dd{margin:0}
+pre{white-space:pre-wrap;font-size:12px;margin:0}
+</style></head><body>
+<header><b>Centro de monitoreo · P6</b><nav><a href="/eventos">Eventos</a><a href="/alertas">Alertas</a>
+<a href="/corridas">Corridas</a></nav></header>
+<main><h1 style="font-size:20px">Corrida c2-20261109T042757Z</h1><div class="panel"><dl>
+<dt>run_id</dt><dd class="mono">c2-20261109T042757Z</dd><dt>Segmento</dt><dd>c2</dd>
+<dt>Inicio / fin</dt><dd>2026-11-09T04:27:57.759Z → 2026-11-09T04:28:21.472Z</dd>
+<dt>Commit</dt><dd class="mono">d5ab5971fd8b960018bd8d2c0f04bb5077a92132 (p6-3-24-nucleo-monitoreo)</dd>
+<dt>Comando</dt><dd class="mono">python -m monitor correr --segmento c2 --salida evidencias/p6/escenarios/c2-baja-confianza</dd>
+<dt>Entorno</dt><dd>Windows-11-10.0.26200-SP0 · Python 3.12.14 · cpu</dd>
+<dt>Modelo</dt><dd class="mono">0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1</dd>
+<dt>Fuente</dt><dd>frames · https://www.youtube.com/watch?v=jKl0o9Ydi5Q
+(Creative Commons Attribution license (reuse allowed), Chalie Juno)</dd>
+<dt>Referencia</dt><dd>referencia-20261109T042407Z · proporción baja 0.3808</dd>
+<dt>Conteos</dt><dd class="mono">{"alertas": 1, "capturas": 23, "descartes_saturacion": 0, "duplicados": 0, "eventos": 24, "eventos_por_estado": {"ok": 24}, "eventos_por_zona": {"aceptada": 2, "baja": 9, "duda": 13}, "fuente": {"descartes": {"muestreo": 696}, "recibidos": 24}, "procesados": 24, "ventanas": 3}</dd></dl>
+<p><a href="/eventos?run=c2-20261109T042757Z">Ver eventos</a> · <a href="/alertas?run=c2-20261109T042757Z">Ver alertas</a></p>
+</div>
+<div class="panel"><h2 style="font-size:16px">Ventanas</h2><table><tr><th>#</th><th>Intervalo (s)</th>
+<th>Frames</th><th>Candidatas</th><th>Proporción baja</th><th>Estado</th><th>Reglas</th>
+<th>Alertas activas</th></tr><tr><td>0</td>
+<td>[0.0, 10.0)</td><td>10</td><td>79</td>
+<td>0.797</td>
+<td>suficiente</td><td>baja-confianza-v1: cumple<br>cambio-sostenido-v1: cumple<br></td>
+<td>1</td></tr><tr><td>1</td>
+<td>[10.0, 20.0)</td><td>10</td><td>43</td>
+<td>0.837</td>
+<td>suficiente</td><td>baja-confianza-v1: cumple<br>cambio-sostenido-v1: cumple<br></td>
+<td>1</td></tr><tr><td>2</td>
+<td>[20.0, 30.0)</td><td>4</td><td>19</td>
+<td>0.947</td>
+<td>insuficiente</td><td>baja-confianza-v1: insuficiente<br>cambio-sostenido-v1: insuficiente<br></td>
+<td>1</td></tr></table></div>
+<div class="panel"><h2 style="font-size:16px">Métricas base</h2><table>
+<tr><th>Grupo</th><th>Métrica</th><th>Valor (corrida)</th><th>Unidad</th><th>n</th></tr>
+<tr><td>G1</td><td>Tiempo de inferencia p95</td>
+<td>484.42</td><td>ms</td>
+<td>24</td></tr><tr><td>G2</td><td>FPS de procesamiento</td>
+<td>1.0307</td><td>frames inferidos / s</td>
+<td>24</td></tr><tr><td>G3</td><td>RAM RSS máxima del proceso</td>
+<td>377.18</td><td>MiB</td>
+<td>24</td></tr><tr><td>G4</td><td>Proporción de baja confianza</td>
+<td>0.8298</td><td>fracción de candidatas</td>
+<td>141</td></tr><tr><td>G5</td><td>Imágenes vinculadas</td>
+<td>1.0</td><td>fracción de capturas</td>
+<td>23</td></tr><tr><td>G6</td><td>Versión esperada frente a reportada</td>
+<td>1.0</td><td>fracción de eventos</td>
+<td>24</td></tr><tr><td>G7</td><td>Alertas activas al cierre de la ventana</td>
+<td>1</td><td>alertas</td>
+<td>3</td></tr></table></div>
+<div class="panel" id="config"><h2 style="font-size:16px">Configuración efectiva
+<span class="mono">c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c</span></h2><pre>{
+ "captura": {
+  "alerta": true,
+  "calidad_jpeg": 90,
+  "muestra_cada": 10,
+  "sin_detecciones": true,
+  "zonas": [
+   "baja",
+   "duda"
+  ]
+ },
+ "detector": "config/p6/detector.json",
+ "detector_config_sha256": "013b037ac11711609631c779de9c4c953fe590c8951b252ba6df125b6ea22e44",
+ "muestreo": {
+  "atraso_max_ms": 3000.0,
+  "cada_n_frames": 30
+ },
+ "referencia": {
+  "ruta": "evidencias/p6/referencia/referencia.json"
+ },
+ "reglas": [
+  {
+   "accion_sugerida": "Revisar las capturas de la ventana: iluminaci\u00f3n, oclusi\u00f3n, distancia de los objetos y si la escena sigue siendo la esperada. Comparar con la referencia antes de concluir algo del modelo.",
+   "descripcion": "Proporci\u00f3n de candidatas con s \u003c inferior dentro de la ventana mayor o igual que el umbral, con al menos minimo_candidatas candidatas puntuadas.",
+   "rule_id": "baja-confianza-v1",
+   "severidad": "advertencia",
+   "tipo": "proporcion_baja",
+   "umbral": 0.6,
+   "ventanas_consecutivas": 1
+  },
+  {
+   "accion_sugerida": "Posible cambio sostenido de condiciones respecto a la referencia. Investigar la fuente (c\u00e1mara, horario, clima) y el preprocesamiento; la confianza no confirma drift ni p\u00e9rdida de calidad por s\u00ed sola.",
+   "descripcion": "La proporci\u00f3n de baja confianza supera a la de la referencia por al menos la tolerancia durante N ventanas suficientes seguidas. Una ventana insuficiente no cuenta ni reinicia.",
+   "rule_id": "cambio-sostenido-v1",
+   "severidad": "critica",
+   "tipo": "cambio_sostenido",
+   "tolerancia": 0.2,
+   "ventanas_consecutivas": 3
+  }
+ ],
+ "umbrales": {
+  "inferior": 0.3,
+  "superior": 0.6
+ },
+ "ventanas": {
+  "duracion_s": 10.0,
+  "minimo_candidatas": 20
+ },
+ "version": 1,
+ "zona_frame": "max_score"
+}</pre></div></main></body></html>

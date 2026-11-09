@@ -1,0 +1,209 @@
+{
+ "schema": "p6.run.v1",
+ "run_id": "c2-20261109T042757Z",
+ "segmento": "c2",
+ "source_id": "youtube-c2",
+ "inicio_utc": "2026-11-09T04:27:57.759Z",
+ "comando": [
+  "python",
+  "-m",
+  "monitor",
+  "correr",
+  "--segmento",
+  "c2",
+  "--salida",
+  "evidencias/p6/escenarios/c2-baja-confianza"
+ ],
+ "git": {
+  "commit": "d5ab5971fd8b960018bd8d2c0f04bb5077a92132",
+  "rama": "p6-3-24-nucleo-monitoreo",
+  "cambios_sin_commit": false
+ },
+ "entorno": {
+  "so": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14",
+  "cpu": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+  "nucleos_logicos": 8,
+  "ram_total_bytes": 8254660608,
+  "dispositivo": "cpu",
+  "paquetes": {
+   "ultralytics": "8.3.0",
+   "torch": "2.9.0",
+   "torchvision": "0.24.0",
+   "opencv-python": "4.11.0.86",
+   "numpy": "1.26.4",
+   "flask": "3.1.3",
+   "psutil": "7.2.2",
+   "yt-dlp": "2026.10.26"
+  }
+ },
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "config_ruta": "config\\p6\\monitoreo.yaml",
+ "config_efectiva": {
+  "version": 1,
+  "detector": "config/p6/detector.json",
+  "muestreo": {
+   "cada_n_frames": 30,
+   "atraso_max_ms": 3000.0
+  },
+  "umbrales": {
+   "inferior": 0.3,
+   "superior": 0.6
+  },
+  "zona_frame": "max_score",
+  "ventanas": {
+   "duracion_s": 10.0,
+   "minimo_candidatas": 20
+  },
+  "referencia": {
+   "ruta": "evidencias/p6/referencia/referencia.json"
+  },
+  "reglas": [
+   {
+    "rule_id": "baja-confianza-v1",
+    "tipo": "proporcion_baja",
+    "descripcion": "Proporción de candidatas con s < inferior dentro de la ventana mayor o igual que el umbral, con al menos minimo_candidatas candidatas puntuadas.",
+    "severidad": "advertencia",
+    "accion_sugerida": "Revisar las capturas de la ventana: iluminación, oclusión, distancia de los objetos y si la escena sigue siendo la esperada. Comparar con la referencia antes de concluir algo del modelo.",
+    "ventanas_consecutivas": 1,
+    "umbral": 0.6
+   },
+   {
+    "rule_id": "cambio-sostenido-v1",
+    "tipo": "cambio_sostenido",
+    "descripcion": "La proporción de baja confianza supera a la de la referencia por al menos la tolerancia durante N ventanas suficientes seguidas. Una ventana insuficiente no cuenta ni reinicia.",
+    "severidad": "critica",
+    "accion_sugerida": "Posible cambio sostenido de condiciones respecto a la referencia. Investigar la fuente (cámara, horario, clima) y el preprocesamiento; la confianza no confirma drift ni pérdida de calidad por sí sola.",
+    "ventanas_consecutivas": 3,
+    "tolerancia": 0.2
+   }
+  ],
+  "captura": {
+   "zonas": [
+    "baja",
+    "duda"
+   ],
+   "sin_detecciones": true,
+   "muestra_cada": 10,
+   "alerta": true,
+   "calidad_jpeg": 90
+  },
+  "detector_config_sha256": "013b037ac11711609631c779de9c4c953fe590c8951b252ba6df125b6ea22e44"
+ },
+ "velocidad": 1.0,
+ "modelo": {
+  "model_ref": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "detector_config_sha256": "013b037ac11711609631c779de9c4c953fe590c8951b252ba6df125b6ea22e44",
+  "pesos": "C:\\Users\\hp\\OneDrive\\Documentos\\Ale\\ITESO\\7mo\\mlops\\Proyecto06-MLOps\\modelo\\descargas\\yolo11n.pt",
+  "efectiva": {
+   "execution": {
+    "augment": false,
+    "batch": 1,
+    "device": "cpu",
+    "dtype": "float32",
+    "torch_threads": 2
+   },
+   "model": {
+    "backend": "pytorch_pt",
+    "name": "YOLO11n"
+   },
+   "postprocess": {
+    "agnostic_nms": false,
+    "bbox_format": "xyxy",
+    "bbox_unit": "px",
+    "class_ids": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     7
+    ],
+    "clip_boxes": true,
+    "confidence": 0.1,
+    "coordinates": "original",
+    "max_det": 300,
+    "nms_iou": 0.7
+   },
+   "preprocess": {
+    "center": true,
+    "decoder": "cv2.imread_IMREAD_COLOR",
+    "imgsz": 640,
+    "input_channels": "BGR",
+    "interpolation": "cv2.INTER_LINEAR",
+    "layout": "BCHW",
+    "letterbox": "minimum_rectangle_auto",
+    "model_channels": "RGB",
+    "normalization_divisor": 255,
+    "padding_value": 114,
+    "scale_fill": false,
+    "scaleup": true,
+    "stride": 32
+   },
+   "runtime": {
+    "numpy": "1.26.4",
+    "opencv-python": "4.11.0.86",
+    "torch": "2.9.0",
+    "torchvision": "0.24.0",
+    "ultralytics": "8.3.0"
+   }
+  },
+  "clases": {
+   "0": "person",
+   "1": "bicycle",
+   "2": "car",
+   "3": "motorcycle",
+   "5": "bus",
+   "7": "truck"
+  }
+ },
+ "model_ref_esperado": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+ "fuente": {
+  "modo": "frames",
+  "carpeta": "C:\\Users\\hp\\OneDrive\\Documentos\\Ale\\ITESO\\7mo\\mlops\\Proyecto06-MLOps\\datos\\p6\\frames\\c2",
+  "manifiesto": {
+   "segmento": "c2",
+   "video": "noche",
+   "youtube_id": "jKl0o9Ydi5Q",
+   "url": "https://www.youtube.com/watch?v=jKl0o9Ydi5Q",
+   "licencia": "Creative Commons Attribution license (reuse allowed)",
+   "canal": "Chalie Juno",
+   "formato": "136",
+   "video_sha256": "eb96b39d543337776c7ff4c1c11945c764a834f4f2e983de49ab170093b478d7",
+   "fps_video": 30.0,
+   "cada_n_frames": 30,
+   "inicio_s": 0,
+   "fin_s": 24,
+   "frames": 24
+  }
+ },
+ "referencia": {
+  "ruta": "evidencias\\p6\\referencia\\referencia.json",
+  "run_id": "referencia-20261109T042407Z",
+  "proporcion_baja": 0.3807580174927114
+ },
+ "fin_utc": "2026-11-09T04:28:21.472Z",
+ "conteos": {
+  "fuente": {
+   "recibidos": 24,
+   "descartes": {
+    "muestreo": 696
+   }
+  },
+  "procesados": 24,
+  "descartes_saturacion": 0,
+  "eventos": 24,
+  "eventos_por_estado": {
+   "ok": 24
+  },
+  "eventos_por_zona": {
+   "duda": 13,
+   "aceptada": 2,
+   "baja": 9
+  },
+  "duplicados": 0,
+  "ventanas": 3,
+  "alertas": 1,
+  "capturas": 23
+ }
+}
