@@ -8,7 +8,7 @@
 |---|---|---|
 | Código con el que se ejecutaron la referencia, C1 y C2 | `d5ab5971fd8b960018bd8d2c0f04bb5077a92132` | Cada `run.json` lo registra en `git.commit`, con `cambios_sin_commit: false`. |
 | Evidencias de las corridas (JSONL, capturas, métricas, recálculo, portal) | `20bfa9b` | Se agregó **después** del código probado y no lo modifica: solo agrega `evidencias/p6/`. |
-| Documentación (docs/p6, README, este índice) | commits posteriores con prefijo `P6-` | No cambian `src/monitor/` ni `config/p6/`, así que el `config_ref` sigue siendo `c574ee88…ff6c`. |
+| Documentación (docs/p6, README, este índice) y ensayo desde una copia limpia | commits posteriores con prefijo `P6-` | No cambian `config/p6/` ni la lógica de inferencia, ventanas o reglas; el `config_ref` sigue siendo `c574ee88…ff6c`. El único cambio de código es cosmético (`noprogress` en la descarga, ver [`ensayo-copia-limpia.md`](ensayo-copia-limpia.md)). En la copia limpia, la corrida de C1 y C2 dio **los mismos scores** que la evidencia. |
 
 Para ubicar la revisión evaluada: `git log --oneline -- evidencias/p6 src/monitor config/p6`.
 

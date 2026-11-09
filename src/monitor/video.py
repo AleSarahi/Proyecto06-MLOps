@@ -64,6 +64,7 @@ def descargar(nombre: str, video: dict[str, Any]) -> str:
         "format": video["formato"],
         "outtmpl": str(temporal),
         "quiet": True,
+        "noprogress": True,
         "no_warnings": True,
         "noplaylist": True,
     }
