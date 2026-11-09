@@ -1,0 +1,41 @@
+{
+ "accion_sugerida": "Revisar las capturas de la ventana: iluminación, oclusión, distancia de los objetos y si la escena sigue siendo la esperada. Comparar con la referencia antes de concluir algo del modelo.",
+ "alert_id": "c2-20261109T040444Z-baja-confianza-v1-v000",
+ "cerrada_en": null,
+ "cerrada_por_ventana": null,
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "estado": "abierta",
+ "event_ids": [
+  "c2-20261109T040444Z-c2-f000000",
+  "c2-20261109T040444Z-c2-f000030",
+  "c2-20261109T040444Z-c2-f000060"
+ ],
+ "model_ref": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+ "motivo": "Baja confianza: 63/79 candidatas con s < 0.3 (proporción 0.797) en la ventana 0 [0 s, 10 s), umbral 0.6.",
+ "regla": {
+  "descripcion": "Proporción de candidatas con s < inferior dentro de la ventana mayor o igual que el umbral, con al menos minimo_candidatas candidatas puntuadas.",
+  "minimo_candidatas": 20,
+  "referencia_proporcion_baja": null,
+  "rule_id": "baja-confianza-v1",
+  "tipo": "proporcion_baja",
+  "tolerancia": null,
+  "umbral": 0.6,
+  "umbral_inferior": 0.3,
+  "ventanas_consecutivas": 1
+ },
+ "rule_id": "baja-confianza-v1",
+ "run_id": "c2-20261109T040444Z",
+ "schema": "p6.alerta.v1",
+ "severidad": "advertencia",
+ "timestamp_utc": "2026-11-09T04:04:50.476Z",
+ "ventanas": [
+  {
+   "fin_ms": 10000.0,
+   "indice": 0,
+   "inicio_ms": 0.0,
+   "n_baja": 63,
+   "n_candidatas": 79,
+   "proporcion_baja": 0.7974683544303798
+  }
+ ]
+}

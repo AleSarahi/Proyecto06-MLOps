@@ -1,0 +1,38 @@
+{
+ "alertas_activas": 1,
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "estado": "suficiente",
+ "event_ids": [
+  "c2-20261109T040444Z-c2-f000000",
+  "c2-20261109T040444Z-c2-f000030",
+  "c2-20261109T040444Z-c2-f000060"
+ ],
+ "fin_ms": 10000.0,
+ "indice": 0,
+ "inicio_ms": 0.0,
+ "n_aceptada": 1,
+ "n_baja": 63,
+ "n_candidatas": 79,
+ "n_duda": 15,
+ "n_error": 0,
+ "n_frames": 10,
+ "n_ok": 10,
+ "n_sin_detecciones": 0,
+ "proporcion_baja": 0.7974683544303798,
+ "referencia_proporcion_baja": null,
+ "reglas": {
+  "baja-confianza-v1": {
+   "alert_id": "c2-20261109T040444Z-baja-confianza-v1-v000",
+   "consecutivas": 1,
+   "resultado": "cumple"
+  },
+  "cambio-sostenido-v1": {
+   "alert_id": null,
+   "consecutivas": 0,
+   "resultado": "sin_referencia"
+  }
+ },
+ "run_id": "c2-20261109T040444Z",
+ "schema": "p6.ventana.v1",
+ "timestamp_utc": "2026-11-09T04:04:50.476Z"
+}

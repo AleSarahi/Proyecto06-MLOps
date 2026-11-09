@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "p6/captura.v1",
+  "title": "Captura de imagen vinculada a un evento (Proyecto 6, v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "image_id", "event_id", "run_id", "ruta", "sha256", "bytes", "motivos", "timestamp_utc", "config_ref"],
+  "properties": {
+    "schema": {"const": "p6.captura.v1"},
+    "image_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,160}$"},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,160}$"},
+    "run_id": {"type": "string"},
+    "ruta": {"type": "string", "pattern": "^capturas/[A-Za-z0-9._-]+\\.jpg$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "bytes": {"type": "integer", "minimum": 1},
+    "motivos": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["zona_baja", "zona_duda", "zona_aceptada", "sin_detecciones", "muestra_normal", "alerta"]}
+    },
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "config_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
