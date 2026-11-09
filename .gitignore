@@ -46,3 +46,5 @@ firmware/**/secretos.h
 datos/p6/video/
 # Corridas locales del monitor que no son evidencia.
 corridas/
+# Base SQLite local del portal (se reconstruye con `python -m monitor importar`).
+datos/p6/monitoreo.sqlite
