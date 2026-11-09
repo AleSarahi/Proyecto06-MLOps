@@ -16,7 +16,8 @@ from contrato.__main__ import main as validar
 from control.__main__ import main as correr_control
 
 RAIZ = Path(__file__).resolve().parents[1]
-README = (RAIZ / "README.md").read_text(encoding="utf-8")
+# El README del Proyecto 5 se conserva en README-P5.md; README.md es el del Proyecto 6.
+README = (RAIZ / "README-P5.md").read_text(encoding="utf-8")
 SECCION = README.split("## Grupo B · Control y verificación", 1)[1].split("\n## ", 1)[0]
 FLUJO = "config/contrato/ejemplos/flujo.jsonl"
 CORRER_CASOS = "3. Correr los casos C1\u2013C10"  # el título del README lleva guion largo

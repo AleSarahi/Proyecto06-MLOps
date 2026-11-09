@@ -1,4 +1,7 @@
-# Proyecto 5 · Mini Tesla
+# Proyecto 5 · Mini Tesla (material heredado)
+
+> Este es el README del **Proyecto 5** (equipo), conservado como historial. El Proyecto 6 (individual) está en
+> [`README.md`](README.md); lo que reutiliza de aquí está en [`docs/p6/autoria.md`](docs/p6/autoria.md).
 
 Un carro pequeño detecta obstáculos en cuadros de cámara y decide **avanzar, girar o frenar**. Todo se evalúa
 desde archivos y código, **offline y en CPU**; el control es virtual: los comandos se registran y **nunca mueven
