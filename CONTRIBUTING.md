@@ -1,6 +1,10 @@
 # Cómo contribuir
 
-Guía corta para trabajar los dos grupos sin pisarnos. Lo que aquí se pide lo revisa el CI
+> **Proyecto 6 (individual).** Cada issue de GitHub es un ticket: rama `p6-NN-descripcion` y título
+> `P6-NN: descripción`, con `NN` = número del issue (p. ej. `p6-2-repo-p6` · `P6-2: adaptar el repo`).
+> Las convenciones `p5-…`/`T…` siguen siendo válidas para el material heredado del Proyecto 5.
+
+Guía corta para trabajar sin pisarnos (escrita para los dos grupos del Proyecto 5). Lo que aquí se pide lo revisa el CI
 (`.github/workflows/`), así que si algo se pone en rojo, casi siempre el mensaje dice qué
 corregir.
 
@@ -11,6 +15,7 @@ corregir.
 2. **Parte de `main` actualizado:**
    ```bash
    git fetch origin
+   git checkout -b p6-NN-descripcion origin/main     # Proyecto 6 (NN = issue)
    git checkout -b p5-NN-descripcion origin/main     # grupo A
    git checkout -b p5-tNN-descripcion origin/main    # grupo B
    ```
@@ -25,6 +30,7 @@ Todo en minúsculas y con guiones.
 
 | Caso | Ejemplo |
 |---|---|
+| Issue del Proyecto 6 (`P6-NN`) | `p6-2-repo-p6`, `p6-11-12-zonas-referencia` |
 | Ticket del grupo A (`P5-NN`) | `p5-01-repo-base`, `p5-13-metricas` |
 | Ticket del grupo B (`TNN`) | `p5-t01-plazos`, `p5-t13-contrato-comando` |
 | Varios tickets | `p5-13-15-metricas-bench`, `p5-t04-t05-fallas` |
@@ -36,6 +42,7 @@ Los prefijos válidos para ramas sin ticket son `feat`, `fix`, `test`, `chore`, 
 ## Commits
 
 ```
+P6-NN: qué cambia, en una línea
 P5-NN: qué cambia, en una línea
 TNN: qué cambia, en una línea
 fix: qué se arregla, en una línea
@@ -52,7 +59,7 @@ del PR (siguiente sección).
 
 ## Pull requests
 
-- **Título** con el mismo formato que un commit: `P5-01: repo base`, `T01: Declarar los plazos`,
+- **Título** con el mismo formato que un commit: `P6-2: adaptar el repo`, `P5-01: repo base`, `T01: Declarar los plazos`,
   `P5-13 P5-15: métricas y benchmark`, `P5-13/15: ...`, `T04 T05: ...` o `fix: ...`.
   Ojo con `T13 · texto`, `P5-01 - texto` o `P5-01 texto`: no cumplen.
 - **Descripción:** completa la plantilla. Di qué probaste **y qué no pudiste probar**.

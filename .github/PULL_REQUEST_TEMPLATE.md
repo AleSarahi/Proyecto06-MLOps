@@ -10,7 +10,7 @@ Cierra #
 
 ## Checklist
 
-- [ ] La rama es `p5-NN-descripcion` / `p5-tNN-descripcion` (o `tipo/descripcion`) y el título es `P5-NN: descripción` / `TNN: descripción` (o `tipo: descripción`). Ver [CONTRIBUTING.md](../CONTRIBUTING.md).
+- [ ] La rama es `p6-NN-descripcion` (NN = issue) o `tipo/descripcion`, y el título es `P6-NN: descripción` o `tipo: descripción`. Ver [CONTRIBUTING.md](../CONTRIBUTING.md).
 - [ ] Corrí en local lo mismo que el CI (`uv sync --locked`, `ruff check`, `ruff format --check`, `pytest`), o expliqué arriba por qué no.
 - [ ] No subí secretos: `.env`, claves ni tokens.
 - [ ] Si agregué una dependencia, usé `uv add` y subí `uv.lock` en este mismo PR.

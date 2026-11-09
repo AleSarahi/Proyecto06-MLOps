@@ -84,6 +84,8 @@ def _check_naming(rama: str, titulo: str) -> int:
 @pytest.mark.parametrize(
     ("rama", "titulo"),
     [
+        ("p6-2-repo-p6", "P6-2: adaptar el repo al Proyecto 6"),
+        ("p6-11-12-zonas", "P6-11 P6-12: zonas y referencia"),
         ("p5-01-repo-base", "P5-01: repo base"),
         ("p5-13-15-metricas-bench", "P5-13 P5-15: métricas y benchmark"),
         ("p5-13-15-metricas-bench", "P5-13/15: métricas y benchmark"),
@@ -101,12 +103,15 @@ def test_nombres_validos(rama, titulo):
 @pytest.mark.parametrize(
     ("rama", "titulo"),
     [
-        ("p6-01-x", "P5-01: repo base"),
+        ("p7-01-x", "P5-01: repo base"),
+        ("p6-t01-x", "P6-1: x"),
+        ("p6-sin-numero", "P6-1: x"),
         ("p4-01-x", "P5-01: repo base"),
         ("P5-01-repo-base", "P5-01: repo base"),
         ("T13-formato-del-comando", "T13: formato"),
         ("p5-01", "P5-01: repo base"),
-        ("p5-01-repo-base", "P6-01: repo base"),
+        ("p5-01-repo-base", "P7-01: repo base"),
+        ("p6-2-repo-p6", "P6-2 repo"),
         ("p5-01-repo-base", "P5-01 repo base"),
         ("p5-t13-contrato-comando", "T13 · Formato del comando"),
     ],
