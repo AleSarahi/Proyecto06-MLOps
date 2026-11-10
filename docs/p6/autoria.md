@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | Estudiante | Alejandra Rayas (GitHub `AleSarahi`) |
-| Matrícula | _pendiente de completar por la autora_ |
+| Matrícula | 751743 |
 | Materia | Integración de Servicios de Aprendizaje Automático (MLOps), ITESO |
 | Repositorio | <https://github.com/AleSarahi/Proyecto06-MLOps> |
 | Inicio del trabajo del Proyecto 6 | commit `243c31a` (`P6-2`). Lo anterior (hasta `4ab8ac1`) es el Proyecto 5 de equipo. |
