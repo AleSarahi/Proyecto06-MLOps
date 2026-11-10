@@ -1,0 +1,38 @@
+{
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "conteo_zonas": {
+  "baja": 0,
+  "duda": 0,
+  "aceptada": 0
+ },
+ "detecciones": [],
+ "error": {
+  "code": "unreadable_image",
+  "message": "decodificacion: no es un JPEG legible"
+ },
+ "event_id": "c2-20261109T040444Z-c2-f000210-e",
+ "frame_id": "c2-f000210",
+ "image_height": null,
+ "image_ref": null,
+ "image_width": null,
+ "model_ref": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+ "n_candidatas": 0,
+ "run_id": "c2-20261109T040444Z",
+ "schema": "p6.evento.v1",
+ "score_max": null,
+ "segmento": "c2",
+ "source_id": "youtube-c2",
+ "status": "error",
+ "t_mono_ms": 16286.839,
+ "task": "detection",
+ "tiempos_ms": {
+  "cola": null,
+  "fin_inferencia": null,
+  "inferencia": null,
+  "inicio_inferencia": null,
+  "llegada": 16272.918
+ },
+ "timestamp_utc": "2026-11-09T04:04:49.569Z",
+ "video_pos_ms": 7000.0,
+ "zona_frame": null
+}

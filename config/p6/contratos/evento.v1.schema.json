@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "p6/evento.v1",
+  "title": "Evento de inferencia (Proyecto 6, v1)",
+  "description": "Un evento por frame procesado. Ver docs/p6/contratos.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "event_id", "run_id", "frame_id", "timestamp_utc", "t_mono_ms", "source_id",
+    "segmento", "video_pos_ms", "task", "model_ref", "config_ref", "status", "detecciones",
+    "n_candidatas", "score_max", "zona_frame", "conteo_zonas", "image_ref", "image_width",
+    "image_height", "tiempos_ms", "error"
+  ],
+  "properties": {
+    "schema": {"const": "p6.evento.v1"},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,160}$"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,80}$"},
+    "frame_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,80}$"},
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "t_mono_ms": {"type": "number", "minimum": 0},
+    "source_id": {"type": "string", "minLength": 1},
+    "segmento": {"type": "string", "minLength": 1},
+    "video_pos_ms": {"type": "number", "minimum": 0},
+    "task": {"const": "detection"},
+    "model_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "config_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["ok", "sin_detecciones", "error"]},
+    "detecciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["class_id", "class_name", "score", "bbox", "zona"],
+        "properties": {
+          "class_id": {"type": "integer", "minimum": 0},
+          "class_name": {"type": "string"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "bbox": {"type": "array", "items": {"type": "number", "minimum": 0}, "minItems": 4, "maxItems": 4},
+          "zona": {"enum": ["baja", "duda", "aceptada"]}
+        }
+      }
+    },
+    "n_candidatas": {"type": "integer", "minimum": 0},
+    "score_max": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "zona_frame": {"enum": ["baja", "duda", "aceptada", null]},
+    "conteo_zonas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baja", "duda", "aceptada"],
+      "properties": {
+        "baja": {"type": "integer", "minimum": 0},
+        "duda": {"type": "integer", "minimum": 0},
+        "aceptada": {"type": "integer", "minimum": 0}
+      }
+    },
+    "image_ref": {"type": ["string", "null"]},
+    "image_width": {"type": ["integer", "null"], "minimum": 1},
+    "image_height": {"type": ["integer", "null"], "minimum": 1},
+    "tiempos_ms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["llegada", "inicio_inferencia", "fin_inferencia", "inferencia", "cola"],
+      "properties": {
+        "llegada": {"type": "number", "minimum": 0},
+        "inicio_inferencia": {"type": ["number", "null"], "minimum": 0},
+        "fin_inferencia": {"type": ["number", "null"], "minimum": 0},
+        "inferencia": {"type": ["number", "null"], "minimum": 0},
+        "cola": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "error": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {"code": {"type": "string"}, "message": {"type": "string"}}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}},
+      "then": {
+        "properties": {
+          "detecciones": {"minItems": 1}, "n_candidatas": {"minimum": 1},
+          "score_max": {"type": "number"}, "zona_frame": {"enum": ["baja", "duda", "aceptada"]},
+          "error": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "sin_detecciones"}}},
+      "then": {
+        "properties": {
+          "detecciones": {"maxItems": 0}, "n_candidatas": {"const": 0},
+          "score_max": {"type": "null"}, "zona_frame": {"type": "null"}, "error": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "error"}}},
+      "then": {
+        "properties": {
+          "detecciones": {"maxItems": 0}, "n_candidatas": {"const": 0},
+          "score_max": {"type": "null"}, "zona_frame": {"type": "null"}, "error": {"type": "object"}
+        }
+      }
+    }
+  ]
+}

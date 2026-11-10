@@ -1,0 +1,82 @@
+# Proyecto 6 · Configuración del monitoreo (issue #4). Ver docs/p6/configuracion.md.
+#
+# Todo lo que decide cómo se muestrea, cómo se clasifica la confianza, cuándo se alerta y qué se
+# captura vive aquí. `config_ref` = SHA-256 del contenido efectivo de este archivo + el
+# config_sha256 del detector; queda en cada evento, ventana, captura y alerta. Si cambias un valor,
+# cambia config_ref y la serie deja de ser comparable con la referencia (hay que volver a correrla).
+
+version: 1
+
+# Configuración del detector (pesos, preprocesamiento, piso de salida, NMS, clases).
+detector: config/p6/detector.json
+
+muestreo:
+  # Se infiere 1 de cada N frames del video (30 fps / 30 = 1 frame por segundo de video). El resto
+  # se descarta con motivo "muestreo". Lo aplica la extracción del respaldo y el modo video.
+  cada_n_frames: 30
+  # Velocidad de reproducción respecto al tiempo del video. 1.0 = tiempo real (como un stream);
+  # 0 = sin esperas (procesa en cuanto puede; útil para pruebas). Se puede cambiar por CLI sin
+  # cambiar config_ref, porque no altera qué frames se infieren salvo por saturación.
+  velocidad: 1.0
+  # Si la inferencia se atrasa más que esto respecto al tiempo de llegada del frame, el frame se
+  # descarta con motivo "saturacion" (como una fuente en vivo que no espera).
+  atraso_max_ms: 3000
+
+umbrales:
+  # 0 <= inferior < superior <= 1. Zonas por candidata: s < inferior -> baja;
+  # inferior <= s < superior -> duda; s >= superior -> aceptada (por política, no "correcta").
+  # Justificación con la referencia: docs/p6/umbrales.md.
+  inferior: 0.30
+  superior: 0.60
+
+# Zona de un frame con detecciones: la de su candidata de mayor score. Un frame sin candidatas es
+# "sin_detecciones" y uno con error es "error": ninguno de los dos recibe zona ni confianza.
+zona_frame: max_score
+
+ventanas:
+  # Ventanas consecutivas sin traslape, en tiempo del video: [k*d, (k+1)*d).
+  duracion_s: 10
+  # Unidad de análisis de la confianza: la detección candidata. Una ventana con menos candidatas
+  # puntuadas que este mínimo es "insuficiente": no es normal ni alerta.
+  minimo_candidatas: 20
+
+referencia:
+  # Resultado de `python -m monitor referencia`. Debe tener el mismo config_ref que la corrida.
+  ruta: evidencias/p6/referencia/referencia.json
+
+reglas:
+  - rule_id: baja-confianza-v1
+    tipo: proporcion_baja
+    descripcion: >-
+      Proporción de candidatas con s < inferior dentro de la ventana mayor o igual que el umbral,
+      con al menos minimo_candidatas candidatas puntuadas.
+    umbral: 0.60
+    ventanas_consecutivas: 1
+    severidad: advertencia
+    accion_sugerida: >-
+      Revisar las capturas de la ventana: iluminación, oclusión, distancia de los objetos y si la
+      escena sigue siendo la esperada. Comparar con la referencia antes de concluir algo del modelo.
+  - rule_id: cambio-sostenido-v1
+    tipo: cambio_sostenido
+    descripcion: >-
+      La proporción de baja confianza supera a la de la referencia por al menos la tolerancia
+      durante N ventanas suficientes seguidas. Una ventana insuficiente no cuenta ni reinicia.
+    tolerancia: 0.20
+    ventanas_consecutivas: 3
+    severidad: critica
+    accion_sugerida: >-
+      Posible cambio sostenido de condiciones respecto a la referencia. Investigar la fuente
+      (cámara, horario, clima) y el preprocesamiento; la confianza no confirma drift ni pérdida
+      de calidad por sí sola.
+
+captura:
+  # Se guarda la imagen del frame cuando su zona está en esta lista.
+  zonas: [baja, duda]
+  # También frames sin detecciones (para poder revisar si la escena estaba vacía).
+  sin_detecciones: true
+  # Muestra de operación normal: 1 de cada N frames procesados, sea cual sea su zona.
+  muestra_cada: 10
+  # Todos los frames de una ventana que abrió una alerta.
+  alerta: true
+  calidad_jpeg: 90
+  # Las capturas no expiran: no hay rotación, TTL ni limpieza automática.

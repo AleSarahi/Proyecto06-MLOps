@@ -1,0 +1,1130 @@
+{
+ "run_id": "referencia-20261109T042407Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "metricas": {
+  "G1": {
+   "id": "tiempo_inferencia_p95_ms",
+   "nombre": "Tiempo de inferencia p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 653.07,
+    "n": 90
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 878.22,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 432.89,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 445.14,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 640.33,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 638.77,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 595.0,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 845.81,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 504.93,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 1219.89,
+     "n": 10
+    }
+   ]
+  },
+  "G2": {
+   "id": "fps_procesamiento",
+   "nombre": "FPS de procesamiento",
+   "unidad": "frames inferidos / s",
+   "corrida": {
+    "valor": 1.0036,
+    "n": 90
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 1.0732,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 1.071,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 1.0622,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 1.0343,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 1.0653,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 1.047,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 1.0679,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 1.0726,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 1.0336,
+     "n": 10
+    }
+   ]
+  },
+  "G3": {
+   "id": "ram_rss_max_mb",
+   "nombre": "RAM RSS máxima del proceso",
+   "unidad": "MiB",
+   "corrida": {
+    "valor": 383.45,
+    "n": 90
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 378.12,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 380.59,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 383.45,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 383.39,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 369.03,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 333.56,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 322.81,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 268.5,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 257.36,
+     "n": 10
+    }
+   ]
+  },
+  "G4": {
+   "id": "proporcion_baja",
+   "nombre": "Proporción de baja confianza",
+   "unidad": "fracción de candidatas",
+   "corrida": {
+    "valor": 0.3808,
+    "n": 1715,
+    "numerador": 653
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 0.3529,
+     "n": 136,
+     "numerador": 48,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 0.3565,
+     "n": 115,
+     "numerador": 41,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 0.3028,
+     "n": 142,
+     "numerador": 43,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 0.3192,
+     "n": 213,
+     "numerador": 68,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 0.4865,
+     "n": 296,
+     "numerador": 144,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 0.527,
+     "n": 315,
+     "numerador": 166,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 0.3208,
+     "n": 240,
+     "numerador": 77,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 0.2857,
+     "n": 154,
+     "numerador": 44,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 0.2115,
+     "n": 104,
+     "numerador": 22,
+     "estado_ventana": "suficiente"
+    }
+   ]
+  },
+  "G5": {
+   "id": "imagenes_vinculadas",
+   "nombre": "Imágenes vinculadas",
+   "unidad": "fracción de capturas",
+   "corrida": {
+    "valor": 1.0,
+    "n": 9,
+    "numerador": 9,
+    "problemas": []
+   },
+   "por_ventana": []
+  },
+  "G6": {
+   "id": "version_esperada_vs_reportada",
+   "nombre": "Versión esperada frente a reportada",
+   "unidad": "fracción de eventos",
+   "corrida": {
+    "valor": 1.0,
+    "n": 90
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 1.0,
+     "n": 10
+    }
+   ]
+  },
+  "G7": {
+   "id": "alertas_activas",
+   "nombre": "Alertas activas al cierre de la ventana",
+   "unidad": "alertas",
+   "corrida": {
+    "valor": 0,
+    "n": 9,
+    "agregado": "máximo de alertas activas entre ventanas"
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000000",
+      "referencia-20261109T042407Z-referencia-f000030",
+      "referencia-20261109T042407Z-referencia-f000060",
+      "referencia-20261109T042407Z-referencia-f000090",
+      "referencia-20261109T042407Z-referencia-f000120",
+      "referencia-20261109T042407Z-referencia-f000150",
+      "referencia-20261109T042407Z-referencia-f000180",
+      "referencia-20261109T042407Z-referencia-f000210",
+      "referencia-20261109T042407Z-referencia-f000240",
+      "referencia-20261109T042407Z-referencia-f000270"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000300",
+      "referencia-20261109T042407Z-referencia-f000330",
+      "referencia-20261109T042407Z-referencia-f000360",
+      "referencia-20261109T042407Z-referencia-f000390",
+      "referencia-20261109T042407Z-referencia-f000420",
+      "referencia-20261109T042407Z-referencia-f000450",
+      "referencia-20261109T042407Z-referencia-f000480",
+      "referencia-20261109T042407Z-referencia-f000510",
+      "referencia-20261109T042407Z-referencia-f000540",
+      "referencia-20261109T042407Z-referencia-f000570"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000600",
+      "referencia-20261109T042407Z-referencia-f000630",
+      "referencia-20261109T042407Z-referencia-f000660",
+      "referencia-20261109T042407Z-referencia-f000690",
+      "referencia-20261109T042407Z-referencia-f000720",
+      "referencia-20261109T042407Z-referencia-f000750",
+      "referencia-20261109T042407Z-referencia-f000780",
+      "referencia-20261109T042407Z-referencia-f000810",
+      "referencia-20261109T042407Z-referencia-f000840",
+      "referencia-20261109T042407Z-referencia-f000870"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f000900",
+      "referencia-20261109T042407Z-referencia-f000930",
+      "referencia-20261109T042407Z-referencia-f000960",
+      "referencia-20261109T042407Z-referencia-f000990",
+      "referencia-20261109T042407Z-referencia-f001020",
+      "referencia-20261109T042407Z-referencia-f001050",
+      "referencia-20261109T042407Z-referencia-f001080",
+      "referencia-20261109T042407Z-referencia-f001110",
+      "referencia-20261109T042407Z-referencia-f001140",
+      "referencia-20261109T042407Z-referencia-f001170"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001200",
+      "referencia-20261109T042407Z-referencia-f001230",
+      "referencia-20261109T042407Z-referencia-f001260",
+      "referencia-20261109T042407Z-referencia-f001290",
+      "referencia-20261109T042407Z-referencia-f001320",
+      "referencia-20261109T042407Z-referencia-f001350",
+      "referencia-20261109T042407Z-referencia-f001380",
+      "referencia-20261109T042407Z-referencia-f001410",
+      "referencia-20261109T042407Z-referencia-f001440",
+      "referencia-20261109T042407Z-referencia-f001470"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001500",
+      "referencia-20261109T042407Z-referencia-f001530",
+      "referencia-20261109T042407Z-referencia-f001560",
+      "referencia-20261109T042407Z-referencia-f001590",
+      "referencia-20261109T042407Z-referencia-f001620",
+      "referencia-20261109T042407Z-referencia-f001650",
+      "referencia-20261109T042407Z-referencia-f001680",
+      "referencia-20261109T042407Z-referencia-f001710",
+      "referencia-20261109T042407Z-referencia-f001740",
+      "referencia-20261109T042407Z-referencia-f001770"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f001800",
+      "referencia-20261109T042407Z-referencia-f001830",
+      "referencia-20261109T042407Z-referencia-f001860",
+      "referencia-20261109T042407Z-referencia-f001890",
+      "referencia-20261109T042407Z-referencia-f001920",
+      "referencia-20261109T042407Z-referencia-f001950",
+      "referencia-20261109T042407Z-referencia-f001980",
+      "referencia-20261109T042407Z-referencia-f002010",
+      "referencia-20261109T042407Z-referencia-f002040",
+      "referencia-20261109T042407Z-referencia-f002070"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002100",
+      "referencia-20261109T042407Z-referencia-f002130",
+      "referencia-20261109T042407Z-referencia-f002160",
+      "referencia-20261109T042407Z-referencia-f002190",
+      "referencia-20261109T042407Z-referencia-f002220",
+      "referencia-20261109T042407Z-referencia-f002250",
+      "referencia-20261109T042407Z-referencia-f002280",
+      "referencia-20261109T042407Z-referencia-f002310",
+      "referencia-20261109T042407Z-referencia-f002340",
+      "referencia-20261109T042407Z-referencia-f002370"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "referencia-20261109T042407Z-referencia-f002400",
+      "referencia-20261109T042407Z-referencia-f002430",
+      "referencia-20261109T042407Z-referencia-f002460",
+      "referencia-20261109T042407Z-referencia-f002490",
+      "referencia-20261109T042407Z-referencia-f002520",
+      "referencia-20261109T042407Z-referencia-f002550",
+      "referencia-20261109T042407Z-referencia-f002580",
+      "referencia-20261109T042407Z-referencia-f002610",
+      "referencia-20261109T042407Z-referencia-f002640",
+      "referencia-20261109T042407Z-referencia-f002670"
+     ],
+     "valor": 0,
+     "n": 1
+    }
+   ]
+  }
+ }
+}

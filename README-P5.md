@@ -1,0 +1,348 @@
+# Proyecto 5 · Mini Tesla (material heredado)
+
+> Este es el README del **Proyecto 5** (equipo), conservado como historial. El Proyecto 6 (individual) está en
+> [`README.md`](README.md); lo que reutiliza de aquí está en [`docs/p6/autoria.md`](docs/p6/autoria.md).
+
+Un carro pequeño detecta obstáculos en cuadros de cámara y decide **avanzar, girar o frenar**. Todo se evalúa
+desde archivos y código, **offline y en CPU**; el control es virtual: los comandos se registran y **nunca mueven
+motores** (`config/ejecucion.yaml`).
+
+- **Grupo A · Percepción y datos:** detector, secuencias etiquetadas, métricas y benchmark ([TICKETS.md](TICKETS.md)).
+- **Grupo B · Control y verificación:** política, supervisor, adaptador virtual y casos C1–C10 (issues `T01`–`T19`).
+- **Frontera entre grupos:** el contrato de percepción v1, en [config/contrato/CONTRATO.md](config/contrato/CONTRATO.md).
+
+Versión: `0.1.0` (`pyproject.toml`). Responsables y comandos: [Grupo A · Percepción y datos](#grupo-a--percepción-y-datos) y
+[Grupo B · Control y verificación](#grupo-b--control-y-verificación).
+
+## Estado de la entrega
+
+Los casos dan **7 de 10**. **C2, C5 y C7 valen 0:** con el detector congelado, en algunos cuadros no ve el
+obstáculo o lo ve debajo de 0.5, y el control avanza o gira hacia él (comando inseguro para la escena). El
+control decide bien con lo que recibe; el límite es del detector. No se cambiaron el umbral, el modelo ni las
+expectativas. Detalle por cuadro: [`docs/casos-reales.md`](docs/casos-reales.md) y
+[`mediciones/LIMITES.md`](mediciones/LIMITES.md).
+
+## Instalación
+
+Requiere [uv](https://docs.astral.sh/uv/) (el CI usa la 0.12.13). Python 3.12 queda fijado en `.python-version`
+y uv lo descarga si no está instalado. Las versiones exactas de todo están en `uv.lock`.
+
+```bash
+# Una vez, si no tienes uv (o el instalador oficial de la página de uv):
+python -m pip install "uv==0.12.13"
+
+# En la raíz del repo: crea .venv con exactamente lo que dice uv.lock
+uv sync --locked
+```
+
+Funciona igual en Windows, macOS y Linux. En Windows, los comandos con `bash` necesitan Git Bash.
+Si después de instalarlo `uv` no se reconoce (en Windows, `pip` sin permisos de administrador lo deja en una
+carpeta fuera del `PATH` y lo avisa), `python -m uv` hace lo mismo: `python -m uv sync --locked`,
+`python -m uv run …`.
+
+## Comandos
+
+| Para qué | Comando |
+|---|---|
+| Pruebas | `uv run pytest -q` |
+| Lint y formato | `uv run ruff check .` · `uv run ruff format --check .` |
+| Validar eventos del contrato | `uv run python -m contrato config/contrato/ejemplos/flujo.jsonl` |
+| Métricas de detección (P5-13) | `uv run --locked python -m metricas …`: comando completo y cómo juntar las 8 secuencias en [Grupo A · Comandos](#grupo-a--percepción-y-datos) |
+| Resultados por cuadro y recálculo (P5-14) | `uv run python -m trazabilidad construir --corrida resultados/<run>/ --anotaciones datos/anotaciones.jsonl --salida resultados/<run>/trazabilidad/` · `… recalcular <carpeta>` · `… cuadro <carpeta> <frame_id>` (ver [`resultados/`](resultados/README.md)) |
+| Benchmark (P5-15) | `uv run --locked python -m bench …`: comando completo en [Grupo A · Comandos](#grupo-a--percepción-y-datos) (ver [`mediciones/`](mediciones/README.md)) |
+| Límites (P5-16) | `uv run python -m bench.limites mediciones/final-1/ mediciones/final-2/ mediciones/final-3/ --sobrecosto mediciones/final-sobrecosto/ --salida mediciones/final-contraste/` (ver [`mediciones/LIMITES.md`](mediciones/LIMITES.md)) |
+| Capturar una secuencia del carro (P5-09) | `uv run python -m captura --url http://IP:81/stream --secuencia S01 [--cuadros 12]` (guarda en `datos/cuadros/S01/` solo si sale completa; un intento fallido va a `datos/cuadros/_fallidas/`; ver [`datos/DOMINIO.md`](datos/DOMINIO.md)) |
+| Manifiesto y `verify_dataset` (P5-11) | `uv run python -m conjunto manifiesto` · `uv run python -m conjunto verificar [--sha256 HASH_CONGELADO]` · `uv run python -m conjunto hojas --salida <carpeta nueva>` (leen `datos/cuadros/`, `datos/anotaciones.jsonl` y `datos/manifiesto.jsonl`) |
+| Pesos e inferencia (P5-07, P5-05) | `uv run --locked python -m infer.descarga` (una vez, con red) y `uv run --locked python -m infer …`: comandos completos en [Grupo A · Comandos](#grupo-a--percepción-y-datos) (ver [`config/DETECTOR.md`](config/DETECTOR.md)) |
+| Correr el control con una secuencia (grupo B) | `uv run python -m control --entrada <eventos.jsonl> --config config/control/ --salida <carpeta>/` (ver [Grupo B](#grupo-b--control-y-verificación)) |
+| Casos C1–C10 (grupo B) | `uv run python casos/runner.py` |
+
+Para agregar una dependencia: `uv add paquete` (o `uv add --dev paquete`) y sube `pyproject.toml` y `uv.lock` en el
+mismo PR. Sin paquetes de GPU: una prueba de humo lo revisa.
+
+## Estructura
+
+| Carpeta | Contenido |
+|---|---|
+| `modelo/` | Detector: decisión, ficha, licencia, pesos o su descarga con SHA-256 (E2). |
+| `config/` | Contrato A → B, modo de ejecución y configuración de política y plazos. |
+| `datos/` | Cuadros, anotaciones, manifiesto y dominio (E3). |
+| `src/` | Código: `contrato/` (validador), `control/` (grupo B), `metricas/` y `bench/` (grupo A). |
+| `casos/` | Casos C1–C10 y su runner (E5). |
+| `resultados/` | Detecciones, decisiones y comandos por cuadro; métricas (E6). |
+| `mediciones/` | Benchmark y límites (E7). |
+| `tests/` | Pruebas (`pytest`). |
+
+## Grupo A · Percepción y datos
+
+Detecta obstáculos en cuadros de la cámara del carro y entrega al grupo B eventos del contrato v1. Un cuadro
+sin objetos es `status=ok` con lista vacía; un error o la falta de cuadros nunca equivale a vía libre.
+
+### Integrantes
+
+| Rol | Nombre | Qué hace | Tickets |
+|---|---|---|---|
+| PM A | Karen Santana | Coordina al grupo, acuerda clases y contrato con el PM B y valida al cierre. | — |
+| A1 · Detector | Heriberto Vlaminck | Contrato A → B (con B3), selección, inferencia, manejo de errores y paquete del detector; primer recorrido. | P5-02, P5-04 a P5-08 |
+| A2 · Datos | Andrea Arevalo | Dominio, captura, anotaciones, manifiesto, congelamiento, casos de entrada y documentación. | P5-03, P5-09 a P5-12, P5-17, P5-18 |
+| A3 · Métricas | Alejandra Rayas | Repositorio, entorno fijado y CI; métricas, trazabilidad, benchmark y límites. | P5-01, P5-13 a P5-16 |
+
+El carro (P5-19) lo armaron y revisaron los tres. Los integrantes del grupo B están en
+[su sección](#grupo-b--control-y-verificación).
+
+### Traspasos
+
+| De | A | Qué se entrega | Dónde |
+|---|---|---|---|
+| A2 | A1 y A3 | Conjunto de evaluación congelado | `datos/`, tag `datos-evaluacion-v1` |
+| A1 | A3 | Detector y hashes para medir | `src/infer/`, `config/detector.json` |
+| A1 | B | Eventos por cuadro | [Contrato v1](config/contrato/CONTRATO.md) |
+| A2 | B | Secuencias, mapa de casos y entradas fallidas | `datos/MAPA_CASOS.md`, `datos/fixtures/` |
+| A2 | B | S09 y S10, solo para pruebas de B, fuera de la evaluación | `datos/pruebas-b/` |
+| B | A3 | Corrida de control para unirla con detecciones y anotaciones | `resultados/<run>/` |
+
+### Comandos
+
+Se corren desde la raíz del repo, después de `uv sync --locked`.
+
+| Para qué | Comando |
+|---|---|
+| Bajar y verificar los pesos (una vez, con red) | `uv run --locked python -m infer.descarga`: deja `modelo/descargas/yolo11n.pt` (fuera de Git) solo si su SHA-256 coincide con el de `config/detector.json` (ver [`modelo/README.md`](modelo/README.md)) |
+| Verificar el conjunto (`verify_dataset`) | `uv run --locked python -m conjunto verificar --sha256 8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
+| Inferir un JPEG | `uv run --locked python -m infer --input <cuadro.jpg> --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run>` |
+| Inferir una secuencia | `uv run --locked python -m infer --input datos/cuadros/S01/ --weights modelo/descargas/yolo11n.pt --output <salida.jsonl> --run-id <run> --sequence-id S01 --capture-ms 0 --capture-ms 281 --capture-ms 594 --capture-ms 797 --capture-ms 1047 --capture-ms 1344 --capture-ms 1609 --capture-ms 1844 --capture-ms 2141 --capture-ms 2500 --capture-ms 2797 --capture-ms 3156`: un `--capture-ms` por JPEG, en orden, con el `t_relativo_ms` de ese cuadro en `datos/manifiesto.jsonl` |
+| Métricas | `uv run --locked python -m metricas --detecciones <run.jsonl> --anotaciones datos/anotaciones.jsonl --salida <carpeta>/ --model-sha256 <hash> --config-sha256 <hash>`, con un `<run.jsonl>` que tenga las 8 secuencias (abajo) |
+| Benchmark | `uv run --locked python -m bench --entradas datos/cuadros/S0*/ --salida mediciones/<run>/ --equipo "laptop de A3" --detector bench.yolo --opcion pesos=modelo/descargas/yolo11n.pt --model-sha256 <hash> --config-sha256 <hash>` |
+
+#### Métricas del conjunto completo
+
+`metricas` evalúa un solo `run_id` contra los 107 cuadros anotados: con una sola secuencia, los demás
+cuadros cuentan como falsos negativos. Hay que inferir S01 a S08 con el **mismo** `--run-id`, cada una en
+**su propia carpeta** (`infer` guarda `<run-id>.infer-run.json` junto a la salida y no lo sobrescribe), y
+juntar las 8 salidas. En Git Bash:
+
+```bash
+for s in S01 S02 S03 S04 S05 S06 S07 S08; do
+  tiempos=$(grep "\"sequence_id\": \"$s\"" datos/manifiesto.jsonl \
+    | sed -E 's/.*"t_relativo_ms": ([0-9]+).*/--capture-ms \1/' | tr '\n' ' ')
+  uv run --locked python -m infer --input datos/cuadros/$s/ --weights modelo/descargas/yolo11n.pt \
+    --output resultados/conjunto/$s/detecciones.jsonl --run-id conjunto --sequence-id $s $tiempos
+done
+cat resultados/conjunto/S0{1..8}/detecciones.jsonl > resultados/conjunto/conjunto.jsonl
+uv run --locked python -m contrato resultados/conjunto/conjunto.jsonl
+# resultados/conjunto/conjunto.jsonl: OK (107 eventos)
+uv run --locked python -m metricas --detecciones resultados/conjunto/conjunto.jsonl \
+  --anotaciones datos/anotaciones.jsonl --salida resultados/conjunto/metricas/ \
+  --model-sha256 0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1 \
+  --config-sha256 6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08
+# TP=71 FP=0 FN=24 | P=1.0000 R=0.7474 F1=0.8554 | 1.4: 5/6
+```
+
+`metricas` rechaza un archivo con BOM. En PowerShell 5.1, `>` y `Set-Content -Encoding UTF8` lo agregan;
+si se junta ahí, que sea sin BOM:
+`[IO.File]::WriteAllLines("$PWD\resultados\conjunto\conjunto.jsonl", [string[]](Get-Content resultados\conjunto\S0*\detecciones.jsonl -Encoding UTF8))`.
+Ese archivo queda con CRLF: su SHA-256 no es el de `cat`, pero las métricas son las mismas.
+
+Para repetir el bloque, borra antes `resultados/conjunto`. Si no, los 8 `infer` fallan (`el JSONL o manifiesto
+del run ya existe`), pero el bloque sigue y vuelve a medir las salidas anteriores sin avisar.
+
+### Versión de entrega
+
+| Qué | Valor |
+|---|---|
+| Datos | Tag `datos-evaluacion-v1` |
+| SHA-256 de `datos/manifiesto.jsonl` | `8a75e2718083411c4db5d3adf4cb247b302014510855dfe93e227e96273334ff` |
+| SHA-256 de `datos/anotaciones.jsonl` | `7e842784a9240e0e4244252117de010fc9037287eaf7e7045bf716e8c4f4a051` |
+| SHA-256 de los pesos (`model_sha256`) | `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1` |
+| `config_sha256` | `6428a259f22939fe5055dc101cec4517612dad5fb573d5852187932f39954e08` |
+| Tag de la configuración | `config-detector-v1` |
+| Pesos | `yolo11n.pt` de la release v8.3.0 de Ultralytics, fuera de Git: `uv run --locked python -m infer.descarga` los deja en `modelo/descargas/yolo11n.pt` |
+
+`verificar` comprueba el hash del manifiesto, que no cubre las coordenadas de las cajas: el de
+`datos/anotaciones.jsonl` se compara aparte. Procedencia, criterio de anotación y lo demás de los datos:
+[`datos/README.md`](datos/README.md).
+
+## Grupo B · Control y verificación
+
+Recibe los eventos de percepción del grupo A, decide **AVANZAR, GIRAR_IZQ, GIRAR_DER o STOP** y verifica
+los casos C1–C10. Nada mueve motores: el adaptador virtual solo **registra** los comandos.
+
+### Integrantes
+
+| Rol | Nombre | Qué hace | Tickets |
+|---|---|---|---|
+| PM B | Alejandra Viera | Coordina al grupo, aprueba clases y expectativas con el PM A y revisa los PR. | — |
+| B1 · Política | Hannah Chenoa | Política: configuración, zonas, decisión, umbral de confianza, histéresis y su documento ([`docs/politica.md`](docs/politica.md)). | T07–T12 |
+| B2 · Paradas | Stephy Borrego | Plazos, adaptador virtual, supervisor, fallas del detector, watchdog, emergencia, rearme y cierre. | T01–T06 |
+| B3 · Integración | Luis Santana | Formato del comando, `python -m control`, expectativas de los casos, recorrido real, runner y copia limpia. | T13–T19 |
+
+### Instalación
+
+Igual que arriba: `uv sync --locked`. Las versiones fijadas de todo están en `uv.lock` y Python 3.12 en
+`.python-version`; no se sube un `requirements.txt` aparte para no tener dos listas que se desfasen. Todos
+los comandos se corren **desde la raíz del repo**.
+
+**Con `pip` en vez de uv.** La parte B solo necesita `jsonschema` y `pyyaml`. Saca de `uv.lock` la lista
+con sus versiones fijadas e instálala en un entorno de Python 3.12:
+
+```bash
+uv export --locked --no-hashes --no-dev --no-emit-project -o requirements.txt
+python -m pip install -r requirements.txt
+```
+
+`requirements.txt` está en `.gitignore`: se genera, no se sube. Con `pip`, cambia `uv run python` por
+`PYTHONPATH=src python` en los comandos de abajo (en PowerShell: `$env:PYTHONPATH = "src"` y luego
+`python ...`).
+
+### Qué se configura
+
+| Archivo | Qué trae |
+|---|---|
+| [`config/control/politica.yaml`](config/control/politica.yaml) | Zonas, clases de obstáculo, umbral de confianza, histéresis y velocidades. Explicado en [`docs/politica.md`](docs/politica.md). |
+| [`config/control/plazos.yaml`](config/control/plazos.yaml) | Edad máxima del cuadro, watchdog, validez de cada orden y paso del reloj. |
+| [`config/contrato/`](config/contrato/CONTRATO.md) | Contrato de percepción A → B y de comando. **No se cambia.** |
+
+Sin llaves ni secretos: nada de esto se conecta a la red.
+
+### 1. Validar eventos contra el contrato
+
+```bash
+uv run python -m contrato config/contrato/ejemplos/flujo.jsonl
+# config/contrato/ejemplos/flujo.jsonl: OK (5 eventos)
+```
+
+Acepta `.json` o `.jsonl`. Sale con **0** si todo cumple y con **1** si algo no cumple; en ese caso imprime
+cada problema con el número de evento.
+
+### 2. Correr una secuencia
+
+```bash
+uv run python -m control --entrada config/contrato/ejemplos/flujo.jsonl \
+  --config config/control/ --salida resultados/ejemplo-01/
+# resultados/ejemplo-01: 5 eventos, 6 comandos, 2 errores
+```
+
+Las tres rutas son tuyas: `--entrada` puede ser cualquier archivo de eventos (por ejemplo, la salida del
+detector de A) y `--salida` cualquier carpeta. Ahí quedan:
+
+| Archivo | Qué es |
+|---|---|
+| `detecciones.jsonl` | Cada evento tal como llegó del detector. |
+| `decisiones.jsonl` | Qué se decidió en cada cuadro o tic de reloj, quién lo decidió (política o supervisor) y el estado. |
+| `comandos.jsonl` | Lo que registró el adaptador virtual. |
+| `errores.jsonl` | Cada STOP por falla (stale, error, watchdog, etc.). |
+| `run.json` | SHA-256 de la entrada y de la configuración, hashes del detector, versiones y conteos. |
+
+Todo se enlaza por `run_id` y `frame_id`. No se lee el reloj del sistema: la misma entrada deja siempre los
+mismos archivos. Con `--acciones acciones.yaml` se agregan `tick`, `emergencia`, `rearmar` y `cerrar` en
+instantes fijos (C10); el formato está en [`casos/README.md`](casos/README.md).
+
+### 3. Correr los casos C1–C10
+
+```bash
+uv run python casos/runner.py            # los diez
+uv run python casos/runner.py C8 C9      # solo esos
+```
+
+Imprime una tabla PASA/FALLA y, debajo, por qué falla cada caso. Sale con **0** si todos pasan, **1** si
+alguno falla y **2** si la configuración no se puede leer. Opciones: `--casos` (carpeta de casos),
+`--config` (carpeta `config/control/`) y `--salida` (por omisión, `resultados/casos/`).
+
+Por caso quedan en `resultados/casos/Cn/` los mismos archivos de `python -m control` más `veredicto.json`
+(cada tramo con su motivo), y la tabla en `resultados/casos/resumen.txt`. Qué se espera de cada caso y cómo
+se juzga: [`casos/README.md`](casos/README.md).
+
+> Hoy pasan **7 de 10**: C1, C3, C4 y C6, con las secuencias reales de S01 a S08 pasadas por `infer`
+> (`datos-evaluacion-v1`, `config-detector-v1`), y C8, C9 y C10, armados a mano porque prueban fallas
+> sin video. **C2, C5 y C7 fallan por el detector**, no por el control: no ve la taza o el obstáculo
+> en algunos cuadros, o lo ve debajo del umbral, y el control hace lo correcto con lo que recibe. Cada
+> cuadro y su score están en [`docs/casos-reales.md`](docs/casos-reales.md). Las expectativas no se
+> cambian para que pasen.
+
+### 4. Comprobar que una expectativa alterada se detecta
+
+Las expectativas (`casos/Cn/expectativa.yaml`) se escribieron antes de correr los casos y **no se cambian
+para que pasen**. Hay dos candados:
+
+```bash
+# a) El hash: falla si alguien edita una expectativa o el esquema.
+uv run pytest -q tests/test_expectativas.py
+
+# b) El runner: en una copia, cambia lo permitido en un tramo y córrelo.
+cp -r casos /tmp/casos-copia
+#    en /tmp/casos-copia/C8/expectativa.yaml, tramo "hueco": acciones_permitidas: [AVANZAR]
+uv run python casos/runner.py C8 --casos /tmp/casos-copia --salida /tmp/casos-salida
+#    C8    armada   2/3     FALLA
+#      - hueco: ninguna orden con AVANZAR en el plazo de 600 ms
+```
+
+En PowerShell, el paso (b) es:
+
+```powershell
+Copy-Item -Recurse casos "$env:TEMP\casos-copia"
+#    en $env:TEMP\casos-copia\C8\expectativa.yaml, tramo "hueco": acciones_permitidas: [AVANZAR]
+uv run python casos/runner.py C8 --casos "$env:TEMP\casos-copia" --salida "$env:TEMP\casos-salida"
+```
+
+En la copia, `sha256sum -c expectativas.sha256` (dentro de la carpeta, en Git Bash) también marca
+`C8/expectativa.yaml: FAILED`. La prueba (a) funciona igual en todos lados.
+
+### 5. Recorrido con una secuencia real
+
+Una secuencia filmada con el carro (S09, en `datos/pruebas-b/S09/`) pasa por el detector de A (`infer`) y
+llega al adaptador virtual. Hacen falta los pesos `yolo11n.pt`, que no están en el repo. Se bajan una
+vez, **con red**, con un solo comando, que los deja en `modelo/descargas/` y comprueba el SHA-256 de
+`config/detector.json` (origen, licencia y detalles en [`modelo/README.md`](modelo/README.md)). `infer` no
+carga otros pesos.
+
+```bash
+uv run --locked python -m infer.descarga
+# .../modelo/descargas/yolo11n.pt: descargado, 5613764 B, SHA-256 0ebbc80d…6ee1 OK
+```
+
+Después, todo corre sin red:
+
+```bash
+# Un --capture-ms por JPEG: el t_capture_ms de cada línea de datos/pruebas-b/S09/captura.jsonl.
+uv run python -m infer --input datos/pruebas-b/S09 --weights modelo/descargas/yolo11n.pt \
+  --output resultados/s09/detector.jsonl --run-id s09 --sequence-id S09 \
+  --capture-ms 0 --capture-ms 203 --capture-ms 484 --capture-ms 687 --capture-ms 906 --capture-ms 1140 \
+  --capture-ms 1390 --capture-ms 1593 --capture-ms 1812 --capture-ms 2031 --capture-ms 2297 --capture-ms 2531
+uv run python -m contrato resultados/s09/detector.jsonl
+# resultados/s09/detector.jsonl: OK (12 eventos)
+uv run python -m control --entrada resultados/s09/detector.jsonl --config config/control/ --salida resultados/s09/
+uv run python -m control.traza --salida resultados/s09/
+```
+
+La taza toca el centro, cargada a la izquierda: lo esperado es `GIRAR_DER` en los 12 cuadros. `infer`
+respeta los tiempos de captura, así que en una máquina lenta algunos cuadros pueden llegar con más de
+500 ms y terminar en STOP por `cuadro_viejo`: eso es lo correcto. `infer` no sobrescribe una salida que
+ya existe; para repetir, usa otra carpeta. Las secuencias que ya se corrieron y cómo leer la traza están
+en [`docs/recorrido-real.md`](docs/recorrido-real.md).
+
+Con los pesos a la mano, define `P5_05_YOLO11N_PT` con su ruta antes de `uv run pytest -q` (Git Bash:
+`export P5_05_YOLO11N_PT=modelo/descargas/yolo11n.pt`; PowerShell: `$env:P5_05_YOLO11N_PT = "modelo\descargas\yolo11n.pt"`).
+Sin esa variable, las pruebas que usan el detector real se saltan (salen como `skipped`), no fallan.
+
+### Dónde quedan los resultados
+
+| Qué corriste | Dónde queda |
+|---|---|
+| `python -m control` | En la carpeta que diste con `--salida`. |
+| `casos/runner.py` | En `resultados/casos/Cn/` (o en la carpeta de `--salida`), más la tabla en `resumen.txt`. |
+| Lo que se sube al repo | `resultados/casos/`, la última corrida de los casos. Tus corridas de prueba no hace falta subirlas. |
+
+### Pruebas del grupo B
+
+```bash
+uv run pytest -q tests/test_config_politica.py tests/test_zonas.py tests/test_decision.py \
+  tests/test_umbral.py tests/test_histeresis.py tests/test_supervisor.py tests/test_watchdog.py \
+  tests/test_fallas.py tests/test_emergencia.py tests/test_adaptador_virtual.py tests/test_comando.py \
+  tests/test_correr.py tests/test_expectativas.py tests/test_runner.py tests/test_readme_b.py \
+  tests/test_copia_limpia.py
+```
+
+## Cómo contribuir
+
+Un ticket = una rama = un PR. Ramas `p5-NN-...` (grupo A) o `p5-tNN-...` (grupo B); títulos `P5-NN: ...` o
+`TNN: ...`. El CI corre Ruff y pytest en cada PR. Detalles en [CONTRIBUTING.md](CONTRIBUTING.md).

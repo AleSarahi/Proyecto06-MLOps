@@ -40,3 +40,11 @@ Thumbs.db
 
 # Firmware del carro (P5-20): la red y la clave del WiFi nunca se suben.
 firmware/**/secretos.h
+
+# Proyecto 6: videos de YouTube descargados con `python -m monitor video descargar` (fuera de Git;
+# se recuperan por URL + SHA-256 y el respaldo de frames sí se sube). Ver docs/p6/fuente.md.
+datos/p6/video/
+# Corridas locales del monitor que no son evidencia.
+corridas/
+# Base SQLite local del portal (se reconstruye con `python -m monitor importar`).
+datos/p6/monitoreo.sqlite

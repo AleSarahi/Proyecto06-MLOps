@@ -1,0 +1,55 @@
+# Proyecto 6 · Fuentes visuales (issue #34). Ver docs/p6/fuente.md.
+#
+# Los videos vienen de YouTube y tienen licencia Creative Commons Attribution (reuse allowed): se
+# pueden reutilizar citando al autor. Se descargan una vez con
+# `uv run python -m monitor video descargar` a datos/p6/video/ (fuera de Git) y se verifican con el
+# SHA-256 de abajo. Los frames muestreados de cada segmento se extraen a datos/p6/frames/<segmento>/
+# (sí van en Git): esa secuencia es la entrada canónica de la referencia, C1 y C2, así que los
+# escenarios se reproducen sin red aunque el video deje de estar disponible.
+#
+# Este archivo NO forma parte de config_ref: describe de dónde salen las imágenes, no cómo se
+# monitorean. La identidad de cada frame (sha256) queda en el manifiesto del segmento.
+
+videos:
+  dia:
+    youtube_id: MNn9qKG2UFI
+    url: https://www.youtube.com/watch?v=MNn9qKG2UFI
+    titulo: "4K Road traffic video for object detection and tracking - free download now!"
+    canal: Karol Majek
+    publicado: "2018-07-16"
+    licencia: "Creative Commons Attribution license (reuse allowed)"
+    # Formato 136 de YouTube: MP4/H.264 1280x720 30 fps, solo video, descarga HTTPS directa
+    # (no necesita ffmpeg).
+    formato: "136"
+    archivo: datos/p6/video/MNn9qKG2UFI.mp4
+    bytes: 86312442
+    sha256: adcda3e9adefd4b48ab47fe677bdff6d1663bc9a5cce35bd76f5605681e166f9
+  noche:
+    youtube_id: jKl0o9Ydi5Q
+    url: https://www.youtube.com/watch?v=jKl0o9Ydi5Q
+    titulo: "Night Traffic"
+    canal: Chalie Juno
+    publicado: "2017-05-14"
+    licencia: "Creative Commons Attribution license (reuse allowed)"
+    formato: "136"
+    archivo: datos/p6/video/jKl0o9Ydi5Q.mp4
+    bytes: 4595103
+    sha256: eb96b39d543337776c7ff4c1c11945c764a834f4f2e983de49ab170093b478d7
+
+# Segmentos por tiempo del video, en segundos [inicio, fin). Cada segmento tiene su source_id.
+segmentos:
+  referencia:
+    video: dia
+    inicio_s: 0
+    fin_s: 90
+    condicion: "Día, carretera con tráfico denso, buena iluminación. Condición representativa."
+  c1:
+    video: dia
+    inicio_s: 120
+    fin_s: 210
+    condicion: "Día, mismo video que la referencia pero otro tramo (operación normal)."
+  c2:
+    video: noche
+    inicio_s: 0
+    fin_s: 24
+    condicion: "Noche: faros, poca luz y objetos lejanos (baja confianza esperada)."

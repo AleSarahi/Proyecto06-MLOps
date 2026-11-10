@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "p6/ventana.v1",
+  "title": "Evaluación de una ventana de confianza (Proyecto 6, v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "run_id", "indice", "inicio_ms", "fin_ms", "config_ref", "n_frames", "n_ok",
+    "n_sin_detecciones", "n_error", "n_candidatas", "n_baja", "n_duda", "n_aceptada",
+    "proporcion_baja", "estado", "referencia_proporcion_baja", "reglas", "event_ids",
+    "alertas_activas", "timestamp_utc"
+  ],
+  "properties": {
+    "schema": {"const": "p6.ventana.v1"},
+    "run_id": {"type": "string"},
+    "indice": {"type": "integer", "minimum": 0},
+    "inicio_ms": {"type": "number", "minimum": 0},
+    "fin_ms": {"type": "number", "minimum": 0},
+    "config_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "n_frames": {"type": "integer", "minimum": 0},
+    "n_ok": {"type": "integer", "minimum": 0},
+    "n_sin_detecciones": {"type": "integer", "minimum": 0},
+    "n_error": {"type": "integer", "minimum": 0},
+    "n_candidatas": {"type": "integer", "minimum": 0},
+    "n_baja": {"type": "integer", "minimum": 0},
+    "n_duda": {"type": "integer", "minimum": 0},
+    "n_aceptada": {"type": "integer", "minimum": 0},
+    "proporcion_baja": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "estado": {"enum": ["suficiente", "insuficiente"]},
+    "referencia_proporcion_baja": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "reglas": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["resultado", "consecutivas", "alert_id"],
+        "properties": {
+          "resultado": {"enum": ["cumple", "no_cumple", "insuficiente", "sin_referencia"]},
+          "consecutivas": {"type": "integer", "minimum": 0},
+          "alert_id": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "event_ids": {"type": "array", "items": {"type": "string"}},
+    "alertas_activas": {"type": "integer", "minimum": 0},
+    "timestamp_utc": {"type": "string", "format": "date-time"}
+  }
+}

@@ -1,0 +1,15 @@
+{
+ "bytes": 70283,
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "event_id": "c2-20261109T040444Z-c2-f000210",
+ "image_id": "img-c2-20261109T040444Z-c2-f000210",
+ "motivos": [
+  "zona_baja",
+  "alerta"
+ ],
+ "run_id": "c2-20261109T040444Z",
+ "ruta": "capturas/c2-20261109T040444Z-c2-f000210.jpg",
+ "schema": "p6.captura.v1",
+ "sha256": "b93b64a3a1515989dd79135a8e3d59458c9a7a55d7062f99949c0bff031c72e9",
+ "timestamp_utc": "2026-11-09T04:04:49.587Z"
+}

@@ -1,0 +1,84 @@
+{
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "conteo_zonas": {
+  "baja": 4,
+  "duda": 0,
+  "aceptada": 0
+ },
+ "detecciones": [
+  {
+   "bbox": [
+    732.47,
+    639.3,
+    793.7,
+    664.58
+   ],
+   "class_id": 2,
+   "class_name": "car",
+   "score": 0.220944,
+   "zona": "baja"
+  },
+  {
+   "bbox": [
+    714.19,
+    628.09,
+    794.23,
+    667.2
+   ],
+   "class_id": 2,
+   "class_name": "car",
+   "score": 0.17896,
+   "zona": "baja"
+  },
+  {
+   "bbox": [
+    264.13,
+    667.78,
+    330.9,
+    712.85
+   ],
+   "class_id": 2,
+   "class_name": "car",
+   "score": 0.169701,
+   "zona": "baja"
+  },
+  {
+   "bbox": [
+    560.46,
+    616.63,
+    597.7,
+    639.24
+   ],
+   "class_id": 2,
+   "class_name": "car",
+   "score": 0.118624,
+   "zona": "baja"
+  }
+ ],
+ "error": null,
+ "event_id": "c2-20261109T040444Z-c2-f000210",
+ "frame_id": "c2-f000210",
+ "image_height": 720,
+ "image_ref": "capturas/c2-20261109T040444Z-c2-f000210.jpg",
+ "image_width": 1280,
+ "model_ref": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+ "n_candidatas": 4,
+ "run_id": "c2-20261109T040444Z",
+ "schema": "p6.evento.v1",
+ "score_max": 0.220944,
+ "segmento": "c2",
+ "source_id": "youtube-c2",
+ "status": "ok",
+ "t_mono_ms": 16286.839,
+ "task": "detection",
+ "tiempos_ms": {
+  "cola": 13.96,
+  "fin_inferencia": 16653.899,
+  "inferencia": 367.022,
+  "inicio_inferencia": 16286.878,
+  "llegada": 16272.918
+ },
+ "timestamp_utc": "2026-11-09T04:04:49.569Z",
+ "video_pos_ms": 7000.0,
+ "zona_frame": "baja"
+}

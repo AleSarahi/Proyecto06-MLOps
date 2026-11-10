@@ -1,7 +1,7 @@
 [project]
-name = "mini-tesla-p5"
+name = "centro-monitoreo-cv-p6"
 version = "0.1.0"
-description = "Proyecto 5 (ITESO MLOps): detector de obstáculos en CPU, política temporal y control virtual sin motores."
+description = "Proyecto 6 (ITESO MLOps, individual): centro de monitoreo de computer vision sobre un video reproducido como stream, con eventos, capturas, métricas G1–G7 y alertas. Reutiliza el detector del Proyecto 5."
 readme = "README.md"
 # Una sola versión menor para todo el equipo; uv descarga 3.12 si no está instalada.
 requires-python = "==3.12.*"
@@ -21,6 +21,9 @@ dependencies = [
     "torchvision==0.24.0; sys_platform != 'linux' or platform_machine != 'x86_64'",
     "opencv-python==4.11.0.86",
     "numpy==1.26.4",
+    "flask>=3.0,<4",
+    "psutil>=6,<8",
+    "yt-dlp>=2025.1.1",
 ]
 
 [dependency-groups]
