@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "p6/alerta_tecnica.v1",
+  "title": "Alerta técnica por ventana: errores de inferencia o saturación (Proyecto 6, extra #37)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "alert_id", "rule_id", "run_id", "timestamp_utc", "severidad", "motivo",
+    "accion_sugerida", "config_ref", "vigilancia_ref", "model_ref", "regla", "ventanas",
+    "diagnostico", "event_ids", "estado", "cerrada_en", "cerrada_por_ventana"
+  ],
+  "properties": {
+    "schema": {"const": "p6.alerta_tecnica.v1"},
+    "alert_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,160}$"},
+    "rule_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "severidad": {"enum": ["info", "advertencia", "critica"]},
+    "motivo": {"type": "string", "minLength": 1},
+    "accion_sugerida": {"type": "string", "minLength": 1},
+    "config_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "vigilancia_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "regla": {
+      "type": "object",
+      "required": ["rule_id", "tipo", "descripcion", "umbral", "minimo_frames"],
+      "properties": {"tipo": {"enum": ["tasa_errores", "tasa_saturacion"]}}
+    },
+    "ventanas": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["indice", "inicio_ms", "fin_ms", "n", "numerador", "tasa"],
+        "properties": {
+          "indice": {"type": "integer", "minimum": 0},
+          "n": {"type": "integer", "minimum": 0},
+          "numerador": {"type": "integer", "minimum": 0},
+          "tasa": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "diagnostico": {"type": "object"},
+    "event_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "estado": {"enum": ["abierta", "cerrada"]},
+    "cerrada_en": {"type": ["string", "null"]},
+    "cerrada_por_ventana": {"type": ["integer", "null"]}
+  }
+}

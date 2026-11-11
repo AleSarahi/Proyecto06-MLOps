@@ -1,4 +1,4 @@
-"""Métricas adicionales X1-X5 (extra, issue #31). Definiciones: docs/p6/extras.md.
+"""Métricas adicionales X1-X7 (extras, issues #31 y #37). Definiciones: docs/p6/extras.md.
 
 No son métricas base: ninguna repite G1-G7 ni es una variante de umbral, ventana o percentil de una
 de ellas. Se calculan desde los archivos exportados de la corrida (y, para X3, desde los eventos
@@ -10,6 +10,8 @@ X2  frames sin detecciones        fracción de frames procesados sin ninguna can
 X3  PSI de scores vs. referencia  índice de estabilidad de la distribución de scores por candidata
 X4  latencia extremo a extremo    p95 de llegada -> evento registrado, con descomposición por etapa
 X5  disponibilidad de la fuente   frames que llegaron / frames que el muestreo esperaba
+X6  tasa de errores de inferencia frames con status error / frames procesados
+X7  tasa de descarte por saturación frames descartados por atraso / frames que llegaron
 """
 
 from __future__ import annotations
@@ -29,6 +31,16 @@ DEFINICIONES = {
     "X3": ("psi_scores_referencia", "PSI de scores frente a la referencia", "PSI (adimensional)"),
     "X4": ("latencia_e2e_p95_ms", "Latencia extremo a extremo p95", "ms"),
     "X5": ("disponibilidad_fuente", "Disponibilidad de la fuente", "fracción de frames esperados"),
+    "X6": (
+        "tasa_errores_inferencia",
+        "Tasa de errores de inferencia",
+        "fracción de frames procesados",
+    ),
+    "X7": (
+        "tasa_descarte_saturacion",
+        "Tasa de descarte por saturación",
+        "fracción de frames llegados",
+    ),
 }
 # Bins de score para X3: [0.0, 0.1), [0.1, 0.2), ..., [0.9, 1.0]. El último incluye 1.0.
 BORDES = [round(i / 10, 1) for i in range(11)]
@@ -94,6 +106,10 @@ def calcular(carpeta: Path, carpeta_ref: Path | None) -> dict[str, Any]:
         # Un frame descartado por saturación sí llegó; un latido sin señal no.
         if o["tipo"] == "frame" or (o["tipo"] == "descarte" and o["motivo"] == "saturacion"):
             llegadas_por_v[o["ventana"]] += 1
+    saturados_por_v: dict[int, int] = defaultdict(int)
+    for o in todas_obs:
+        if o["tipo"] == "descarte" and o["motivo"] == "saturacion":
+            saturados_por_v[o["ventana"]] += 1
     obs_por_v: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for o in obs:
         obs_por_v[o["ventana"]].append(o)
@@ -143,6 +159,14 @@ def calcular(carpeta: Path, carpeta_ref: Path | None) -> dict[str, Any]:
             "numerador": llegados,
         }
 
+    def x6(evs: list[dict[str, Any]]) -> dict[str, Any]:
+        err = sum(1 for e in evs if e["status"] == "error")
+        return {"valor": _r(err / len(evs) if evs else None), "n": len(evs), "numerador": err}
+
+    def x7(procesados: int, saturados: int) -> dict[str, Any]:
+        n = procesados + saturados
+        return {"valor": _r(saturados / n if n else None), "n": n, "numerador": saturados}
+
     por_ventana: dict[str, list[dict[str, Any]]] = {g: [] for g in DEFINICIONES}
     for v in ventanas:
         i = v["indice"]
@@ -161,6 +185,8 @@ def calcular(carpeta: Path, carpeta_ref: Path | None) -> dict[str, Any]:
                 ),
             }
         )
+        por_ventana["X6"].append({**base, **x6(evs)})
+        por_ventana["X7"].append({**base, **x7(len(evs), saturados_por_v.get(i, 0))})
 
     a, b = x1x2(eventos)
     man = run["fuente"].get("manifiesto")
@@ -173,6 +199,8 @@ def calcular(carpeta: Path, carpeta_ref: Path | None) -> dict[str, Any]:
             sum(llegadas_por_v.values()),
             _esperados(run["fuente"], man["inicio_s"] * 1000, man["fin_s"] * 1000) if man else None,
         ),
+        "X6": x6(eventos),
+        "X7": x7(len(eventos), sum(saturados_por_v.values())),
     }
     resultado = {
         "run_id": run["run_id"],

@@ -42,11 +42,15 @@ def _video(args: argparse.Namespace) -> int:
         cfg = cargar()
         segmentos = [args.segmento] if args.segmento else list(fuentes["segmentos"])
         for s in segmentos:
+            if "respaldo" in fuentes["segmentos"][s]:
+                continue  # usa el respaldo de otro segmento
             video.extraer(s, fuentes, cfg.cada_n_frames)
         return 0
     # verificar: respaldo de frames (siempre) y videos locales (si están)
     estado = 0
-    for s in fuentes["segmentos"]:
+    for s, seg in fuentes["segmentos"].items():
+        if "respaldo" in seg:
+            continue  # se verifica con el segmento dueño del respaldo
         carpeta = video.DIR_FRAMES / s
         errores = video.verificar_respaldo(carpeta) if carpeta.exists() else [f"falta {carpeta}"]
         print(f"respaldo {s}: {'OK' if not errores else '; '.join(errores[:3])}")
@@ -73,15 +77,29 @@ def _correr(args: argparse.Namespace) -> int:
     referencia = None if args.sin_referencia else cargar_referencia(cfg)
     reloj = reloj_monotonico()
     if args.modo == "frames":
-        fuente = FuenteFrames(DIR_FRAMES / args.segmento, velocidad=cfg.velocidad, reloj_ms=reloj)
+        respaldo = seg.get("respaldo", args.segmento)
+        fuente = FuenteFrames(DIR_FRAMES / respaldo, velocidad=cfg.velocidad, reloj_ms=reloj)
     else:
         fuente = FuenteVideo(
             args.segmento, fuentes, cfg.cada_n_frames, velocidad=cfg.velocidad, reloj_ms=reloj
         )
     if args.corte:
         fuente = FuenteInterrumpida(fuente, _cortes(args.corte), seg["inicio_s"] * 1000)
+    if args.lentitud_ms and not args.lentitud:
+        raise ErrorConfig("--lentitud-ms requiere --lentitud DESDE:HASTA")
     vigilancia = None if args.sin_vigilancia else cargar_vigilancia(args.vigilancia)
     inferidor = Inferidor(cfg.detector_ruta, reloj)
+    if args.error_inferencia or args.lentitud:
+        from .fallas import DetectorConFallas
+
+        inferidor.detector = DetectorConFallas(
+            inferidor.detector,
+            inferidor,
+            inicio_ms=seg["inicio_s"] * 1000,
+            errores=_cortes(args.error_inferencia or []),
+            lentitud=_cortes(args.lentitud or []),
+            lentitud_ms=args.lentitud_ms or 0.0,
+        )
     if inferidor.detector_config_sha256 != cfg.detector_config_sha256:
         raise ErrorConfig("el detector cargado no corresponde a config_ref")
     corrida = Corrida(
@@ -241,6 +259,19 @@ def main(argv: list[str] | None = None) -> int:
         metavar="DESDE:HASTA",
         help="inyecta una caída de la fuente entre esos segundos del segmento (extra #33)",
     )
+    c.add_argument(
+        "--error-inferencia",
+        action="append",
+        metavar="DESDE:HASTA",
+        help="el detector falla (excepción) en los frames entre esos segundos (extra S3)",
+    )
+    c.add_argument(
+        "--lentitud",
+        action="append",
+        metavar="DESDE:HASTA",
+        help="el detector tarda --lentitud-ms más en esos segundos (extra S4)",
+    )
+    c.add_argument("--lentitud-ms", type=float, help="demora agregada por frame, en ms")
     c.add_argument("--vigilancia", default=str(RUTA_VIGILANCIA))
     c.add_argument("--sin-vigilancia", action="store_true", help="no vigilar la fuente")
     c.set_defaults(f=_correr)

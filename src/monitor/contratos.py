@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator
 from .config import RAIZ
 
 DIR_CONTRATOS = RAIZ / "config" / "p6" / "contratos"
-TIPOS = ("evento", "captura", "ventana", "alerta", "alerta_fuente")
+TIPOS = ("evento", "captura", "ventana", "alerta", "alerta_fuente", "alerta_tecnica")
 
 
 class ErrorContrato(ValueError):

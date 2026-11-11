@@ -38,7 +38,7 @@ from .config import RAIZ, ConfigMonitoreo, ErrorConfig
 from .metricas import calcular as calcular_metricas
 from .metricas_extra import calcular as calcular_extra
 from .reglas import EvaluadorReglas
-from .vigilancia import Vigilante
+from .vigilancia import ReglasTecnicas, Vigilante
 
 CAMPOS_VIVO = (
     "event_id",
@@ -236,6 +236,19 @@ class Corrida:
             if self.vigilancia
             else None
         )
+        tecnicas = (
+            ReglasTecnicas(
+                self.vigilancia,
+                run_id=self.run_id,
+                config_ref=cfg.config_ref,
+                model_ref=self.inferidor.model_ref,
+                reloj_utc=ahora_utc,
+            )
+            if self.vigilancia
+            and ("errores_inferencia" in self.vigilancia or "saturacion" in self.vigilancia)
+            else None
+        )
+        saturacion_por_v: dict[int, int] = {}
         run = {
             "schema": "p6.run.v1",
             "run_id": self.run_id,
@@ -268,6 +281,11 @@ class Corrida:
                     "vigilancia_ref": self.vigilancia["vigilancia_ref"],
                     "ruta": _relativa(Path(self.vigilancia["ruta"])),
                     "fuente_sin_senal": self.vigilancia["fuente_sin_senal"],
+                    **{
+                        k: self.vigilancia[k]
+                        for k in ("errores_inferencia", "saturacion")
+                        if k in self.vigilancia
+                    },
                 }
                 if self.vigilancia
                 else None
@@ -314,6 +332,8 @@ class Corrida:
             abiertas = [a["alert_id"] for a in evaluador.abiertas()]
             if vigilante and vigilante.abierta:
                 abiertas.append(vigilante.abierta["alert_id"])
+            if tecnicas:
+                abiertas += tecnicas.abiertas_ids()
             if ev:
                 resumen = {k: ev[k] for k in CAMPOS_VIVO}
                 resumen["detecciones"] = [
@@ -342,12 +362,27 @@ class Corrida:
         def cerrar_ventana(i: int) -> None:
             eventos = buffers[-1][1] if buffers and buffers[-1][0] == i else []
             a, b = self._limites(i)
+            if tecnicas:
+                resultados, cambiadas_t = tecnicas.evaluar(
+                    i, a, b, [e for e, _ in eventos], saturacion_por_v.get(i, 0)
+                )
+                for alerta in cambiadas_t:
+                    almacen.guardar_alerta(alerta)
+                obs(
+                    {
+                        "tipo": "ventana_tecnica",
+                        "run_id": self.run_id,
+                        "ventana": i,
+                        "reglas": resultados,
+                    }
+                )
             ventana, cambiadas = evaluador.evaluar(
                 i,
                 a,
                 b,
                 [e for e, _ in eventos],
-                otras_activas=vigilante.activas if vigilante else 0,
+                otras_activas=(vigilante.activas if vigilante else 0)
+                + (tecnicas.activas if tecnicas else 0),
             )
             for alerta in cambiadas:
                 almacen.guardar_alerta(alerta)
@@ -389,6 +424,7 @@ class Corrida:
                     continue
                 if cola > cfg.atraso_max_ms:
                     saturacion += 1
+                    saturacion_por_v[v] = saturacion_por_v.get(v, 0) + 1
                     obs(
                         {
                             "tipo": "descarte",
@@ -409,6 +445,8 @@ class Corrida:
                         "error", [], None, None, {"code": codigo, "message": frame.error}
                     )
                 else:
+                    # Posición del frame para las fallas inyectadas de S3/S4 (monitor/fallas.py).
+                    self.inferidor.posicion_ms = frame.video_pos_ms
                     salida_inf = self.inferidor.inferir(frame.imagen)
                 ev = self._evento(frame, salida_inf, inicio)
                 procesados += 1

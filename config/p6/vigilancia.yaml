@@ -20,3 +20,34 @@ fuente_sin_senal:
     Revisar la conexión con la fuente (red, cámara, servidor del stream). Mientras no haya frames,
     las ventanas de confianza quedan insuficientes: no interpretar su ausencia de alertas como
     operación sana.
+
+# --- Reglas técnicas por ventana (extras S3 y S4, issue #37) --------------------------------------
+# Misma ventana de 10 s de video que la confianza. Con 1 frame por segundo, una ventana completa tiene
+# 10 frames; menos de minimo_frames es "insuficiente" (no abre ni cierra), como en las de confianza.
+
+errores_inferencia:
+  rule_id: errores-inferencia-v1
+  descripcion: >-
+    Fracción de frames procesados de la ventana cuyo evento terminó con status error (el modelo no
+    produjo salida) mayor o igual que el umbral.
+  # La mitad de los frames sin inferencia ya deja la ventana sin evidencia útil de confianza.
+  umbral: 0.5
+  minimo_frames: 5
+  severidad: critica
+  accion_sugerida: >-
+    Revisar los códigos y mensajes de error del diagnóstico (runtime del modelo, memoria, pesos,
+    formato de entrada). Mientras falle, la confianza de esas ventanas no es interpretable.
+
+saturacion:
+  rule_id: saturacion-v1
+  descripcion: >-
+    Fracción de frames que llegaron en la ventana y se descartaron por saturación (atraso mayor que
+    muestreo.atraso_max_ms) mayor o igual que el umbral.
+  # 1 de cada 5 frames perdido por atraso ya es una pérdida de cobertura notable a 1 fps.
+  umbral: 0.2
+  minimo_frames: 5
+  severidad: advertencia
+  accion_sugerida: >-
+    El procesamiento no alcanza el ritmo de la fuente: revisar el tiempo de inferencia y la cola del
+    diagnóstico, la carga de CPU de la máquina o bajar el muestreo. Los frames descartados no se
+    infieren, así que la ventana pierde cobertura.

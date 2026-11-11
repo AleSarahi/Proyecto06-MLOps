@@ -1,4 +1,4 @@
-"""Recálculo independiente de las métricas adicionales X1-X5 y de las alertas de fuente (extras).
+"""Recálculo independiente de las métricas adicionales X1-X7 y de las alertas técnicas (extras).
 
 Solo usa la biblioteca estándar y los archivos exportados; no importa `monitor`.
 
@@ -97,13 +97,16 @@ def recalcular(carpeta: Path) -> list[str]:
         x4 = rango_cercano([x["t_fin_registro_ms"] - x["t_llegada_ms"] for x in o], 95)
         esperados = round(max(0.0, min(b_ms, fin) - max(a_ms, ini)) / 1000 * tasa)
         x5 = llegados / esperados if esperados else None
-        return {"X1": x1, "X2": x2, "X3": x3, "X4": x4, "X5": x5}
+        x6 = sum(1 for e in evs if e["status"] == "error") / len(evs) if evs else None
+        sat = llegados - len(evs)  # llegaron y no se registraron: descartes por saturación
+        x7 = sat / llegados if llegados else None
+        return {"X1": x1, "X2": x2, "X3": x3, "X4": x4, "X5": x5, "X6": x6, "X7": x7}
 
     llegadas: dict[int, int] = defaultdict(int)
     for o in obs_todas:
         if o["tipo"] == "frame" or (o["tipo"] == "descarte" and o["motivo"] == "saturacion"):
             llegadas[o["ventana"]] += 1
-    tol = {"X1": 1e-4, "X2": 1e-4, "X3": 1e-4, "X4": 0.01, "X5": 1e-4}
+    tol = {"X1": 1e-4, "X2": 1e-4, "X3": 1e-4, "X4": 0.01, "X5": 1e-4, "X6": 1e-4, "X7": 1e-4}
     for v in ventanas:
         i = v["indice"]
         evs = [ev_id[e] for e in v["event_ids"] if e in ev_id]
@@ -116,11 +119,58 @@ def recalcular(carpeta: Path) -> list[str]:
             True,
         )
         for g, val in propio.items():
+            if g not in guardado:
+                continue  # metricas_extra.json anterior a X6/X7
             gv = next(p for p in guardado[g]["por_ventana"] if p["ventana"] == i)["valor"]
             cmp(f"{g} ventana {i}", val, gv, tol[g])
     propio = calcular(eventos, obs, sum(llegadas.values()), ini, fin, False)
     for g, val in propio.items():
-        cmp(f"{g} corrida", val, guardado[g]["corrida"]["valor"], tol[g])
+        if g in guardado:
+            cmp(f"{g} corrida", val, guardado[g]["corrida"]["valor"], tol[g])
+
+    # Alertas técnicas por ventana (S3/S4): recalcula la tasa de cada ventana y comprueba que la
+    # alerta abre en la primera ventana suficiente que cumple y cierra en la primera que no.
+    vig_cfg = run.get("vigilancia") or {}
+    tecnicas = {
+        vig_cfg[s]["rule_id"]: (s, vig_cfg[s])
+        for s in ("errores_inferencia", "saturacion")
+        if s in vig_cfg
+    }
+    sat_v: dict[int, int] = defaultdict(int)
+    for o in obs_todas:
+        if o["tipo"] == "descarte" and o["motivo"] == "saturacion":
+            sat_v[o["ventana"]] += 1
+    for a in alertas:
+        if a.get("schema") != "p6.alerta_tecnica.v1":
+            continue
+        seccion, r = tecnicas[a["rule_id"]]
+        abre = cierra = tasa_abre = None
+        for v in ventanas:
+            evs = [ev_id[e] for e in v["event_ids"] if e in ev_id]
+            if seccion == "errores_inferencia":
+                n, num = len(evs), sum(1 for e in evs if e["status"] == "error")
+            else:
+                n, num = len(evs) + sat_v[v["indice"]], sat_v[v["indice"]]
+            if n < r["minimo_frames"]:
+                continue
+            if num / n >= r["umbral"] and abre is None:
+                abre = v["indice"]
+                tasa_abre = num / n
+            elif num / n < r["umbral"] and abre is not None:
+                cierra = v["indice"]
+                break
+        ok = (
+            abre == a["ventanas"][0]["indice"]
+            and tasa_abre is not None
+            and abs(tasa_abre - a["ventanas"][0]["tasa"]) < 1e-4
+            and cierra == a["cerrada_por_ventana"]
+        )
+        print(
+            f"  {'OK ' if ok else 'DIF'} {a['alert_id']} abre en {abre} "
+            f"(tasa {tasa_abre}) y cierra en {cierra}"
+        )
+        if not ok:
+            difs.append(f"{a['alert_id']} ventanas")
 
     # Alertas de fuente.
     vig = (run.get("vigilancia") or {}).get("fuente_sin_senal")
@@ -160,7 +210,7 @@ def recalcular(carpeta: Path) -> list[str]:
     # Persistencia: una regla de N ventanas abre en la N-ésima ventana suficiente que cumple.
     reglas = {r["rule_id"]: r for r in cfg["reglas"]}
     for a in alertas:
-        if a.get("schema") == "p6.alerta_fuente.v1":
+        if a.get("schema") in ("p6.alerta_fuente.v1", "p6.alerta_tecnica.v1"):
             continue
         r = reglas[a["rule_id"]]
         seguidas = 0

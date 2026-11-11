@@ -246,3 +246,123 @@ def test_dashboard_y_exportacion(interrumpida):
     assert c.get("/exportar/eventos.xml").status_code == 404
     assert c.get("/exportar/eventos.csv?run=nada").status_code == 404
     assert c.get("/eventos?zona=xx").status_code == 400
+
+
+# --- S3/S4: reglas técnicas por ventana (issue #37) --------------------------------------------
+
+
+def _tecnicas():
+    from monitor.vigilancia import ReglasTecnicas
+
+    return ReglasTecnicas(
+        VIG,
+        run_id="r",
+        config_ref="c" * 64,
+        model_ref="m" * 64,
+        reloj_utc=lambda: "2026-01-01T00:00:00Z",
+    )
+
+
+def _evs(n_ok: int, n_err: int, i: int = 0) -> list[dict]:
+    evs = []
+    for k in range(n_ok + n_err):
+        err = k >= n_ok
+        evs.append(
+            {
+                "event_id": f"v{i}-e{k}",
+                "status": "error" if err else "ok",
+                "error": {"code": "detector_exception", "message": "x"} if err else None,
+                "tiempos_ms": {"cola": 100.0 * k, "inferencia": None if err else 200.0},
+            }
+        )
+    return evs
+
+
+def test_regla_de_errores_abre_sigue_y_cierra():
+    t = _tecnicas()
+    res, cambios = t.evaluar(0, 0, 10000, _evs(10, 0, 0), 0)
+    assert res["errores-inferencia-v1"]["resultado"] == "no_cumple" and cambios == []
+    res, cambios = t.evaluar(1, 10000, 20000, _evs(4, 6, 1), 0)
+    (a,) = cambios
+    assert a["estado"] == "abierta" and a["diagnostico"]["codigos"] == {"detector_exception": 6}
+    assert len(a["event_ids"]) == 6 and t.activas == 1
+    # Ventana insuficiente (3 frames): no abre ni cierra.
+    res, cambios = t.evaluar(2, 20000, 30000, _evs(3, 0, 2), 0)
+    assert res["errores-inferencia-v1"]["resultado"] == "insuficiente" and cambios == []
+    res, cambios = t.evaluar(3, 30000, 40000, _evs(10, 0, 3), 0)
+    (c,) = cambios
+    assert c["estado"] == "cerrada" and c["cerrada_por_ventana"] == 3 and t.activas == 0
+
+
+def test_regla_de_saturacion():
+    t = _tecnicas()
+    res, cambios = t.evaluar(0, 0, 10000, _evs(9, 0), 1)  # 1/10 < 0.2
+    assert res["saturacion-v1"]["resultado"] == "no_cumple" and cambios == []
+    res, cambios = t.evaluar(1, 10000, 20000, _evs(7, 0, 1), 3)  # 3/10
+    (a,) = cambios
+    assert a["regla"]["tipo"] == "tasa_saturacion" and a["ventanas"][0]["tasa"] == 0.3
+    assert a["diagnostico"]["cola_max_ms"] == 600.0
+    # Todo descartado: sin eventos en la ventana, la alerta sigue abierta.
+    res, cambios = t.evaluar(2, 20000, 30000, [], 10)
+    assert res["saturacion-v1"]["tasa"] == 1.0 and cambios[0]["estado"] == "abierta"
+
+
+@pytest.fixture
+def con_fallas(tmp_path, monkeypatch):
+    """30 frames de 1 s: errores en [10, 15) s y un detector lento (2.5 s) en [20, 25) s."""
+    reloj = Reloj()
+    monkeypatch.setattr(fuente_mod.time, "sleep", reloj.dormir)
+
+    class DetectorConGuion(DetectorDoble):
+        def inferir(self, imagen):
+            if 20000 <= self.posicion_ms < 25000:
+                reloj.t += 2500  # inferencia lenta: la cola crece
+            return super().inferir(imagen)
+
+    guion = [[0.9, 0.8]] * 10 + ["error"] * 5 + [[0.9, 0.8]] * 15
+    _respaldo(tmp_path / "frames", 30, 1000.0)
+    man = tmp_path / "frames" / "manifiesto.jsonl"
+    lineas = man.read_text(encoding="utf-8").splitlines()
+    cab = json.loads(lineas[0])
+    cab["cabecera"]["cada_n_frames"] = 30
+    man.write_text("\n".join([json.dumps(cab), *lineas[1:]]) + "\n", encoding="utf-8")
+    det = DetectorConGuion(guion, reloj)
+    salida = tmp_path / "corrida"
+    Corrida(
+        cfgmod.cargar(velocidad=1.0),
+        FuenteFrames(tmp_path / "frames", velocidad=1.0, reloj_ms=reloj),
+        det,
+        segmento="t",
+        inicio_segmento_ms=0,
+        salida=salida,
+        db=tmp_path / "m.sqlite",
+        referencia={"run_id": "ref", "proporcion_baja": 0.38},
+        reloj_ms=reloj,
+        run_id="fallas",
+        vigilancia=VIG,
+    ).correr()
+    return salida, tmp_path / "m.sqlite"
+
+
+def test_errores_y_saturacion_en_una_corrida(con_fallas):
+    salida, db = con_fallas
+    alertas = {a["rule_id"]: a for a in leer_jsonl(salida / "alertas.jsonl")}
+    err = alertas["errores-inferencia-v1"]
+    assert err["schema"] == "p6.alerta_tecnica.v1" and err["ventanas"][0]["indice"] == 1
+    assert err["ventanas"][0]["numerador"] == 5 and err["cerrada_por_ventana"] == 2
+    sat = alertas["saturacion-v1"]
+    # La cola atrasada no se vacía antes del final (3 ventanas): la alerta sigue abierta.
+    assert sat["ventanas"][0]["indice"] == 2 and sat["estado"] == "abierta"
+    run = json.loads((salida / "run.json").read_text(encoding="utf-8"))
+    assert run["conteos"]["descartes_saturacion"] > 0
+    assert "errores_inferencia" in run["vigilancia"]
+    x = json.loads((salida / "metricas_extra.json").read_text(encoding="utf-8"))["metricas"]
+    assert [p["valor"] for p in x["X6"]["por_ventana"]][:2] == [0.0, 0.5]
+    assert x["X7"]["por_ventana"][2]["valor"] >= 0.2 and x["X7"]["por_ventana"][0]["valor"] == 0.0
+    tec = [o for o in leer_jsonl(salida / "observaciones.jsonl") if o["tipo"] == "ventana_tecnica"]
+    assert len(tec) == 3
+    c = crear_app(db).test_client()
+    r = c.get(f"/alertas/{err['alert_id']}")
+    assert r.status_code == 200 and b"detector_exception" in r.data
+    assert c.get(f"/alertas/{sat['alert_id']}").status_code == 200
+    assert c.get("/dashboard?run=fallas&metrica=X7").status_code == 200

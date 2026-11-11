@@ -50,7 +50,9 @@ class Inferidor:
         return self.config.config_sha256
 
     def ficha(self) -> dict[str, Any]:
+        inyeccion = getattr(self.detector, "descripcion", None)
         return {
+            **({"inyeccion": inyeccion()} if inyeccion else {}),
             "model_ref": self.model_ref,
             "detector_config_sha256": self.detector_config_sha256,
             "pesos": str(self.config.weights_path),

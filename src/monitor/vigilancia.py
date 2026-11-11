@@ -16,7 +16,7 @@ confianza, que no se abren ni se cierran por ella.
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, ClassVar
 
 
 class Vigilante:
@@ -164,3 +164,202 @@ class Vigilante:
         if self.abierta is not None:
             return "recuperando" if self.recuperando else "sin_senal"
         return "con_senal"
+
+
+class ReglasTecnicas:
+    """Reglas técnicas por ventana (extras S3 y S4, issue #37): `errores-inferencia-v1` (fracción de
+    frames procesados con status error) y `saturacion-v1` (fracción de frames llegados que se
+    descartaron por saturación). Igual que las de confianza: una ventana con menos de
+    `minimo_frames` es insuficiente (no abre ni cierra); se abre cuando la tasa llega al umbral en
+    una ventana, no se repite mientras sigue abierta y se cierra en la primera ventana suficiente
+    por debajo del umbral."""
+
+    TIPOS: ClassVar[dict[str, str]] = {
+        "errores_inferencia": "tasa_errores",
+        "saturacion": "tasa_saturacion",
+    }
+
+    def __init__(
+        self,
+        vigilancia: dict[str, Any],
+        *,
+        run_id: str,
+        config_ref: str,
+        model_ref: str,
+        reloj_utc: Callable[[], str],
+    ):
+        self.reglas = {
+            seccion: {**vigilancia[seccion], "tipo": tipo}
+            for seccion, tipo in self.TIPOS.items()
+            if seccion in vigilancia
+        }
+        self.vigilancia_ref = vigilancia["vigilancia_ref"]
+        self.run_id = run_id
+        self.config_ref = config_ref
+        self.model_ref = model_ref
+        self.reloj_utc = reloj_utc
+        self.abiertas: dict[str, dict[str, Any]] = {}
+        self.ultimo_evento: str | None = None
+
+    @property
+    def activas(self) -> int:
+        return len(self.abiertas)
+
+    def _medir(self, seccion, eventos, n_saturacion):
+        if seccion == "errores_inferencia":
+            errores = [e for e in eventos if e["status"] == "error"]
+            return len(eventos), len(errores), errores
+        return len(eventos) + n_saturacion, n_saturacion, eventos
+
+    def _diagnostico(self, seccion, eventos, relevantes) -> dict[str, Any]:
+        if seccion == "errores_inferencia":
+            codigos: dict[str, int] = {}
+            for e in relevantes:
+                codigos[e["error"]["code"]] = codigos.get(e["error"]["code"], 0) + 1
+            return {
+                "codigos": codigos,
+                "ejemplos": [
+                    {
+                        "event_id": e["event_id"],
+                        "code": e["error"]["code"],
+                        "message": e["error"]["message"],
+                    }
+                    for e in relevantes[:3]
+                ],
+                "frames_ok_en_ventana": sum(1 for e in eventos if e["status"] != "error"),
+            }
+        colas = sorted(
+            e["tiempos_ms"]["cola"] for e in eventos if e["tiempos_ms"]["cola"] is not None
+        )
+        inf = sorted(
+            e["tiempos_ms"]["inferencia"]
+            for e in eventos
+            if e["tiempos_ms"]["inferencia"] is not None
+        )
+        return {
+            "cola_max_ms": colas[-1] if colas else None,
+            "cola_mediana_ms": colas[len(colas) // 2] if colas else None,
+            "inferencia_mediana_ms": inf[len(inf) // 2] if inf else None,
+            "frames_procesados_en_ventana": len(eventos),
+        }
+
+    def evaluar(
+        self,
+        indice: int,
+        inicio_ms: float,
+        fin_ms: float,
+        eventos: list[dict[str, Any]],
+        n_saturacion: int,
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """Resultado por regla (para observaciones.jsonl) y alertas que cambiaron."""
+        if eventos:
+            self.ultimo_evento = eventos[-1]["event_id"]
+        resultados: dict[str, Any] = {}
+        cambiadas: list[dict[str, Any]] = []
+        for seccion, r in self.reglas.items():
+            n, num, relevantes = self._medir(seccion, eventos, n_saturacion)
+            tasa = num / n if n else None
+            if n < r["minimo_frames"]:
+                res = "insuficiente"
+            elif tasa >= r["umbral"]:
+                res = "cumple"
+            else:
+                res = "no_cumple"
+            abierta = self.abiertas.get(seccion)
+            if res == "cumple" and abierta is None:
+                ids = [e["event_id"] for e in relevantes] or (
+                    [self.ultimo_evento] if self.ultimo_evento else []
+                )
+                if ids:
+                    nueva = self._abrir(
+                        r,
+                        seccion,
+                        indice,
+                        inicio_ms,
+                        fin_ms,
+                        n,
+                        num,
+                        tasa,
+                        eventos,
+                        relevantes,
+                        ids,
+                    )
+                    self.abiertas[seccion] = nueva
+                    cambiadas.append(dict(nueva))
+            elif res == "cumple" and abierta is not None:
+                abierta["ventanas"].append(
+                    {
+                        "indice": indice,
+                        "inicio_ms": inicio_ms,
+                        "fin_ms": fin_ms,
+                        "n": n,
+                        "numerador": num,
+                        "tasa": round(tasa, 4),
+                    }
+                )
+                cambiadas.append(dict(abierta))
+            elif res == "no_cumple" and abierta is not None:
+                abierta.update(
+                    {
+                        "estado": "cerrada",
+                        "cerrada_en": self.reloj_utc(),
+                        "cerrada_por_ventana": indice,
+                    }
+                )
+                cambiadas.append(dict(abierta))
+                del self.abiertas[seccion]
+            resultados[r["rule_id"]] = {
+                "resultado": res,
+                "n": n,
+                "numerador": num,
+                "tasa": None if tasa is None else round(tasa, 4),
+                "alert_id": self.abiertas[seccion]["alert_id"]
+                if seccion in self.abiertas
+                else None,
+            }
+        return resultados, cambiadas
+
+    def _abrir(self, r, seccion, indice, inicio_ms, fin_ms, n, num, tasa, eventos, relevantes, ids):
+        que = (
+            "frames con error de inferencia"
+            if seccion == "errores_inferencia"
+            else ("frames descartados por saturación (llegaron con más atraso que el máximo)")
+        )
+        return {
+            "schema": "p6.alerta_tecnica.v1",
+            "alert_id": f"{self.run_id}-{r['rule_id']}-v{indice:03d}",
+            "rule_id": r["rule_id"],
+            "run_id": self.run_id,
+            "timestamp_utc": self.reloj_utc(),
+            "severidad": r["severidad"],
+            "motivo": (
+                f"{num}/{n} {que} en la ventana {indice} "
+                f"[{inicio_ms / 1000:g} s, {fin_ms / 1000:g} s): "
+                f"tasa {tasa:.3f}, umbral {r['umbral']:g}."
+            ),
+            "accion_sugerida": r["accion_sugerida"],
+            "config_ref": self.config_ref,
+            "vigilancia_ref": self.vigilancia_ref,
+            "model_ref": self.model_ref,
+            "regla": {
+                k: r[k] for k in ("rule_id", "tipo", "descripcion", "umbral", "minimo_frames")
+            },
+            "ventanas": [
+                {
+                    "indice": indice,
+                    "inicio_ms": inicio_ms,
+                    "fin_ms": fin_ms,
+                    "n": n,
+                    "numerador": num,
+                    "tasa": round(tasa, 4),
+                }
+            ],
+            "diagnostico": self._diagnostico(seccion, eventos, relevantes),
+            "event_ids": ids,
+            "estado": "abierta",
+            "cerrada_en": None,
+            "cerrada_por_ventana": None,
+        }
+
+    def abiertas_ids(self) -> list[str]:
+        return [a["alert_id"] for a in self.abiertas.values()]
