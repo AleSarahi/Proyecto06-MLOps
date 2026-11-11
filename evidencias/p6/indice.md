@@ -11,6 +11,7 @@
 | Documentación (docs/p6, README, este índice) y ensayo desde una copia limpia | commits posteriores con prefijo `P6-` | No cambian `config/p6/` ni la lógica de inferencia, ventanas o reglas; el `config_ref` sigue siendo `c574ee88…ff6c`. El único cambio de código es cosmético (`noprogress` en la descarga, ver [`ensayo-copia-limpia.md`](ensayo-copia-limpia.md)). En la copia limpia, la corrida de C1 y C2 dio **los mismos scores** que la evidencia. |
 
 | Código de los extras (#29–#33), con el que se ejecutaron S1 y S2 | `ac12754fb1f0382865da6c0cf5cc92203c69c97e` | No cambia `config/p6/monitoreo.yaml` ni `config_ref`. Agrega `metricas_extra.json` a las corridas base sin tocar sus demás archivos. |
+| Código de S3, S4, X6 y X7 (#37), con el que se ejecutaron S3 y S4 | `5f004fbdc5318ec2ca3d296df633f7c7ae580a1b` | Igual: `config_ref` sin cambios. Se regeneró `metricas_extra.json` de las corridas anteriores para agregar X6 y X7 (los valores X1–X5 no cambian). |
 
 Para ubicar la revisión evaluada: `git log --oneline -- evidencias/p6 src/monitor config/p6`.
 
@@ -86,5 +87,9 @@ Los filtros que ya tenía el portal base, las cajas sobre la imagen y la página
 | M5 | M · X5 disponibilidad de la fuente | 5 | ídem + S2 | S2 por ventana: 1, 1, 0, 0, 1, 1 |
 | S1 | S · cambio sostenido con transición y recuperación | 8 | [ficha S1](extras/s1-transicion/README.md) | `s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005` (ventanas 3, 4 y 5) |
 | S2 | S · interrupción, diagnóstico, recuperación y verificación | 10 | [ficha S2](extras/s2-interrupcion/README.md) | `s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000` (20 frames perdidos, 21.0 s sin señal) |
+| M6 | M · X6 tasa de errores de inferencia | 5 | `metricas_extra.json`, [`recalculo/x-*.txt`](recalculo/) | S3 por ventana: 0, 0, 1.0, 0.5, 0, 0 |
+| M7 | M · X7 tasa de descarte por saturación | 5 | ídem | S4 por ventana: 0, 0, 0.4, 0.6, 0, 0 |
+| S3 | S · error de inferencia, diagnóstico, recuperación y verificación | 10 | [ficha S3](extras/s3-error-inferencia/README.md) | `s3-error-inferencia-20261111T183922Z-errores-inferencia-v1-v002` (código `detector_exception`) |
+| S4 | S · saturación con persistencia y recuperación | 8 | [ficha S4](extras/s4-saturacion/README.md) | `s4-saturacion-20261111T184104Z-saturacion-v1-v002` (cola máx. 2972 ms) |
 
-Total solicitado: **79 puntos** (35 F + 26 M + 18 S).
+Total solicitado: **107 puntos** (35 F + 36 M + 36 S).

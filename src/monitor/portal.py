@@ -221,6 +221,34 @@ corte y frames de la recuperación</h2>
 <td>{{'%.1f'|format(e.video_pos_ms/1000)}} s</td><td>{{zona(e.zona_frame, e.status)|safe}}</td>
 <td>{{e.timestamp_utc}}</td></tr>{% endfor %}</table>{% endif %}</div>"""
 
+T_ALERTA_TECNICA = """
+<div class="panel"><dl>
+<dt>alert_id</dt><dd class="mono">{{a.alert_id}}</dd>
+<dt>Momento (UTC)</dt><dd>{{a.timestamp_utc}}</dd>
+<dt>Regla</dt><dd class="mono">{{a.rule_id}} ({{a.regla.tipo}}, regla técnica por ventana)</dd>
+<dt>Condición</dt><dd>{{a.regla.descripcion}}</dd>
+<dt>Parámetros</dt><dd>umbral {{a.regla.umbral}} · mínimo {{a.regla.minimo_frames}} frames por ventana</dd>
+<dt>Severidad</dt><dd><span class="z {{a.severidad}}">{{a.severidad}}</span></dd>
+<dt>Estado</dt><dd>{{a.estado}}{% if a.cerrada_en %} (cerrada {{a.cerrada_en}} por la ventana
+{{a.cerrada_por_ventana}}){% endif %}</dd>
+<dt>Motivo</dt><dd>{{a.motivo}}</dd>
+<dt>Acción sugerida</dt><dd>{{a.accion_sugerida}}</dd>
+<dt>Diagnóstico</dt><dd><pre>{{ a.diagnostico|tojson(indent=1) }}</pre></dd>
+<dt>Corrida</dt><dd><a class="mono" href="/corridas/{{a.run_id}}">{{a.run_id}}</a></dd>
+<dt>Configuración</dt><dd class="mono">config_ref {{a.config_ref}} · vigilancia_ref {{a.vigilancia_ref}}</dd>
+<dt>Modelo</dt><dd class="mono">{{a.model_ref}}</dd></dl></div>
+<div class="panel"><h2 style="font-size:16px">Ventanas que cumplieron la regla</h2>
+<table><tr><th>Ventana</th><th>Intervalo (s)</th><th>Frames</th><th>Afectados</th><th>Tasa</th></tr>
+{% for v in a.ventanas %}<tr><td>{{v.indice}}</td><td>[{{v.inicio_ms/1000}}, {{v.fin_ms/1000}})</td>
+<td>{{v.n}}</td><td>{{v.numerador}}</td><td>{{v.tasa}}</td></tr>{% endfor %}</table></div>
+<div class="panel"><h2 style="font-size:16px">Eventos de origen ({{eventos|length}})</h2>
+{% if not eventos %}<div class="vacio">Los eventos de esta alerta no están en la base.</div>{% else %}
+<table><tr><th>Evento</th><th>t video</th><th>Estado</th><th>Error / tiempos (ms)</th></tr>
+{% for e in eventos %}<tr><td><a class="mono" href="/eventos/{{e.event_id}}">{{e.frame_id}}</a></td>
+<td>{{'%.1f'|format(e.video_pos_ms/1000)}} s</td><td>{{e.status}}</td>
+<td>{% if e.error %}{{e.error.code}}: {{e.error.message}}{% else %}inferencia {{e.tiempos_ms.inferencia}} ·
+cola {{e.tiempos_ms.cola}}{% endif %}</td></tr>{% endfor %}</table>{% endif %}</div>"""
+
 T_CORRIDAS = """<div class="panel">{% if not corridas %}<div class="vacio">No hay corridas en la base.
 Corre <code>python -m monitor importar &lt;carpetas&gt;</code>.</div>{% else %}
 <table><tr><th>Corrida</th><th>Segmento</th><th>Inicio (UTC)</th><th>Commit</th><th>Eventos</th>
@@ -381,7 +409,10 @@ def crear_app(db: Path) -> Flask:
             evs = [e for e in (alm.evento(i) for i in a["event_ids"]) if e]
         finally:
             alm.con.close()
-        plantilla = T_ALERTA_FUENTE if a["schema"] == "p6.alerta_fuente.v1" else T_ALERTA
+        plantilla = {
+            "p6.alerta_fuente.v1": T_ALERTA_FUENTE,
+            "p6.alerta_tecnica.v1": T_ALERTA_TECNICA,
+        }.get(a["schema"], T_ALERTA)
         return pagina(f"Alerta {a['rule_id']}", plantilla, a=a, eventos=evs)
 
     @app.get("/corridas")

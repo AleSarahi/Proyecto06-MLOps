@@ -166,7 +166,10 @@ class Almacen:
         self.con.commit()
 
     def guardar_alerta(self, al: dict[str, Any]) -> None:
-        tipo = "alerta_fuente" if al["schema"] == "p6.alerta_fuente.v1" else "alerta"
+        tipo = {
+            "p6.alerta_fuente.v1": "alerta_fuente",
+            "p6.alerta_tecnica.v1": "alerta_tecnica",
+        }.get(al["schema"], "alerta")
         contratos.validar(tipo, al)
         self.con.execute(
             "INSERT OR REPLACE INTO alertas VALUES (?,?,?,?,?,?,?,?)",

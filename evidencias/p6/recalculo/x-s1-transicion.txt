@@ -4,56 +4,78 @@
   OK  X3 ventana 0: recalculado=0.11828565300561328 guardado=0.1183
   OK  X4 ventana 0: recalculado=376.79299999999967 guardado=376.79
   OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 0: recalculado=0.0 guardado=0.0
   OK  X1 ventana 1: recalculado=14.4 guardado=14.4
   OK  X2 ventana 1: recalculado=0.0 guardado=0.0
   OK  X3 ventana 1: recalculado=0.24137892778910303 guardado=0.2414
   OK  X4 ventana 1: recalculado=291.3709999999992 guardado=291.37
   OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 1: recalculado=0.0 guardado=0.0
   OK  X1 ventana 2: recalculado=9.6 guardado=9.6
   OK  X2 ventana 2: recalculado=0.0 guardado=0.0
   OK  X3 ventana 2: recalculado=0.2893161814814822 guardado=0.2893
   OK  X4 ventana 2: recalculado=250.23500000000058 guardado=250.24
   OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 2: recalculado=0.0 guardado=0.0
   OK  X1 ventana 3: recalculado=7.9 guardado=7.9
   OK  X2 ventana 3: recalculado=0.0 guardado=0.0
   OK  X3 ventana 3: recalculado=1.8872757960669984 guardado=1.8873
   OK  X4 ventana 3: recalculado=341.025999999998 guardado=341.03
   OK  X5 ventana 3: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 3: recalculado=0.0 guardado=0.0
   OK  X1 ventana 4: recalculado=4.3 guardado=4.3
   OK  X2 ventana 4: recalculado=0.0 guardado=0.0
   OK  X3 ventana 4: recalculado=2.531477432805026 guardado=2.5315
   OK  X4 ventana 4: recalculado=384.9939999999988 guardado=384.99
   OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 4: recalculado=0.0 guardado=0.0
   OK  X1 ventana 5: recalculado=21.1 guardado=21.1
   OK  X2 ventana 5: recalculado=0.0 guardado=0.0
   OK  X3 ventana 5: recalculado=0.6137539589591041 guardado=0.6138
   OK  X4 ventana 5: recalculado=400.5809999999983 guardado=400.58
   OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 5: recalculado=0.0 guardado=0.0
   OK  X1 ventana 6: recalculado=27.6 guardado=27.6
   OK  X2 ventana 6: recalculado=0.0 guardado=0.0
   OK  X3 ventana 6: recalculado=0.6768303854860883 guardado=0.6768
   OK  X4 ventana 6: recalculado=482.36999999999534 guardado=482.37
   OK  X5 ventana 6: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 6: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 6: recalculado=0.0 guardado=0.0
   OK  X1 ventana 7: recalculado=11.1 guardado=11.1
   OK  X2 ventana 7: recalculado=0.0 guardado=0.0
   OK  X3 ventana 7: recalculado=0.5300406168227594 guardado=0.53
   OK  X4 ventana 7: recalculado=230.75400000000081 guardado=230.75
   OK  X5 ventana 7: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 7: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 7: recalculado=0.0 guardado=0.0
   OK  X1 ventana 8: recalculado=13.0 guardado=13.0
   OK  X2 ventana 8: recalculado=0.0 guardado=0.0
   OK  X3 ventana 8: recalculado=0.08395795830804177 guardado=0.084
   OK  X4 ventana 8: recalculado=352.7179999999935 guardado=352.72
   OK  X5 ventana 8: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 8: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 8: recalculado=0.0 guardado=0.0
   OK  X1 ventana 9: recalculado=13.6 guardado=13.6
   OK  X2 ventana 9: recalculado=0.0 guardado=0.0
   OK  X3 ventana 9: recalculado=0.12801134584737237 guardado=0.128
   OK  X4 ventana 9: recalculado=378.9389999999985 guardado=378.94
   OK  X5 ventana 9: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 9: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 9: recalculado=0.0 guardado=0.0
   OK  X1 corrida: recalculado=14.58 guardado=14.58
   OK  X2 corrida: recalculado=0.0 guardado=0.0
   OK  X3 corrida: recalculado=0.06602884597300195 guardado=0.066
   OK  X4 corrida: recalculado=362.387999999999 guardado=362.39
   OK  X5 corrida: recalculado=1.0 guardado=1.0
+  OK  X6 corrida: recalculado=0.0 guardado=0.0
+  OK  X7 corrida: recalculado=0.0 guardado=0.0
   OK  s1-transicion-20261111T180825Z-baja-confianza-v1-v003 abre en la ventana 3
   OK  s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005 abre en la ventana 5
   resultado: todo coincide

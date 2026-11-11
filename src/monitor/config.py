@@ -365,5 +365,27 @@ def cargar_vigilancia(ruta: str | Path = RUTA_VIGILANCIA) -> dict[str, Any]:
         "severidad": r["severidad"],
         "accion_sugerida": _texto(r["accion_sugerida"], "fuente_sin_senal.accion_sugerida"),
     }
-    efectiva = {"version": 1, "fuente_sin_senal": regla}
+    efectiva: dict[str, Any] = {"version": 1, "fuente_sin_senal": regla}
+    sobran = set(datos) - {"version", "fuente_sin_senal", "errores_inferencia", "saturacion"}
+    if sobran:
+        raise ErrorConfig(f"vigilancia: secciones desconocidas {sorted(sobran)}")
+    # Reglas técnicas por ventana (extras S3/S4, issue #37). Son opcionales.
+    for nombre in ("errores_inferencia", "saturacion"):
+        if nombre not in datos:
+            continue
+        t = _seccion(
+            datos,
+            nombre,
+            {"rule_id", "descripcion", "umbral", "minimo_frames", "severidad", "accion_sugerida"},
+        )
+        if t["severidad"] not in SEVERIDADES:
+            raise ErrorConfig(f"{nombre}.severidad: debe ser una de {sorted(SEVERIDADES)}")
+        efectiva[nombre] = {
+            "rule_id": _texto(t["rule_id"], f"{nombre}.rule_id"),
+            "descripcion": _texto(t["descripcion"], f"{nombre}.descripcion"),
+            "umbral": _num(t["umbral"], f"{nombre}.umbral", minimo=0, maximo=1),
+            "minimo_frames": _entero(t["minimo_frames"], f"{nombre}.minimo_frames"),
+            "severidad": t["severidad"],
+            "accion_sugerida": _texto(t["accion_sugerida"], f"{nombre}.accion_sugerida"),
+        }
     return {**efectiva, "vigilancia_ref": _hash(efectiva), "ruta": str(ruta)}

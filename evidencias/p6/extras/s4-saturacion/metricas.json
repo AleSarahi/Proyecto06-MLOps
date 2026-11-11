@@ -1,0 +1,722 @@
+{
+ "run_id": "s4-saturacion-20261111T184104Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "metricas": {
+  "G1": {
+   "id": "tiempo_inferencia_p95_ms",
+   "nombre": "Tiempo de inferencia p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 2117.37,
+    "n": 50
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 127.89,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 160.97,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 2137.58,
+     "n": 6
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 2152.37,
+     "n": 4
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 300.19,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 111.06,
+     "n": 10
+    }
+   ]
+  },
+  "G2": {
+   "id": "fps_procesamiento",
+   "nombre": "FPS de procesamiento",
+   "unidad": "frames inferidos / s",
+   "corrida": {
+    "valor": 0.8459,
+    "n": 50
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 1.099,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 1.0986,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 0.4595,
+     "n": 6
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 0.3762,
+     "n": 4
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 1.0979,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 1.0978,
+     "n": 10
+    }
+   ]
+  },
+  "G3": {
+   "id": "ram_rss_max_mb",
+   "nombre": "RAM RSS máxima del proceso",
+   "unidad": "MiB",
+   "corrida": {
+    "valor": 386.0,
+    "n": 50
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 386.0,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 381.14,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 383.13,
+     "n": 6
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 376.54,
+     "n": 4
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 336.66,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 328.63,
+     "n": 10
+    }
+   ]
+  },
+  "G4": {
+   "id": "proporcion_baja",
+   "nombre": "Proporción de baja confianza",
+   "unidad": "fracción de candidatas",
+   "corrida": {
+    "valor": 0.2805,
+    "n": 631,
+    "numerador": 177
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 0.2342,
+     "n": 111,
+     "numerador": 26,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 0.3077,
+     "n": 130,
+     "numerador": 40,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 0.3117,
+     "n": 77,
+     "numerador": 24,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 0.2778,
+     "n": 54,
+     "numerador": 15,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 0.2635,
+     "n": 148,
+     "numerador": 39,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 0.2973,
+     "n": 111,
+     "numerador": 33,
+     "estado_ventana": "suficiente"
+    }
+   ]
+  },
+  "G5": {
+   "id": "imagenes_vinculadas",
+   "nombre": "Imágenes vinculadas",
+   "unidad": "fracción de capturas",
+   "corrida": {
+    "valor": 1.0,
+    "n": 5,
+    "numerador": 5,
+    "problemas": []
+   },
+   "por_ventana": []
+  },
+  "G6": {
+   "id": "version_esperada_vs_reportada",
+   "nombre": "Versión esperada frente a reportada",
+   "unidad": "fracción de eventos",
+   "corrida": {
+    "valor": 1.0,
+    "n": 50
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 1.0,
+     "n": 6
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 1.0,
+     "n": 4
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 1.0,
+     "n": 10
+    }
+   ]
+  },
+  "G7": {
+   "id": "alertas_activas",
+   "nombre": "Alertas activas al cierre de la ventana",
+   "unidad": "alertas",
+   "corrida": {
+    "valor": 1,
+    "n": 6,
+    "agregado": "máximo de alertas activas entre ventanas"
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007200",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007230",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007260",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007290",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007320",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007350",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007380",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007410",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007440",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007470"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007500",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007530",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007560",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007590",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007620",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007650",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007680",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007710",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007740",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007770"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007800",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007830",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007860",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007920",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f007980",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008040"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008160",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008220",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008280",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008340"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008400",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008430",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008460",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008490",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008520",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008550",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008580",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008610",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008640",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008670"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008700",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008730",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008760",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008790",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008820",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008850",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008880",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008910",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008940",
+      "s4-saturacion-20261111T184104Z-s2-interrupcion-f008970"
+     ],
+     "valor": 0,
+     "n": 1
+    }
+   ]
+  }
+ }
+}

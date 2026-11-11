@@ -610,6 +610,174 @@
      "numerador": 10
     }
    ]
+  },
+  "X6": {
+   "id": "tasa_errores_inferencia",
+   "nombre": "Tasa de errores de inferencia",
+   "unidad": "fracción de frames procesados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 90,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    }
+   ]
+  },
+  "X7": {
+   "id": "tasa_descarte_saturacion",
+   "nombre": "Tasa de descarte por saturación",
+   "unidad": "fracción de frames llegados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 90,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    }
+   ]
   }
  }
 }

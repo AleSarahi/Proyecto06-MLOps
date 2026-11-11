@@ -1,0 +1,782 @@
+{
+ "run_id": "s3-error-inferencia-20261111T183922Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "metricas": {
+  "G1": {
+   "id": "tiempo_inferencia_p95_ms",
+   "nombre": "Tiempo de inferencia p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 288.52,
+    "n": 60
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 401.43,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 113.1,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": 0.04,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 267.99,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 435.6,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 137.28,
+     "n": 10
+    }
+   ]
+  },
+  "G2": {
+   "id": "fps_procesamiento",
+   "nombre": "FPS de procesamiento",
+   "unidad": "frames inferidos / s",
+   "corrida": {
+    "valor": 1.0152,
+    "n": 60
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 1.0973,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 1.0977,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": 1.1047,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 1.0721,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 1.0965,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 1.0988,
+     "n": 10
+    }
+   ]
+  },
+  "G3": {
+   "id": "ram_rss_max_mb",
+   "nombre": "RAM RSS máxima del proceso",
+   "unidad": "MiB",
+   "corrida": {
+    "valor": 384.84,
+    "n": 60
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 379.57,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 381.51,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": 384.84,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 381.8,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 329.39,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 323.14,
+     "n": 10
+    }
+   ]
+  },
+  "G4": {
+   "id": "proporcion_baja",
+   "nombre": "Proporción de baja confianza",
+   "unidad": "fracción de candidatas",
+   "corrida": {
+    "valor": 0.2748,
+    "n": 575,
+    "numerador": 158
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 0.2342,
+     "n": 111,
+     "numerador": 26,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 0.3077,
+     "n": 130,
+     "numerador": 40,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": null,
+     "n": 0,
+     "numerador": 0,
+     "estado_ventana": "insuficiente"
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 0.2667,
+     "n": 75,
+     "numerador": 20,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 0.2635,
+     "n": 148,
+     "numerador": 39,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 0.2973,
+     "n": 111,
+     "numerador": 33,
+     "estado_ventana": "suficiente"
+    }
+   ]
+  },
+  "G5": {
+   "id": "imagenes_vinculadas",
+   "nombre": "Imágenes vinculadas",
+   "unidad": "fracción de capturas",
+   "corrida": {
+    "valor": 1.0,
+    "n": 6,
+    "numerador": 6,
+    "problemas": []
+   },
+   "por_ventana": []
+  },
+  "G6": {
+   "id": "version_esperada_vs_reportada",
+   "nombre": "Versión esperada frente a reportada",
+   "unidad": "fracción de eventos",
+   "corrida": {
+    "valor": 1.0,
+    "n": 60
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 1.0,
+     "n": 10
+    }
+   ]
+  },
+  "G7": {
+   "id": "alertas_activas",
+   "nombre": "Alertas activas al cierre de la ventana",
+   "unidad": "alertas",
+   "corrida": {
+    "valor": 1,
+    "n": 6,
+    "agregado": "máximo de alertas activas entre ventanas"
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007200",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007230",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007260",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007290",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007320",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007350",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007380",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007410",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007440",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007470"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007500",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007530",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007560",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007590",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007620",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007650",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007680",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007710",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007740",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007770"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007800",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007830",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007860",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007890",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007920",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007950",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f007980",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008010",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008040",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008070"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008100",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008130",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008160",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008190",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008220",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008250",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008280",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008310",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008340",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008370"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008400",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008430",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008460",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008490",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008520",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008550",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008580",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008610",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008640",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008670"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "event_ids": [
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008700",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008730",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008760",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008790",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008820",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008850",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008880",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008910",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008940",
+      "s3-error-inferencia-20261111T183922Z-s2-interrupcion-f008970"
+     ],
+     "valor": 0,
+     "n": 1
+    }
+   ]
+  }
+ }
+}

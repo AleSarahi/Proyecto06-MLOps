@@ -87,3 +87,18 @@ segmentos:
     inicio_s: 240
     fin_s: 300
     condicion: "Día, operación normal con una caída de la fuente de 20 s a mitad de la corrida."
+  # Escenarios S3 y S4 (issue #37): mismos 60 s de día que S2, con otra falla inyectada al correr
+  # (--error-inferencia / --lentitud). Reutilizan el respaldo de s2-interrupcion (`respaldo`), así
+  # que la entrada es idéntica y lo único que cambia es la condición probada.
+  s3-error-inferencia:
+    video: dia
+    inicio_s: 240
+    fin_s: 300
+    respaldo: s2-interrupcion
+    condicion: "Día, operación normal; el runtime del modelo falla de 20 a 35 s y se recupera."
+  s4-saturacion:
+    video: dia
+    inicio_s: 240
+    fin_s: 300
+    respaldo: s2-interrupcion
+    condicion: "Día, operación normal; la inferencia se vuelve lenta de 20 a 40 s y se satura."

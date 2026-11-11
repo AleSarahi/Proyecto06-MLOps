@@ -130,8 +130,8 @@ def recalcular(carpeta: Path) -> list[str]:
     # Alertas de baja confianza: su ventana debe ser suficiente y cumplir la regla.
     reglas = {r["rule_id"]: r for r in cfg["reglas"]}
     for a in alertas:
-        if a.get("schema") == "p6.alerta_fuente.v1":
-            continue  # alerta técnica de la fuente: la verifica recalcular_extras.py
+        if a.get("schema") in ("p6.alerta_fuente.v1", "p6.alerta_tecnica.v1"):
+            continue  # alertas técnicas: las verifica recalcular_extras.py
         regla = reglas[a["rule_id"]]
         for w in a["ventanas"]:
             v = next(x for x in ventanas if x["indice"] == w["indice"])
