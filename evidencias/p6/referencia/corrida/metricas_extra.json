@@ -1,0 +1,615 @@
+{
+ "run_id": "referencia-20261109T042407Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "referencia_x3": {
+  "run_id": "referencia-20261109T042407Z",
+  "bordes": [
+   0.0,
+   0.1,
+   0.2,
+   0.3,
+   0.4,
+   0.5,
+   0.6,
+   0.7,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "histograma": [
+   0,
+   384,
+   269,
+   186,
+   156,
+   183,
+   268,
+   214,
+   54,
+   1
+  ],
+  "eps": 0.0001
+ },
+ "metricas": {
+  "X1": {
+   "id": "candidatas_por_frame",
+   "nombre": "Candidatas por frame",
+   "unidad": "candidatas / frame",
+   "corrida": {
+    "valor": 19.0556,
+    "n": 90,
+    "numerador": 1715
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 13.6,
+     "n": 10,
+     "numerador": 136
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 11.5,
+     "n": 10,
+     "numerador": 115
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 14.2,
+     "n": 10,
+     "numerador": 142
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 21.3,
+     "n": 10,
+     "numerador": 213
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 29.6,
+     "n": 10,
+     "numerador": 296
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 31.5,
+     "n": 10,
+     "numerador": 315
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 24.0,
+     "n": 10,
+     "numerador": 240
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 15.4,
+     "n": 10,
+     "numerador": 154
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 10.4,
+     "n": 10,
+     "numerador": 104
+    }
+   ]
+  },
+  "X2": {
+   "id": "frames_sin_detecciones",
+   "nombre": "Frames sin detecciones",
+   "unidad": "fracción de frames procesados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 90,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    }
+   ]
+  },
+  "X3": {
+   "id": "psi_scores_referencia",
+   "nombre": "PSI de scores frente a la referencia",
+   "unidad": "PSI (adimensional)",
+   "corrida": {
+    "valor": 0.0,
+    "n": 1715,
+    "estado": "ok",
+    "histograma": [
+     0,
+     384,
+     269,
+     186,
+     156,
+     183,
+     268,
+     214,
+     54,
+     1
+    ]
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0912,
+     "n": 136,
+     "estado": "ok",
+     "histograma": [
+      0,
+      27,
+      21,
+      11,
+      7,
+      13,
+      35,
+      19,
+      3,
+      0
+     ]
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.084,
+     "n": 115,
+     "estado": "ok",
+     "histograma": [
+      0,
+      21,
+      20,
+      11,
+      8,
+      7,
+      21,
+      23,
+      4,
+      0
+     ]
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.1371,
+     "n": 142,
+     "estado": "ok",
+     "histograma": [
+      0,
+      25,
+      18,
+      18,
+      5,
+      16,
+      31,
+      27,
+      2,
+      0
+     ]
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 0.0744,
+     "n": 213,
+     "estado": "ok",
+     "histograma": [
+      0,
+      37,
+      31,
+      21,
+      29,
+      32,
+      33,
+      19,
+      10,
+      1
+     ]
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 0.074,
+     "n": 296,
+     "estado": "ok",
+     "histograma": [
+      0,
+      86,
+      58,
+      36,
+      27,
+      26,
+      33,
+      22,
+      8,
+      0
+     ]
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 0.167,
+     "n": 315,
+     "estado": "ok",
+     "histograma": [
+      0,
+      103,
+      63,
+      35,
+      37,
+      20,
+      22,
+      26,
+      9,
+      0
+     ]
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 0.0502,
+     "n": 240,
+     "estado": "ok",
+     "histograma": [
+      0,
+      50,
+      27,
+      33,
+      26,
+      35,
+      38,
+      22,
+      9,
+      0
+     ]
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 0.0997,
+     "n": 154,
+     "estado": "ok",
+     "histograma": [
+      0,
+      25,
+      19,
+      13,
+      9,
+      25,
+      30,
+      27,
+      6,
+      0
+     ]
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 0.2993,
+     "n": 104,
+     "estado": "ok",
+     "histograma": [
+      0,
+      10,
+      12,
+      8,
+      8,
+      9,
+      25,
+      29,
+      3,
+      0
+     ]
+    }
+   ]
+  },
+  "X4": {
+   "id": "latencia_e2e_p95_ms",
+   "nombre": "Latencia extremo a extremo p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 1101.05,
+    "n": 90,
+    "mediana_por_etapa_ms": {
+     "cola": 27.42,
+     "inferencia": 356.45,
+     "registro": 29.74
+    }
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 1172.46,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 23.9,
+      "inferencia": 306.69,
+      "registro": 22.4
+     }
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 485.0,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 28.62,
+      "inferencia": 312.13,
+      "registro": 18.85
+     }
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 498.54,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 27.42,
+      "inferencia": 341.32,
+      "registro": 23.24
+     }
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 902.6,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 26.38,
+      "inferencia": 368.02,
+      "registro": 27.86
+     }
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 729.09,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 27.27,
+      "inferencia": 348.0,
+      "registro": 32.36
+     }
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 681.73,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 28.08,
+      "inferencia": 356.46,
+      "registro": 34.03
+     }
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 1270.45,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 26.1,
+      "inferencia": 350.48,
+      "registro": 36.27
+     }
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 558.65,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 21.83,
+      "inferencia": 329.15,
+      "registro": 25.61
+     }
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 1288.37,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 34.69,
+      "inferencia": 542.2,
+      "registro": 31.78
+     }
+    }
+   ]
+  },
+  "X5": {
+   "id": "disponibilidad_fuente",
+   "nombre": "Disponibilidad de la fuente",
+   "unidad": "fracción de frames esperados",
+   "corrida": {
+    "valor": 1.0,
+    "n": 90,
+    "numerador": 90
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,1 @@
+event_id,run_id,frame_id,timestamp_utc,video_pos_ms,status,zona_frame,score_max,n_candidatas,n_baja,n_duda,n_aceptada,image_ref,model_ref,config_ref

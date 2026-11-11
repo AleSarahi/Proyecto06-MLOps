@@ -1,0 +1,43 @@
+== evidencias/p6/extras/s1-transicion
+  OK  ventana 0 candidatas: recalculado=232 guardado=232
+  OK  ventana 0 proporcion_baja: recalculado=0.3103448275862069 guardado=0.3103448275862069
+  OK  G4 ventana 0: recalculado=0.3103 guardado=0.3103
+  OK  ventana 1 candidatas: recalculado=144 guardado=144
+  OK  ventana 1 proporcion_baja: recalculado=0.4097222222222222 guardado=0.4097222222222222
+  OK  G4 ventana 1: recalculado=0.4097 guardado=0.4097
+  OK  ventana 2 candidatas: recalculado=96 guardado=96
+  OK  ventana 2 proporcion_baja: recalculado=0.25 guardado=0.25
+  OK  G4 ventana 2: recalculado=0.25 guardado=0.25
+  OK  ventana 3 candidatas: recalculado=79 guardado=79
+  OK  ventana 3 proporcion_baja: recalculado=0.7974683544303798 guardado=0.7974683544303798
+  OK  G4 ventana 3: recalculado=0.7975 guardado=0.7975
+  OK  ventana 4 candidatas: recalculado=43 guardado=43
+  OK  ventana 4 proporcion_baja: recalculado=0.8372093023255814 guardado=0.8372093023255814
+  OK  G4 ventana 4: recalculado=0.8372 guardado=0.8372
+  OK  ventana 5 candidatas: recalculado=211 guardado=211
+  OK  ventana 5 proporcion_baja: recalculado=0.7109004739336493 guardado=0.7109004739336493
+  OK  G4 ventana 5: recalculado=0.7109 guardado=0.7109
+  OK  ventana 6 candidatas: recalculado=276 guardado=276
+  OK  ventana 6 proporcion_baja: recalculado=0.7210144927536232 guardado=0.7210144927536232
+  OK  G4 ventana 6: recalculado=0.721 guardado=0.721
+  OK  ventana 7 candidatas: recalculado=111 guardado=111
+  OK  ventana 7 proporcion_baja: recalculado=0.23423423423423423 guardado=0.23423423423423423
+  OK  G4 ventana 7: recalculado=0.2342 guardado=0.2342
+  OK  ventana 8 candidatas: recalculado=130 guardado=130
+  OK  ventana 8 proporcion_baja: recalculado=0.3076923076923077 guardado=0.3076923076923077
+  OK  G4 ventana 8: recalculado=0.3077 guardado=0.3077
+  OK  ventana 9 candidatas: recalculado=136 guardado=136
+  OK  ventana 9 proporcion_baja: recalculado=0.3161764705882353 guardado=0.3161764705882353
+  OK  G4 ventana 9: recalculado=0.3162 guardado=0.3162
+  OK  G1 p95 ms: recalculado=286.64 guardado=286.64
+  OK  G2 fps: recalculado=1.008504435523528 guardado=1.0085
+  OK  G3 RAM MiB: recalculado=384.13671875 guardado=384.14
+  OK  G4 corrida: recalculado=0.4883401920438957 guardado=0.4883
+  OK  G5 imágenes vinculadas: recalculado=1.0 guardado=1.0
+  OK  G6 versión: recalculado=1.0 guardado=1.0
+  OK  G7 máx. alertas activas: recalculado=2 guardado=2
+  OK  alerta s1-transicion-20261111T180825Z-baja-confianza-v1-v003 ventana 3
+  OK  alerta s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005 ventana 3
+  OK  alerta s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005 ventana 4
+  OK  alerta s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005 ventana 5
+  resultado: todo coincide

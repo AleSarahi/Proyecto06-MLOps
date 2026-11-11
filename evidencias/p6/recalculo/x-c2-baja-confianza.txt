@@ -1,0 +1,23 @@
+== evidencias/p6/escenarios/c2-baja-confianza
+  OK  X1 ventana 0: recalculado=7.9 guardado=7.9
+  OK  X2 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 0: recalculado=1.8872757960669984 guardado=1.8873
+  OK  X4 ventana 0: recalculado=608.5109999999986 guardado=608.51
+  OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 1: recalculado=4.3 guardado=4.3
+  OK  X2 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 1: recalculado=2.531477432805026 guardado=2.5315
+  OK  X4 ventana 1: recalculado=800.5720000000001 guardado=800.57
+  OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 2: recalculado=4.75 guardado=4.75
+  OK  X2 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 2: recalculado=None guardado=None
+  OK  X4 ventana 2: recalculado=367.8070000000007 guardado=367.81
+  OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X1 corrida: recalculado=5.875 guardado=5.875
+  OK  X2 corrida: recalculado=0.0 guardado=0.0
+  OK  X3 corrida: recalculado=2.0206749471297467 guardado=2.0207
+  OK  X4 corrida: recalculado=608.5109999999986 guardado=608.51
+  OK  X5 corrida: recalculado=1.0 guardado=1.0
+  OK  c2-20261109T042757Z-baja-confianza-v1-v000 abre en la ventana 0
+  resultado: todo coincide
