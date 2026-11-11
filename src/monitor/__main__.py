@@ -10,6 +10,11 @@ uv run python -m monitor verificar-capturas evidencias/p6/escenarios/c1-normal
 uv run python -m monitor metricas evidencias/p6/escenarios/c1-normal
 uv run python -m monitor importar evidencias/p6/referencia/corrida evidencias/p6/escenarios/*/
 uv run python -m monitor portal
+
+Extras (docs/p6/extras.md):
+uv run python -m monitor correr --segmento s1-transicion --salida evidencias/p6/extras/s1-transicion
+uv run python -m monitor correr --segmento s2-interrupcion --corte 20:40 --salida …
+uv run python -m monitor metricas-extra evidencias/p6/escenarios/c1-normal
 """
 
 from __future__ import annotations
@@ -19,7 +24,7 @@ import json
 import sys
 from pathlib import Path
 
-from .config import RAIZ, ErrorConfig, cargar, cargar_fuentes
+from .config import RAIZ, RUTA_VIGILANCIA, ErrorConfig, cargar, cargar_fuentes, cargar_vigilancia
 
 DB_DEFECTO = RAIZ / "datos" / "p6" / "monitoreo.sqlite"
 
@@ -56,7 +61,7 @@ def _video(args: argparse.Namespace) -> int:
 
 def _correr(args: argparse.Namespace) -> int:
     from .corrida import Corrida, cargar_referencia, resumen_texto
-    from .fuente import FuenteFrames, FuenteVideo
+    from .fuente import FuenteFrames, FuenteInterrumpida, FuenteVideo
     from .inferencia import Inferidor, reloj_monotonico
     from .video import DIR_FRAMES
 
@@ -73,6 +78,9 @@ def _correr(args: argparse.Namespace) -> int:
         fuente = FuenteVideo(
             args.segmento, fuentes, cfg.cada_n_frames, velocidad=cfg.velocidad, reloj_ms=reloj
         )
+    if args.corte:
+        fuente = FuenteInterrumpida(fuente, _cortes(args.corte), seg["inicio_s"] * 1000)
+    vigilancia = None if args.sin_vigilancia else cargar_vigilancia(args.vigilancia)
     inferidor = Inferidor(cfg.detector_ruta, reloj)
     if inferidor.detector_config_sha256 != cfg.detector_config_sha256:
         raise ErrorConfig("el detector cargado no corresponde a config_ref")
@@ -88,9 +96,44 @@ def _correr(args: argparse.Namespace) -> int:
         reloj_ms=reloj,
         comando=["python", "-m", "monitor", *sys.argv[1:]],
         run_id=args.run_id,
+        vigilancia=vigilancia,
+        carpeta_referencia=cfg.ruta_referencia.parent / "corrida",
     )
     corrida.correr()
     print(resumen_texto(Path(args.salida)))
+    return 0
+
+
+def _cortes(textos: list[str]) -> list[tuple[float, float]]:
+    cortes = []
+    for t in textos:
+        try:
+            a, b = (float(x) for x in t.split(":"))
+        except ValueError as exc:
+            raise ErrorConfig(f"--corte {t!r}: usa desde:hasta en segundos, p. ej. 20:40") from exc
+        if not 0 <= a < b:
+            raise ErrorConfig(f"--corte {t!r}: se requiere 0 <= desde < hasta")
+        cortes.append((a * 1000, b * 1000))
+    return cortes
+
+
+def _metricas_extra(args: argparse.Namespace) -> int:
+    from .metricas_extra import calcular
+
+    cfg = cargar(args.config)
+    ref = cfg.ruta_referencia.parent / "corrida"
+    for c in args.corridas:
+        m = calcular(Path(c), ref)
+        destino = Path(c) / "metricas_extra.json"
+        destino.write_text(
+            json.dumps(m, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
+        )
+        print(f"{c}:")
+        for g, d in m["metricas"].items():
+            print(
+                f"  {g} {d['nombre']}: {d['corrida']['valor']} {d['unidad']} "
+                f"(n={d['corrida']['n']})"
+            )
     return 0
 
 
@@ -192,6 +235,14 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="solo para la corrida de referencia: la regla sostenida queda sin_referencia",
     )
+    c.add_argument(
+        "--corte",
+        action="append",
+        metavar="DESDE:HASTA",
+        help="inyecta una caída de la fuente entre esos segundos del segmento (extra #33)",
+    )
+    c.add_argument("--vigilancia", default=str(RUTA_VIGILANCIA))
+    c.add_argument("--sin-vigilancia", action="store_true", help="no vigilar la fuente")
     c.set_defaults(f=_correr)
 
     r = sub.add_parser("referencia", help="calcula referencia.json desde una corrida")
@@ -207,6 +258,11 @@ def main(argv: list[str] | None = None) -> int:
     m = sub.add_parser("metricas", help="recalcula metricas.json de una corrida")
     m.add_argument("corridas", nargs="+")
     m.set_defaults(f=_metricas)
+
+    mx = sub.add_parser("metricas-extra", help="calcula metricas_extra.json (X1-X5)")
+    mx.add_argument("corridas", nargs="+")
+    mx.add_argument("--config", default=str(RAIZ / "config" / "p6" / "monitoreo.yaml"))
+    mx.set_defaults(f=_metricas_extra)
 
     i = sub.add_parser("importar", help="carga corridas exportadas en la base del portal")
     i.add_argument("corridas", nargs="+")

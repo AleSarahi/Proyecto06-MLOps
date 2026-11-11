@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard · Centro de monitoreo P6</title>
+<style>
+:root{--fondo:#f6f7f9;--texto:#1d2330;--sutil:#5d6675;--borde:#d8dde5;--panel:#fff;
+--baja:#b42318;--duda:#b54708;--aceptada:#067647;--neutro:#475467;--enlace:#1849a9}
+@media (prefers-color-scheme:dark){:root{--fondo:#12151b;--texto:#e6e9ef;--sutil:#9aa3b2;
+--borde:#2c323d;--panel:#1a1e26;--baja:#f97066;--duda:#fdb022;--aceptada:#47cd89;--neutro:#98a2b3;
+--enlace:#84adff}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,sans-serif;background:var(--fondo);
+color:var(--texto)}header{background:var(--panel);border-bottom:1px solid var(--borde);
+padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header b{font-size:16px}nav a{margin-right:14px}a{color:var(--enlace)}
+main{max-width:1200px;margin:0 auto;padding:16px}
+.panel{background:var(--panel);border:1px solid var(--borde);border-radius:8px;padding:14px;
+margin-bottom:14px;overflow-x:auto}table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--borde);vertical-align:top}
+th{color:var(--sutil);font-weight:600;font-size:13px}
+.z{font-weight:600;padding:1px 8px;border-radius:10px;border:1px solid currentColor;
+white-space:nowrap;font-size:13px}.baja,.critica{color:var(--baja)}.duda,.advertencia{color:var(--duda)}
+.aceptada{color:var(--aceptada)}.neutro,.info,.sin_detecciones,.error{color:var(--neutro)}
+.vacio{color:var(--sutil);padding:24px;text-align:center}
+.err{border-color:var(--baja)}.mono{font-family:ui-monospace,monospace;font-size:13px;
+word-break:break-all}form{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+label{font-size:13px;color:var(--sutil);display:flex;flex-direction:column;gap:2px}
+select,button{font:inherit;padding:4px 8px}img.mini{height:54px;border-radius:4px}
+.figura{position:relative;max-width:100%}.figura svg{position:absolute;inset:0;width:100%;height:100%}
+.figura img{display:block;max-width:100%;height:auto}dl{display:grid;grid-template-columns:
+max-content 1fr;gap:4px 14px;margin:0}dt{color:var(--sutil)}dd{margin:0}
+pre{white-space:pre-wrap;font-size:12px;margin:0}
+</style></head><body>
+<header><b>Centro de monitoreo · P6</b><nav><a href="/eventos">Eventos</a><a href="/alertas">Alertas</a>
+<a href="/corridas">Corridas</a><a href="/vivo">En vivo</a><a href="/dashboard">Dashboard</a></nav></header>
+<main><h1 style="font-size:20px">Dashboard</h1>
+<div class="panel"><form method="get">
+<label>Corridas (una o varias)<select name="run" multiple size="4">
+<option value="referencia-20261109T042407Z" >referencia-20261109T042407Z</option><option value="c1-20261109T042610Z" >c1-20261109T042610Z</option><option value="c2-20261109T042757Z" >c2-20261109T042757Z</option><option value="s2-interrupcion-20261111T180638Z" >s2-interrupcion-20261111T180638Z</option><option value="s1-transicion-20261111T180825Z" selected>s1-transicion-20261111T180825Z</option>
+</select></label>
+<label>Métrica<select name="metrica">
+<option value="G1" >G1 · Tiempo de inferencia p95</option>
+<option value="G2" >G2 · FPS de procesamiento</option>
+<option value="G3" >G3 · RAM RSS máxima del proceso</option>
+<option value="G4" selected>G4 · Proporción de baja confianza</option>
+<option value="G5" >G5 · Imágenes vinculadas</option>
+<option value="G6" >G6 · Versión esperada frente a reportada</option>
+<option value="G7" >G7 · Alertas activas al cierre de la ventana</option>
+<option value="X1" >X1 · Candidatas por frame</option>
+<option value="X2" >X2 · Frames sin detecciones</option>
+<option value="X3" >X3 · PSI de scores frente a la referencia</option>
+<option value="X4" >X4 · Latencia extremo a extremo p95</option>
+<option value="X5" >X5 · Disponibilidad de la fuente</option></select></label>
+<label>Desde ventana<input name="desde" value="" size="4" inputmode="numeric"></label>
+<label>Hasta ventana<input name="hasta" value="" size="4" inputmode="numeric"></label>
+<button>Graficar</button></form></div>
+
+
+<div class="panel"><h2 style="font-size:16px">G4 · Proporción de baja confianza <span style="color:var(--sutil);font-weight:400">(fracción de candidatas, por ventana)</span></h2>
+<svg viewBox="0 0 860 260" width="100%" role="img" aria-label="gráfica por ventana" style="max-width:860px;color:var(--sutil)"><rect x="274.9" y="14" width="87.6" height="216" fill="var(--baja)" opacity="0.10"/><rect x="362.4" y="14" width="87.6" height="216" fill="var(--baja)" opacity="0.10"/><rect x="450.0" y="14" width="87.6" height="216" fill="var(--baja)" opacity="0.10"/><line x1="56" x2="844" y1="230.0" y2="230.0" stroke="var(--borde)"/><text x="50" y="234.0" font-size="11" text-anchor="end" fill="currentColor">0</text><line x1="56" x2="844" y1="176.0" y2="176.0" stroke="var(--borde)"/><text x="50" y="180.0" font-size="11" text-anchor="end" fill="currentColor">0.226</text><line x1="56" x2="844" y1="122.0" y2="122.0" stroke="var(--borde)"/><text x="50" y="126.0" font-size="11" text-anchor="end" fill="currentColor">0.452</text><line x1="56" x2="844" y1="68.0" y2="68.0" stroke="var(--borde)"/><text x="50" y="72.0" font-size="11" text-anchor="end" fill="currentColor">0.678</text><line x1="56" x2="844" y1="14.0" y2="14.0" stroke="var(--borde)"/><text x="50" y="18.0" font-size="11" text-anchor="end" fill="currentColor">0.904</text><text x="56.0" y="250" font-size="11" text-anchor="middle" fill="currentColor">0</text><text x="143.6" y="250" font-size="11" text-anchor="middle" fill="currentColor">1</text><text x="231.1" y="250" font-size="11" text-anchor="middle" fill="currentColor">2</text><text x="318.7" y="250" font-size="11" text-anchor="middle" fill="currentColor">3</text><text x="406.2" y="250" font-size="11" text-anchor="middle" fill="currentColor">4</text><text x="493.8" y="250" font-size="11" text-anchor="middle" fill="currentColor">5</text><text x="581.3" y="250" font-size="11" text-anchor="middle" fill="currentColor">6</text><text x="668.9" y="250" font-size="11" text-anchor="middle" fill="currentColor">7</text><text x="756.4" y="250" font-size="11" text-anchor="middle" fill="currentColor">8</text><text x="844.0" y="250" font-size="11" text-anchor="middle" fill="currentColor">9</text><line x1="56" x2="844" y1="139.0" y2="139.0" stroke="currentColor" stroke-dasharray="6 4"/><circle cx="56.0" cy="155.9" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 0: 0.3103 (n=232)</title></circle><circle cx="143.6" cy="132.1" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 1: 0.4097 (n=144)</title></circle><circle cx="231.1" cy="170.3" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 2: 0.25 (n=96)</title></circle><circle cx="318.7" cy="39.5" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 3: 0.7975 (n=79)</title></circle><circle cx="406.2" cy="30.0" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 4: 0.8372 (n=43)</title></circle><circle cx="493.8" cy="60.2" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 5: 0.7109 (n=211)</title></circle><circle cx="581.3" cy="57.8" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 6: 0.721 (n=276)</title></circle><circle cx="668.9" cy="174.1" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 7: 0.2342 (n=111)</title></circle><circle cx="756.4" cy="156.5" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 8: 0.3077 (n=130)</title></circle><circle cx="844.0" cy="154.5" r="3.5" fill="#1849a9"><title>s1-transicion-20261111T180825Z · ventana 9: 0.3162 (n=136)</title></circle><polyline points="56.0,155.9 143.6,132.1 231.1,170.3 318.7,39.5 406.2,30.0 493.8,60.2 581.3,57.8 668.9,174.1 756.4,156.5 844.0,154.5" fill="none" stroke="#1849a9" stroke-width="2"/><text x="458" y="260" font-size="11" text-anchor="middle" fill="currentColor">ventana</text></svg>
+<p style="font-size:13px;color:var(--sutil)"><span style="color:#1849a9">■</span> s1-transicion-20261111T180825Z &nbsp; 
+<span>- - referencia 0.381</span> · franjas: ventanas con alerta de la corrida
+· punto hueco: sin dato</p></div>
+<div class="panel"><table><tr><th>Ventana</th><th>s1-transicion-20261111T180825Z</th></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">0</a></td>
+<td>0.3103 · n=232</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">1</a></td>
+<td>0.4097 · n=144</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">2</a></td>
+<td>0.25 · n=96</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">3</a></td>
+<td>0.7975 · n=79</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">4</a></td>
+<td>0.8372 · n=43</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">5</a></td>
+<td>0.7109 · n=211</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">6</a></td>
+<td>0.721 · n=276</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">7</a></td>
+<td>0.2342 · n=111</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">8</a></td>
+<td>0.3077 · n=130</td></tr>
+<tr><td><a href="/corridas/s1-transicion-20261111T180825Z">9</a></td>
+<td>0.3162 · n=136</td></tr>
+</table></div>
+</main></body></html>

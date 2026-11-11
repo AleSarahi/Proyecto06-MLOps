@@ -1,4 +1,5 @@
-"""Validación de los contratos v1 de evento, captura, ventana y alerta (issue #3)."""
+"""Validación de los contratos v1 de evento, captura, ventana y alerta (issue #3), y de la alerta
+de fuente del extra #33."""
 
 from __future__ import annotations
 
@@ -11,7 +12,7 @@ from jsonschema import Draft202012Validator
 from .config import RAIZ
 
 DIR_CONTRATOS = RAIZ / "config" / "p6" / "contratos"
-TIPOS = ("evento", "captura", "ventana", "alerta")
+TIPOS = ("evento", "captura", "ventana", "alerta", "alerta_fuente")
 
 
 class ErrorContrato(ValueError):

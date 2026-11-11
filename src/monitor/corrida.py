@@ -10,6 +10,10 @@ Archivos de la carpeta de la corrida:
     capturas.jsonl        capturas con SHA-256 y motivos (contrato captura.v1)
     capturas/*.jpg        imágenes vinculadas, sin expiración
     metricas.json         métricas base G1-G7 por ventana y por corrida
+    metricas_extra.json   métricas adicionales X1-X5 (extra #31)
+
+Extras: con `vigilancia` se vigila la fuente (alerta «sin señal», #33) y en la tabla `vivo` de la
+base queda el último frame procesado para la vista en vivo del portal (#29).
 """
 
 from __future__ import annotations
@@ -32,7 +36,23 @@ from . import zonas as z
 from .almacen import Almacen, escribir_jsonl, leer_jsonl
 from .config import RAIZ, ConfigMonitoreo, ErrorConfig
 from .metricas import calcular as calcular_metricas
+from .metricas_extra import calcular as calcular_extra
 from .reglas import EvaluadorReglas
+from .vigilancia import Vigilante
+
+CAMPOS_VIVO = (
+    "event_id",
+    "timestamp_utc",
+    "frame_id",
+    "video_pos_ms",
+    "status",
+    "zona_frame",
+    "score_max",
+    "n_candidatas",
+    "conteo_zonas",
+    "image_width",
+    "image_height",
+)
 
 
 def ahora_utc() -> str:
@@ -113,6 +133,8 @@ class Corrida:
         reloj_ms,
         comando: list[str] | None = None,
         run_id: str | None = None,
+        vigilancia: dict[str, Any] | None = None,
+        carpeta_referencia: Path | None = None,
     ):
         self.cfg = cfg
         self.fuente = fuente
@@ -127,6 +149,8 @@ class Corrida:
         self.run_id = run_id or f"{segmento}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
         self.source_id = f"youtube-{segmento}"
         self.proc = psutil.Process()
+        self.vigilancia = vigilancia
+        self.carpeta_referencia = carpeta_referencia
 
     # --- utilidades ----------------------------------------------------------------------------
 
@@ -201,6 +225,17 @@ class Corrida:
             referencia=ref_valor,
             reloj_utc=ahora_utc,
         )
+        vigilante = (
+            Vigilante(
+                self.vigilancia,
+                run_id=self.run_id,
+                config_ref=cfg.config_ref,
+                model_ref=self.inferidor.model_ref,
+                reloj_utc=ahora_utc,
+            )
+            if self.vigilancia
+            else None
+        )
         run = {
             "schema": "p6.run.v1",
             "run_id": self.run_id,
@@ -226,6 +261,15 @@ class Corrida:
                     "proporcion_baja": ref_valor,
                 }
                 if self.referencia
+                else None
+            ),
+            "vigilancia": (
+                {
+                    "vigilancia_ref": self.vigilancia["vigilancia_ref"],
+                    "ruta": _relativa(Path(self.vigilancia["ruta"])),
+                    "fuente_sin_senal": self.vigilancia["fuente_sin_senal"],
+                }
+                if self.vigilancia
                 else None
             ),
         }
@@ -264,10 +308,47 @@ class Corrida:
             capturas[ev["event_id"]] = previa
             almacen.guardar_captura(previa)
 
+        ultimo_vivo: dict[str, Any] = {"resumen": None}
+
+        def vivo(estado: str, ev: dict[str, Any] | None, datos: bytes | None, v: int | None):
+            abiertas = [a["alert_id"] for a in evaluador.abiertas()]
+            if vigilante and vigilante.abierta:
+                abiertas.append(vigilante.abierta["alert_id"])
+            if ev:
+                resumen = {k: ev[k] for k in CAMPOS_VIVO}
+                resumen["detecciones"] = [
+                    {k: d[k] for k in ("class_name", "score", "zona", "bbox")}
+                    for d in ev["detecciones"]
+                ]
+                ultimo_vivo["resumen"] = resumen
+            # Sin frame nuevo (latido o cierre) se conserva el último frame mostrado.
+            resumen = ultimo_vivo["resumen"]
+            almacen.guardar_vivo(
+                self.run_id,
+                actualizado_utc=ahora_utc(),
+                estado=estado,
+                estado_fuente=vigilante.estado_fuente() if vigilante else "con_senal",
+                evento=ev,
+                jpeg=datos,
+                datos={
+                    "ultimo": resumen,
+                    "ventana": v,
+                    "procesados": procesados,
+                    "alertas_abiertas": abiertas,
+                    "segmento": self.segmento,
+                },
+            )
+
         def cerrar_ventana(i: int) -> None:
             eventos = buffers[-1][1] if buffers and buffers[-1][0] == i else []
             a, b = self._limites(i)
-            ventana, cambiadas = evaluador.evaluar(i, a, b, [e for e, _ in eventos])
+            ventana, cambiadas = evaluador.evaluar(
+                i,
+                a,
+                b,
+                [e for e, _ in eventos],
+                otras_activas=vigilante.activas if vigilante else 0,
+            )
             for alerta in cambiadas:
                 almacen.guardar_alerta(alerta)
                 if alerta["estado"] == "abierta" and cfg.captura["alerta"]:
@@ -290,6 +371,22 @@ class Corrida:
                     ventana_actual += 1
                 if not buffers or buffers[-1][0] != v:
                     buffers.append((v, []))
+                if not frame.senal:
+                    # Latido: a esta hora debía llegar un frame y la fuente no lo entregó.
+                    obs(
+                        {
+                            "tipo": "sin_senal",
+                            "run_id": self.run_id,
+                            "ventana": v,
+                            "video_pos_ms": frame.video_pos_ms,
+                            "t_esperado_ms": round(frame.t_llegada_ms, 3),
+                        }
+                    )
+                    if vigilante:
+                        for alerta in vigilante.latido(frame.t_llegada_ms, v):
+                            almacen.guardar_alerta(alerta)
+                    vivo("en_curso", None, None, v)
+                    continue
                 if cola > cfg.atraso_max_ms:
                     saturacion += 1
                     obs(
@@ -303,6 +400,8 @@ class Corrida:
                             "video_pos_ms": frame.video_pos_ms,
                         }
                     )
+                    if vigilante:
+                        vigilante.senal(frame.t_llegada_ms)
                     continue
                 if frame.error is not None:
                     codigo = "unreadable_image"
@@ -317,6 +416,10 @@ class Corrida:
                 datos = cap_mod.codificar(frame.imagen, frame.jpeg, cfg.captura["calidad_jpeg"])
                 capturar(ev, datos, cap_mod.motivos(ev, procesados, cfg.captura))
                 buffers[-1][1].append((ev, datos))
+                if vigilante:
+                    for alerta in vigilante.frame(frame.t_llegada_ms, v, ev):
+                        almacen.guardar_alerta(alerta)
+                vivo("en_curso", ev, datos, v)
                 fin = self.reloj_ms()
                 obs(
                     {
@@ -340,8 +443,12 @@ class Corrida:
                 )
             if ventana_actual is not None:
                 cerrar_ventana(ventana_actual)
+        except BaseException:
+            vivo("fallida", None, None, ventana_actual)
+            raise
         finally:
             f_obs.close()
+        vivo("terminada", None, None, ventana_actual)
 
         # Exportación recalculable desde la base (lo persistido es lo exportado).
         evs, _ = almacen.eventos(run_id=self.run_id, limite=10**9)
@@ -380,7 +487,16 @@ class Corrida:
         (self.salida / "metricas.json").write_text(
             json.dumps(metricas, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
         )
+        extra = calcular_extra(self.salida, self.carpeta_referencia)
+        (self.salida / "metricas_extra.json").write_text(
+            json.dumps(extra, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
+        )
         return run
+
+
+def _relativa(p: Path) -> str:
+    p = p.resolve()
+    return p.relative_to(RAIZ).as_posix() if p.is_relative_to(RAIZ) else str(p)
 
 
 def _r3(v: float | None) -> float | None:

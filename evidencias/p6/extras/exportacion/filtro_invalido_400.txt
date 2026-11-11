@@ -1,0 +1,2 @@
+Filtro inválido: zona desconocida 'xx'; usa una de baja, duda, aceptada
+ 400

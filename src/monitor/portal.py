@@ -8,6 +8,8 @@ Lee la base SQLite en solo lectura. Rutas:
     /alertas/<id>        detalle: regla, ventanas, configuración y eventos de origen con imágenes
     /corridas[/<id>]     identidad de la corrida, configuración efectiva y métricas
     /imagenes/<id>       la captura (solo archivos registrados en la base)
+
+Extras (portal_extras.py): /vivo, /dashboard y /exportar/eventos.{csv,jsonl}.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from typing import Any
 from flask import Flask, abort, render_template_string, request, send_file
 
 from .almacen import Almacen
+from .portal_extras import filtros_eventos, registrar
 
 POR_PAGINA = 50
 
@@ -56,7 +59,7 @@ max-content 1fr;gap:4px 14px;margin:0}dt{color:var(--sutil)}dd{margin:0}
 pre{white-space:pre-wrap;font-size:12px;margin:0}
 </style></head><body>
 <header><b>Centro de monitoreo · P6</b><nav><a href="/eventos">Eventos</a><a href="/alertas">Alertas</a>
-<a href="/corridas">Corridas</a></nav></header>
+<a href="/corridas">Corridas</a><a href="/vivo">En vivo</a><a href="/dashboard">Dashboard</a></nav></header>
 <main><h1 style="font-size:20px">{{ titulo }}</h1>{{ cuerpo|safe }}</main></body></html>"""
 
 
@@ -76,7 +79,9 @@ T_EVENTOS = """
 </select></label>
 <label>Estado<select name="status"><option value="">todos</option>
 {% for s in ['ok','sin_detecciones','error'] %}<option {{'selected' if s==f.status}}>{{s}}</option>
-{% endfor %}</select></label><button>Filtrar</button></form></div>
+{% endfor %}</select></label><button>Filtrar</button>
+<span style="font-size:13px">Exportar con estos filtros: <a href="/exportar/eventos.csv?{{qs}}">CSV</a> ·
+<a href="/exportar/eventos.jsonl?{{qs}}">JSONL</a></span></form></div>
 <div class="panel">
 {% if not eventos %}<div class="vacio">No hay eventos con estos filtros.
 {% if not corridas %} La base no tiene corridas: corre <code>python -m monitor importar …</code>.{% endif %}
@@ -184,6 +189,38 @@ candidatas por ventana · {{a.regla.ventanas_consecutivas}} ventana(s) seguida(s
 <td>{% if e.image_ref %}<img class="mini" loading="lazy" src="/imagenes/img-{{e.event_id}}"
 alt="captura">{% else %}—{% endif %}</td></tr>{% endfor %}</table>{% endif %}</div>"""
 
+T_ALERTA_FUENTE = """
+<div class="panel"><dl>
+<dt>alert_id</dt><dd class="mono">{{a.alert_id}}</dd>
+<dt>Momento de detección (UTC)</dt><dd>{{a.timestamp_utc}}{% if a.deteccion_tardia %} (tardía: se
+detectó al volver la señal){% endif %}</dd>
+<dt>Regla</dt><dd class="mono">{{a.rule_id}} ({{a.regla.tipo}}, vigilancia técnica de la fuente)</dd>
+<dt>Condición</dt><dd>{{a.regla.descripcion}}</dd>
+<dt>Parámetros</dt><dd>sin frames más de {{a.regla.sin_frames_ms/1000}} s · cierre tras
+{{a.regla.frames_recuperacion}} frames seguidos</dd>
+<dt>Severidad</dt><dd><span class="z {{a.severidad}}">{{a.severidad}}</span></dd>
+<dt>Estado</dt><dd>{{a.estado}}{% if a.cerrada_en %} (cerrada {{a.cerrada_en}} en la ventana
+{{a.cerrada_por_ventana}}){% endif %}</dd>
+<dt>Motivo</dt><dd>{{a.motivo}}</dd>
+<dt>Acción sugerida</dt><dd>{{a.accion_sugerida}}</dd>
+<dt>Último frame antes del corte</dt><dd>{% if a.ultimo_frame %}<a class="mono"
+href="/eventos/{{a.ultimo_frame.event_id}}">{{a.ultimo_frame.event_id}}</a>{% else %}—{% endif %}</dd>
+<dt>Frames perdidos</dt><dd>{{a.frames_perdidos}} (latidos sin frame)</dd>
+<dt>Recuperación</dt><dd>{% if a.recuperacion %}primer frame a los {{'%.1f'|format(
+(a.recuperacion.primer_frame_ms - a.sin_senal_desde_ms)/1000)}} s del último · sin señal
+{{'%.1f'|format(a.recuperacion.duracion_sin_senal_ms/1000)}} s{% else %}no se recuperó durante la corrida{% endif %}</dd>
+<dt>Ventanas afectadas</dt><dd>{{a.ventanas|join(', ')}} (las de confianza quedan «insuficientes»)</dd>
+<dt>Corrida</dt><dd><a class="mono" href="/corridas/{{a.run_id}}">{{a.run_id}}</a></dd>
+<dt>Configuración</dt><dd class="mono">config_ref {{a.config_ref}} · vigilancia_ref {{a.vigilancia_ref}}</dd>
+<dt>Modelo</dt><dd class="mono">{{a.model_ref}}</dd></dl></div>
+<div class="panel"><h2 style="font-size:16px">Eventos vinculados ({{eventos|length}}): último antes del
+corte y frames de la recuperación</h2>
+{% if not eventos %}<div class="vacio">Los eventos de esta alerta no están en la base.</div>{% else %}
+<table><tr><th>Evento</th><th>t video</th><th>Zona</th><th>Fecha (UTC)</th></tr>
+{% for e in eventos %}<tr><td><a class="mono" href="/eventos/{{e.event_id}}">{{e.frame_id}}</a></td>
+<td>{{'%.1f'|format(e.video_pos_ms/1000)}} s</td><td>{{zona(e.zona_frame, e.status)|safe}}</td>
+<td>{{e.timestamp_utc}}</td></tr>{% endfor %}</table>{% endif %}</div>"""
+
 T_CORRIDAS = """<div class="panel">{% if not corridas %}<div class="vacio">No hay corridas en la base.
 Corre <code>python -m monitor importar &lt;carpetas&gt;</code>.</div>{% else %}
 <table><tr><th>Corrida</th><th>Segmento</th><th>Inicio (UTC)</th><th>Commit</th><th>Eventos</th>
@@ -221,6 +258,12 @@ c.referencia.proporcion_baja) if c.referencia else 'ninguna (esta es la corrida 
 {% for g, m in metricas.metricas.items() %}<tr><td>{{g}}</td><td>{{m.nombre}}</td>
 <td>{{m.corrida.valor if m.corrida.valor is not none else '— (sin datos)'}}</td><td>{{m.unidad}}</td>
 <td>{{m.corrida.n}}</td></tr>{% endfor %}</table></div>{% endif %}
+{% if extra %}<div class="panel"><h2 style="font-size:16px">Métricas adicionales (extras)</h2><table>
+<tr><th>ID</th><th>Métrica</th><th>Valor (corrida)</th><th>Unidad</th><th>n</th></tr>
+{% for g, m in extra.metricas.items() %}<tr><td>{{g}}</td><td>{{m.nombre}}</td>
+<td>{{m.corrida.valor if m.corrida.valor is not none else '— (sin datos)'}}</td><td>{{m.unidad}}</td>
+<td>{{m.corrida.n}}</td></tr>{% endfor %}</table>
+<p><a href="/dashboard?run={{c.run_id}}&metrica=G4">Ver gráficas por ventana</a></p></div>{% endif %}
 <div class="panel" id="config"><h2 style="font-size:16px">Configuración efectiva
 <span class="mono">{{c.config_ref}}</span></h2><pre>{{ c.config_efectiva|tojson(indent=1) }}</pre></div>"""
 
@@ -262,6 +305,7 @@ def crear_app(db: Path) -> Flask:
 
     @app.get("/eventos")
     def eventos():
+        filtros_eventos(request.args)  # 400 si la zona o el estado no existen (extra F3)
         f = {k: request.args.get(k, "") for k in ("run", "zona", "status")}
         try:
             num = max(1, int(request.args.get("pagina", "1")))
@@ -337,7 +381,8 @@ def crear_app(db: Path) -> Flask:
             evs = [e for e in (alm.evento(i) for i in a["event_ids"]) if e]
         finally:
             alm.con.close()
-        return pagina(f"Alerta {a['rule_id']}", T_ALERTA, a=a, eventos=evs)
+        plantilla = T_ALERTA_FUENTE if a["schema"] == "p6.alerta_fuente.v1" else T_ALERTA
+        return pagina(f"Alerta {a['rule_id']}", plantilla, a=a, eventos=evs)
 
     @app.get("/corridas")
     def corridas():
@@ -360,7 +405,16 @@ def crear_app(db: Path) -> Flask:
             alm.con.close()
         ruta_m = Path(c["_dir"]) / "metricas.json"
         metricas = json.loads(ruta_m.read_text(encoding="utf-8")) if ruta_m.is_file() else None
-        return pagina(f"Corrida {run_id}", T_CORRIDA, c=c, ventanas=ventanas, metricas=metricas)
+        ruta_x = Path(c["_dir"]) / "metricas_extra.json"
+        extra = json.loads(ruta_x.read_text(encoding="utf-8")) if ruta_x.is_file() else None
+        return pagina(
+            f"Corrida {run_id}",
+            T_CORRIDA,
+            c=c,
+            ventanas=ventanas,
+            metricas=metricas,
+            extra=extra,
+        )
 
     @app.get("/imagenes/<image_id>")
     def imagen(image_id: str):
@@ -380,4 +434,5 @@ def crear_app(db: Path) -> Flask:
             )
         return send_file(archivo, mimetype="image/jpeg", max_age=3600)
 
+    registrar(app, abrir, pagina)
     return app

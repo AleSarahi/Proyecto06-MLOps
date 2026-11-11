@@ -1,0 +1,1246 @@
+{
+ "run_id": "s1-transicion-20261111T180825Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "metricas": {
+  "G1": {
+   "id": "tiempo_inferencia_p95_ms",
+   "nombre": "Tiempo de inferencia p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 286.64,
+    "n": 100
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 217.14,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 197.59,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 181.82,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 306.41,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 335.42,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 362.31,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 394.79,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 193.73,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 323.76,
+     "n": 10
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 145.2,
+     "n": 10
+    }
+   ]
+  },
+  "G2": {
+   "id": "fps_procesamiento",
+   "nombre": "FPS de procesamiento",
+   "unidad": "frames inferidos / s",
+   "corrida": {
+    "valor": 1.0085,
+    "n": 100
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 1.0968,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 1.0929,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 1.0936,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 1.0895,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 1.0703,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 1.0961,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 1.0936,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 1.0862,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 1.0942,
+     "n": 10
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 1.0921,
+     "n": 10
+    }
+   ]
+  },
+  "G3": {
+   "id": "ram_rss_max_mb",
+   "nombre": "RAM RSS máxima del proceso",
+   "unidad": "MiB",
+   "corrida": {
+    "valor": 384.14,
+    "n": 100
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 381.27,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 380.78,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 383.11,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 384.14,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 383.98,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 383.3,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 321.66,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 311.71,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 312.37,
+     "n": 10
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 312.39,
+     "n": 10
+    }
+   ]
+  },
+  "G4": {
+   "id": "proporcion_baja",
+   "nombre": "Proporción de baja confianza",
+   "unidad": "fracción de candidatas",
+   "corrida": {
+    "valor": 0.4883,
+    "n": 1458,
+    "numerador": 712
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 0.3103,
+     "n": 232,
+     "numerador": 72,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 0.4097,
+     "n": 144,
+     "numerador": 59,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 0.25,
+     "n": 96,
+     "numerador": 24,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 0.7975,
+     "n": 79,
+     "numerador": 63,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 0.8372,
+     "n": 43,
+     "numerador": 36,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 0.7109,
+     "n": 211,
+     "numerador": 150,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 0.721,
+     "n": 276,
+     "numerador": 199,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 0.2342,
+     "n": 111,
+     "numerador": 26,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 0.3077,
+     "n": 130,
+     "numerador": 40,
+     "estado_ventana": "suficiente"
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 0.3162,
+     "n": 136,
+     "numerador": 43,
+     "estado_ventana": "suficiente"
+    }
+   ]
+  },
+  "G5": {
+   "id": "imagenes_vinculadas",
+   "nombre": "Imágenes vinculadas",
+   "unidad": "fracción de capturas",
+   "corrida": {
+    "valor": 1.0,
+    "n": 37,
+    "numerador": 37,
+    "problemas": []
+   },
+   "por_ventana": []
+  },
+  "G6": {
+   "id": "version_esperada_vs_reportada",
+   "nombre": "Versión esperada frente a reportada",
+   "unidad": "fracción de eventos",
+   "corrida": {
+    "valor": 1.0,
+    "n": 100
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 1.0,
+     "n": 10
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 1.0,
+     "n": 10
+    }
+   ]
+  },
+  "G7": {
+   "id": "alertas_activas",
+   "nombre": "Alertas activas al cierre de la ventana",
+   "unidad": "alertas",
+   "corrida": {
+    "valor": 2,
+    "n": 10,
+    "agregado": "máximo de alertas activas entre ventanas"
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006570"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006600",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006630",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006660",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006690",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006720",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006750",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006780",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006810",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006840",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006870"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006900",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006930",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006960",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f006990",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007020",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007050",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007080",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007110",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007140",
+      "s1-transicion-20261111T180825Z-s1-transicion-t0-f007170"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 30000.0,
+     "fin_ms": 40000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000270"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 40000.0,
+     "fin_ms": 50000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t1-f000570"
+     ],
+     "valor": 1,
+     "n": 1
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 50000.0,
+     "fin_ms": 60000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000000",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000030",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000060",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000090",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000120",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000150",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000180",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000210",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000240",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000270"
+     ],
+     "valor": 2,
+     "n": 1
+    },
+    {
+     "ventana": 6,
+     "inicio_ms": 60000.0,
+     "fin_ms": 70000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000300",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000360",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000390",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000420",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000450",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000480",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000510",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000540",
+      "s1-transicion-20261111T180825Z-s1-transicion-t2-f000570"
+     ],
+     "valor": 2,
+     "n": 1
+    },
+    {
+     "ventana": 7,
+     "inicio_ms": 70000.0,
+     "fin_ms": 80000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007200",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007230",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007260",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007290",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007320",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007350",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007380",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007410",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007440",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007470"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 8,
+     "inicio_ms": 80000.0,
+     "fin_ms": 90000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007500",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007530",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007560",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007590",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007620",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007650",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007680",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007710",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007740",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007770"
+     ],
+     "valor": 0,
+     "n": 1
+    },
+    {
+     "ventana": 9,
+     "inicio_ms": 90000.0,
+     "fin_ms": 100000.0,
+     "event_ids": [
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007800",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007830",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007860",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007890",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007920",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007950",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f007980",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008010",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008040",
+      "s1-transicion-20261111T180825Z-s1-transicion-t3-f008070"
+     ],
+     "valor": 0,
+     "n": 1
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,279 @@
+{
+ "run_id": "c2-20261109T042757Z",
+ "config_ref": "c574ee88333cbf676b469df9ddbb6f1cf2c1cf0df1d2c3499631fadbfecaff6c",
+ "referencia_x3": {
+  "run_id": "referencia-20261109T042407Z",
+  "bordes": [
+   0.0,
+   0.1,
+   0.2,
+   0.3,
+   0.4,
+   0.5,
+   0.6,
+   0.7,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "histograma": [
+   0,
+   384,
+   269,
+   186,
+   156,
+   183,
+   268,
+   214,
+   54,
+   1
+  ],
+  "eps": 0.0001
+ },
+ "metricas": {
+  "X1": {
+   "id": "candidatas_por_frame",
+   "nombre": "Candidatas por frame",
+   "unidad": "candidatas / frame",
+   "corrida": {
+    "valor": 5.875,
+    "n": 24,
+    "numerador": 141
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 7.9,
+     "n": 10,
+     "numerador": 79
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 4.3,
+     "n": 10,
+     "numerador": 43
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 4.75,
+     "n": 4,
+     "numerador": 19
+    }
+   ]
+  },
+  "X2": {
+   "id": "frames_sin_detecciones",
+   "nombre": "Frames sin detecciones",
+   "unidad": "fracción de frames procesados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 24,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 4,
+     "numerador": 0
+    }
+   ]
+  },
+  "X3": {
+   "id": "psi_scores_referencia",
+   "nombre": "PSI de scores frente a la referencia",
+   "unidad": "PSI (adimensional)",
+   "corrida": {
+    "valor": 2.0207,
+    "n": 141,
+    "estado": "ok",
+    "histograma": [
+     0,
+     89,
+     28,
+     14,
+     4,
+     4,
+     2,
+     0,
+     0,
+     0
+    ]
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 1.8873,
+     "n": 79,
+     "estado": "ok",
+     "histograma": [
+      0,
+      46,
+      17,
+      8,
+      4,
+      3,
+      1,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 2.5315,
+     "n": 43,
+     "estado": "ok",
+     "histograma": [
+      0,
+      28,
+      8,
+      5,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": null,
+     "n": 19,
+     "estado": "insuficiente",
+     "histograma": [
+      0,
+      15,
+      3,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "X4": {
+   "id": "latencia_e2e_p95_ms",
+   "nombre": "Latencia extremo a extremo p95",
+   "unidad": "ms",
+   "corrida": {
+    "valor": 608.51,
+    "n": 24,
+    "mediana_por_etapa_ms": {
+     "cola": 17.64,
+     "inferencia": 299.89,
+     "registro": 53.1
+    }
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 608.51,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 16.23,
+      "inferencia": 321.02,
+      "registro": 55.84
+     }
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 800.57,
+     "n": 10,
+     "mediana_por_etapa_ms": {
+      "cola": 17.64,
+      "inferencia": 299.89,
+      "registro": 50.83
+     }
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 367.81,
+     "n": 4,
+     "mediana_por_etapa_ms": {
+      "cola": 16.95,
+      "inferencia": 271.71,
+      "registro": 53.1
+     }
+    }
+   ]
+  },
+  "X5": {
+   "id": "disponibilidad_fuente",
+   "nombre": "Disponibilidad de la fuente",
+   "unidad": "fracción de frames esperados",
+   "corrida": {
+    "valor": 1.0,
+    "n": 24,
+    "numerador": 24
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 1.0,
+     "n": 10,
+     "numerador": 10
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 1.0,
+     "n": 4,
+     "numerador": 4
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,386 @@
+{
+ "actualizado_utc": "2026-11-11T18:09:46.245Z",
+ "alertas_abiertas": [
+  "s1-transicion-20261111T180825Z-baja-confianza-v1-v003",
+  "s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005"
+ ],
+ "edad_s": 0.12,
+ "estado_corrida": "en_curso",
+ "estado_fuente": "con_senal",
+ "explicacion": "Recibiendo e infiriendo frames.",
+ "procesados": 62,
+ "run_id": "s1-transicion-20261111T180825Z",
+ "ultimo": {
+  "conteo_zonas": {
+   "aceptada": 5,
+   "baja": 20,
+   "duda": 7
+  },
+  "detecciones": [
+   {
+    "bbox": [
+     901.03,
+     481.76,
+     1032.8,
+     666.09
+    ],
+    "class_name": "bus",
+    "score": 0.778235,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     0.17,
+     407.88,
+     113.24,
+     539.64
+    ],
+    "class_name": "bus",
+    "score": 0.772782,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     665.16,
+     596.6,
+     801.87,
+     699.05
+    ],
+    "class_name": "car",
+    "score": 0.676445,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     133.07,
+     618.28,
+     397.35,
+     720.0
+    ],
+    "class_name": "car",
+    "score": 0.657988,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     781.92,
+     523.55,
+     851.51,
+     580.67
+    ],
+    "class_name": "car",
+    "score": 0.613598,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     344.28,
+     589.94,
+     506.09,
+     659.16
+    ],
+    "class_name": "car",
+    "score": 0.580506,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     724.74,
+     628.14,
+     921.25,
+     714.84
+    ],
+    "class_name": "car",
+    "score": 0.524613,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     711.92,
+     494.97,
+     781.73,
+     544.66
+    ],
+    "class_name": "car",
+    "score": 0.514922,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     65.74,
+     623.32,
+     223.18,
+     715.74
+    ],
+    "class_name": "car",
+    "score": 0.453711,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     0.14,
+     532.61,
+     70.95,
+     717.55
+    ],
+    "class_name": "bus",
+    "score": 0.389948,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     855.57,
+     536.74,
+     915.51,
+     602.58
+    ],
+    "class_name": "car",
+    "score": 0.383867,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     0.42,
+     531.47,
+     69.98,
+     717.46
+    ],
+    "class_name": "truck",
+    "score": 0.310811,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     904.57,
+     492.39,
+     949.51,
+     536.05
+    ],
+    "class_name": "car",
+    "score": 0.235818,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     830.73,
+     470.76,
+     891.71,
+     525.1
+    ],
+    "class_name": "car",
+    "score": 0.218082,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     1097.87,
+     551.92,
+     1122.15,
+     615.95
+    ],
+    "class_name": "person",
+    "score": 0.217609,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     923.68,
+     460.99,
+     963.5,
+     491.67
+    ],
+    "class_name": "car",
+    "score": 0.200352,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     843.15,
+     462.24,
+     892.78,
+     520.88
+    ],
+    "class_name": "car",
+    "score": 0.184571,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     651.47,
+     485.64,
+     676.62,
+     545.58
+    ],
+    "class_name": "person",
+    "score": 0.174721,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     1166.78,
+     622.6,
+     1201.56,
+     696.83
+    ],
+    "class_name": "person",
+    "score": 0.172879,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     154.7,
+     498.84,
+     173.48,
+     543.38
+    ],
+    "class_name": "person",
+    "score": 0.15293,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     591.87,
+     523.0,
+     613.76,
+     580.63
+    ],
+    "class_name": "person",
+    "score": 0.142276,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     1084.09,
+     481.94,
+     1100.37,
+     516.26
+    ],
+    "class_name": "person",
+    "score": 0.132871,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     65.09,
+     620.12,
+     288.18,
+     715.39
+    ],
+    "class_name": "car",
+    "score": 0.132071,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     907.48,
+     485.4,
+     956.57,
+     534.83
+    ],
+    "class_name": "car",
+    "score": 0.126947,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     647.49,
+     484.92,
+     670.78,
+     546.1
+    ],
+    "class_name": "person",
+    "score": 0.119847,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     912.4,
+     461.72,
+     967.62,
+     508.3
+    ],
+    "class_name": "car",
+    "score": 0.114467,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     848.87,
+     472.99,
+     892.28,
+     522.98
+    ],
+    "class_name": "car",
+    "score": 0.108604,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     811.55,
+     648.69,
+     918.81,
+     711.94
+    ],
+    "class_name": "car",
+    "score": 0.108153,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     911.26,
+     466.36,
+     963.8,
+     530.87
+    ],
+    "class_name": "car",
+    "score": 0.107757,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     1061.98,
+     405.58,
+     1087.04,
+     462.73
+    ],
+    "class_name": "person",
+    "score": 0.106928,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     864.13,
+     463.61,
+     893.17,
+     515.38
+    ],
+    "class_name": "car",
+    "score": 0.101192,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     1187.18,
+     562.15,
+     1215.83,
+     630.57
+    ],
+    "class_name": "person",
+    "score": 0.100722,
+    "zona": "baja"
+   }
+  ],
+  "event_id": "s1-transicion-20261111T180825Z-s1-transicion-t2-f000330",
+  "frame_id": "s1-transicion-t2-f000330",
+  "image_height": 720,
+  "image_width": 1280,
+  "n_candidatas": 32,
+  "score_max": 0.778235,
+  "status": "ok",
+  "timestamp_utc": "2026-11-11T18:09:46.234Z",
+  "video_pos_ms": 61000.0,
+  "zona_frame": "aceptada"
+ },
+ "ventana": 6,
+ "vista": "en_vivo"
+}

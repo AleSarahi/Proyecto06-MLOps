@@ -35,6 +35,19 @@ videos:
     archivo: datos/p6/video/jKl0o9Ydi5Q.mp4
     bytes: 4595103
     sha256: eb96b39d543337776c7ff4c1c11945c764a834f4f2e983de49ab170093b478d7
+  # Solo para el escenario adicional S1 (extra #32): el video «noche» dura 23 s y no alcanza para
+  # las 3 ventanas suficientes seguidas que pide la regla sostenida.
+  noche2:
+    youtube_id: 4a9ANcON_eU
+    url: https://www.youtube.com/watch?v=4a9ANcON_eU
+    titulo: "Time Lapse of Night Traffic at a Busy Intersection"
+    canal: non copyright videos
+    publicado: "2021-12-09"
+    licencia: "Creative Commons Attribution license (reuse allowed)"
+    formato: "136"
+    archivo: datos/p6/video/4a9ANcON_eU.mp4
+    bytes: 5619707
+    sha256: 929f20ec50e2f9e359b9125217b27ae18dbc82343ec49440c37f26bbb69e31ab
 
 # Segmentos por tiempo del video, en segundos [inicio, fin). Cada segmento tiene su source_id.
 segmentos:
@@ -53,3 +66,24 @@ segmentos:
     inicio_s: 0
     fin_s: 24
     condicion: "Noche: faros, poca luz y objetos lejanos (baja confianza esperada)."
+
+  # --- Escenarios adicionales (extras, docs/p6/extras.md) ------------------------------------
+  # Una secuencia de tramos se reproduce como un solo stream: el tiempo del segmento corre de 0 a
+  # la suma de las duraciones y cada frame conserva su video y su posición original en el
+  # manifiesto. Simula una cámara cuya escena cambia (día -> noche -> día).
+  s1-transicion:
+    condicion: >-
+      Día (30 s) -> noche en dos cámaras (20 s + 20 s) -> día (30 s). Transición, persistencia del
+      cambio y recuperación.
+    tramos:
+      - {video: dia, inicio_s: 210, fin_s: 240}
+      - {video: noche, inicio_s: 0, fin_s: 20}
+      - {video: noche2, inicio_s: 0, fin_s: 20}
+      - {video: dia, inicio_s: 240, fin_s: 270}
+  # Escenario de interrupción (extra #33): mismo tipo de escena que C1; el corte de la fuente se
+  # inyecta al correr (`--corte 20:40`), no está en los frames.
+  s2-interrupcion:
+    video: dia
+    inicio_s: 240
+    fin_s: 300
+    condicion: "Día, operación normal con una caída de la fuente de 20 s a mitad de la corrida."

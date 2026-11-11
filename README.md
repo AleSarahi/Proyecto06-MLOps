@@ -18,6 +18,7 @@ política», no «correcta».
 | Ejecución | Local, CPU, Python 3.12 (`uv`). Windows, macOS o Linux. |
 | Evidencias | [`evidencias/p6/indice.md`](evidencias/p6/indice.md): criterio → archivo → ID → commit |
 | Autoría | [`docs/p6/autoria.md`](docs/p6/autoria.md) (aportación propia, componentes reutilizados de P5, terceros) |
+| Extras | Vista en vivo, dashboard, exportación, métricas X1–X5 y escenarios S1/S2 · [inventario](docs/p6/extras.md) |
 
 ## Instalación
 
@@ -35,8 +36,8 @@ Si `uv` no se reconoce después de instalarlo (por ejemplo en Windows sin permis
 ## Ver el portal con la evidencia entregada (sin correr el modelo)
 
 ```bash
-uv run python -m monitor importar evidencias/p6/referencia/corrida evidencias/p6/escenarios/c1-normal evidencias/p6/escenarios/c2-baja-confianza
-uv run python -m monitor portal          # http://127.0.0.1:8000  (/eventos, /alertas, /corridas)
+uv run python -m monitor importar evidencias/p6/referencia/corrida evidencias/p6/escenarios/c1-normal evidencias/p6/escenarios/c2-baja-confianza evidencias/p6/extras/s1-transicion evidencias/p6/extras/s2-interrupcion
+uv run python -m monitor portal          # http://127.0.0.1:8000  (/eventos, /alertas, /corridas, /vivo, /dashboard)
 ```
 
 `importar` reconstruye la base SQLite (`datos/p6/monitoreo.sqlite`, que no va en Git) a partir de los JSONL
@@ -75,6 +76,31 @@ Resultados entregados (commit del código `d5ab597`, `config_ref c574ee88…`):
 | [Referencia](evidencias/p6/referencia/) | 90 | 90 aceptadas | 0.3808 | — |
 | [C1 · normal](evidencias/p6/escenarios/c1-normal/) | 90 | 90 aceptadas | 0.3859 (ventanas 0.28–0.51) | ninguna |
 | [C2 · baja confianza](evidencias/p6/escenarios/c2-baja-confianza/) | 24 | 9 baja · 13 duda · 2 aceptadas | 0.8298 (ventanas 0.80 / 0.84 / insuficiente) | `baja-confianza-v1` (advertencia) |
+
+## Extras (puntos adicionales)
+
+Detalle, niveles solicitados y control de doble conteo: [`docs/p6/extras.md`](docs/p6/extras.md). No cambian
+`config/p6/monitoreo.yaml` ni `config_ref`.
+
+```bash
+# S1 · cambio sostenido: día -> noche -> noche -> día (100 s)
+uv run python -m monitor correr --segmento s1-transicion --salida tmp/s1
+# S2 · la fuente se cae de 20 a 40 s y se recupera (60 s); con el portal abierto, ver /vivo
+uv run python -m monitor correr --segmento s2-interrupcion --corte 20:40 --salida tmp/s2
+# Verificaciones
+python evidencias/p6/recalcular.py tmp/s1 tmp/s2
+python evidencias/p6/recalcular_extras.py tmp/s1 tmp/s2   # X1-X5 y alertas de fuente (solo stdlib)
+uv run python -m monitor metricas-extra evidencias/p6/escenarios/c1-normal   # X1-X5 de otra corrida
+```
+
+| Extra | Qué es | Evidencia |
+|---|---|---|
+| F1 · En vivo (`/vivo`) | Último frame con cajas, estado de corrida y fuente, alertas abiertas; cada segundo | [capturas durante S2](evidencias/p6/extras/portal/) |
+| F2 · Dashboard (`/dashboard`) | G1–G7 y X1–X5 por ventana, varias corridas, rango, alertas sombreadas | `portal/10…14` |
+| F3 · Exportación | `/exportar/eventos.csv` y `.jsonl` con filtros validados | [`exportacion/`](evidencias/p6/extras/exportacion/) |
+| M1–M5 · X1–X5 | Candidatas/frame, frames sin detecciones, PSI vs. referencia, latencia e2e, disponibilidad | `metricas_extra.json` de cada corrida |
+| S1 · Cambio sostenido | La regla de 3 ventanas abre en la 3.ª, nada se repite, todo cierra al volver el día | [ficha](evidencias/p6/extras/s1-transicion/README.md) |
+| S2 · Interrupción | Corte de 20 s → alerta de fuente → recuperación → verificación | [ficha](evidencias/p6/extras/s2-interrupcion/README.md) |
 
 ## Arquitectura
 

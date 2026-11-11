@@ -10,6 +10,8 @@
 | Evidencias de las corridas (JSONL, capturas, métricas, recálculo, portal) | `20bfa9b` | Se agregó **después** del código probado y no lo modifica: solo agrega `evidencias/p6/`. |
 | Documentación (docs/p6, README, este índice) y ensayo desde una copia limpia | commits posteriores con prefijo `P6-` | No cambian `config/p6/` ni la lógica de inferencia, ventanas o reglas; el `config_ref` sigue siendo `c574ee88…ff6c`. El único cambio de código es cosmético (`noprogress` en la descarga, ver [`ensayo-copia-limpia.md`](ensayo-copia-limpia.md)). En la copia limpia, la corrida de C1 y C2 dio **los mismos scores** que la evidencia. |
 
+| Código de los extras (#29–#33), con el que se ejecutaron S1 y S2 | `ac12754fb1f0382865da6c0cf5cc92203c69c97e` | No cambia `config/p6/monitoreo.yaml` ni `config_ref`. Agrega `metricas_extra.json` a las corridas base sin tocar sus demás archivos. |
+
 Para ubicar la revisión evaluada: `git log --oneline -- evidencias/p6 src/monitor config/p6`.
 
 ## Identidades de la serie
@@ -69,7 +71,20 @@ uv run python -m monitor video verificar        # hashes del respaldo de frames
 
 ## Extras
 
-**Esta entrega no reclama puntos extra.** El portal tiene funciones que van más allá de la consulta mínima (filtros
-por corrida/zona/estado, cajas sobre la imagen y página de corrida con métricas), pero no se presentan como
-adicionales con evidencia propia. Si más adelante se reclaman, se registrarán aquí con ID, tipo F/M/S, nivel
-solicitado y evidencia.
+Inventario completo, con definiciones, límites y control de doble conteo: [`docs/p6/extras.md`](../../docs/p6/extras.md).
+Los filtros que ya tenía el portal base, las cajas sobre la imagen y la página de corrida **no** se reclaman.
+
+| ID | Tipo | Nivel solicitado | Evidencia | IDs / valores para comprobar |
+|---|---|---|---|---|
+| F1 | F · stream en vivo | 15 | [`extras/portal/vivo-1…5`](extras/portal/) (+ `.json`), [`portal/s1/`](extras/portal/s1/), `tests/test_p6_extras.py` | S2: `en_vivo` → `sin_senal` → `recuperando` → `en_vivo` → `terminada` |
+| F2 | F · dashboard | 10 | [`extras/portal/10…14`](extras/portal/) | `/dashboard?run=s1-transicion-20261111T180825Z&metrica=G4`; 400 con `metrica=ZZ` |
+| F3 | F · exportación con filtros validados | 10 | [`extras/exportacion/`](extras/exportacion/), `portal/19-…`, `portal/20-…` | `eventos_s1_baja.csv`: 6 filas = 6 frames baja de S1 |
+| M1 | M · X1 candidatas por frame | 3 | `metricas_extra.json` de las 5 corridas, [`recalculo/x-*.txt`](recalculo/) | C1 22.78 · C2 5.88 |
+| M2 | M · X2 frames sin detecciones | 5 | ídem | 0.0 en las 5 corridas (probado con frames vacíos en las pruebas) |
+| M3 | M · X3 PSI de scores vs. referencia | 8 | ídem + S1 como caso controlado | S1 por ventana: 0.12–0.29 día, 0.61–2.53 noche, 0.08–0.13 al volver |
+| M4 | M · X4 latencia e2e p95 + etapas | 5 | ídem | C1 624.51 ms · S1 362.39 ms |
+| M5 | M · X5 disponibilidad de la fuente | 5 | ídem + S2 | S2 por ventana: 1, 1, 0, 0, 1, 1 |
+| S1 | S · cambio sostenido con transición y recuperación | 8 | [ficha S1](extras/s1-transicion/README.md) | `s1-transicion-20261111T180825Z-cambio-sostenido-v1-v005` (ventanas 3, 4 y 5) |
+| S2 | S · interrupción, diagnóstico, recuperación y verificación | 10 | [ficha S2](extras/s2-interrupcion/README.md) | `s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000` (20 frames perdidos, 21.0 s sin señal) |
+
+Total solicitado: **79 puntos** (35 F + 26 M + 18 S).

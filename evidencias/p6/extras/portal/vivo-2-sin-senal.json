@@ -1,0 +1,176 @@
+{
+ "actualizado_utc": "2026-11-11T18:07:21.019Z",
+ "alertas_abiertas": [
+  "s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000"
+ ],
+ "edad_s": 0.2,
+ "estado_corrida": "en_curso",
+ "estado_fuente": "sin_senal",
+ "explicacion": "La fuente no entrega frames: alerta de fuente abierta. Imagen congelada.",
+ "procesados": 20,
+ "run_id": "s2-interrupcion-20261111T180638Z",
+ "ultimo": {
+  "conteo_zonas": {
+   "aceptada": 5,
+   "baja": 5,
+   "duda": 3
+  },
+  "detecciones": [
+   {
+    "bbox": [
+     405.9,
+     107.44,
+     449.4,
+     156.35
+    ],
+    "class_name": "car",
+    "score": 0.777913,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     332.02,
+     351.86,
+     437.58,
+     476.5
+    ],
+    "class_name": "car",
+    "score": 0.755545,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     586.67,
+     667.56,
+     720.54,
+     719.26
+    ],
+    "class_name": "car",
+    "score": 0.712742,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     480.98,
+     66.87,
+     515.49,
+     98.22
+    ],
+    "class_name": "car",
+    "score": 0.671207,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     284.96,
+     94.81,
+     326.57,
+     134.76
+    ],
+    "class_name": "car",
+    "score": 0.668283,
+    "zona": "aceptada"
+   },
+   {
+    "bbox": [
+     0.56,
+     514.76,
+     133.82,
+     719.08
+    ],
+    "class_name": "car",
+    "score": 0.593528,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     457.11,
+     38.21,
+     488.96,
+     67.62
+    ],
+    "class_name": "car",
+    "score": 0.587267,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     407.93,
+     56.91,
+     440.43,
+     86.32
+    ],
+    "class_name": "car",
+    "score": 0.539173,
+    "zona": "duda"
+   },
+   {
+    "bbox": [
+     357.91,
+     28.91,
+     388.19,
+     64.77
+    ],
+    "class_name": "car",
+    "score": 0.298966,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     399.89,
+     1.97,
+     425.35,
+     24.02
+    ],
+    "class_name": "car",
+    "score": 0.272095,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     264.83,
+     100.26,
+     290.36,
+     149.43
+    ],
+    "class_name": "car",
+    "score": 0.19372,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     357.7,
+     44.5,
+     386.25,
+     65.72
+    ],
+    "class_name": "car",
+    "score": 0.160348,
+    "zona": "baja"
+   },
+   {
+    "bbox": [
+     402.74,
+     43.4,
+     442.58,
+     85.68
+    ],
+    "class_name": "car",
+    "score": 0.111876,
+    "zona": "baja"
+   }
+  ],
+  "event_id": "s2-interrupcion-20261111T180638Z-s2-interrupcion-f007770",
+  "frame_id": "s2-interrupcion-f007770",
+  "image_height": 720,
+  "image_width": 1280,
+  "n_candidatas": 13,
+  "score_max": 0.777913,
+  "status": "ok",
+  "timestamp_utc": "2026-11-11T18:07:15.113Z",
+  "video_pos_ms": 259000.0,
+  "zona_frame": "aceptada"
+ },
+ "ventana": 2,
+ "vista": "sin_senal"
+}

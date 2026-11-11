@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS alertas (
 CREATE TABLE IF NOT EXISTS alerta_eventos (
     alert_id TEXT NOT NULL, event_id TEXT NOT NULL, PRIMARY KEY (alert_id, event_id)
 );
+CREATE TABLE IF NOT EXISTS vivo (
+    run_id TEXT PRIMARY KEY, actualizado_utc TEXT NOT NULL, estado TEXT NOT NULL,
+    estado_fuente TEXT NOT NULL, event_id TEXT, jpeg BLOB, json TEXT NOT NULL
+);
 """
 
 
@@ -58,13 +62,18 @@ class Almacen:
             if not self.ruta.is_file():
                 raise FileNotFoundError(self.ruta)
             self.con = sqlite3.connect(
-                f"{self.ruta.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False
+                f"{self.ruta.resolve().as_uri()}?mode=ro",
+                uri=True,
+                check_same_thread=False,
+                timeout=5,
             )
         else:
             self.ruta.parent.mkdir(parents=True, exist_ok=True)
-            self.con = sqlite3.connect(self.ruta)
+            self.con = sqlite3.connect(self.ruta, timeout=5)
         self.con.row_factory = sqlite3.Row
         if not solo_lectura:
+            # WAL: el portal puede leer mientras una corrida escribe (vista en vivo, extra #29).
+            self.con.execute("PRAGMA journal_mode=WAL")
             self.con.executescript(ESQUEMA)
         self.duplicados = 0
 
@@ -157,7 +166,8 @@ class Almacen:
         self.con.commit()
 
     def guardar_alerta(self, al: dict[str, Any]) -> None:
-        contratos.validar("alerta", al)
+        tipo = "alerta_fuente" if al["schema"] == "p6.alerta_fuente.v1" else "alerta"
+        contratos.validar(tipo, al)
         self.con.execute(
             "INSERT OR REPLACE INTO alertas VALUES (?,?,?,?,?,?,?,?)",
             (
@@ -177,9 +187,55 @@ class Almacen:
         )
         self.con.commit()
 
+    def guardar_vivo(
+        self,
+        run_id: str,
+        *,
+        actualizado_utc: str,
+        estado: str,
+        estado_fuente: str,
+        evento: dict[str, Any] | None,
+        jpeg: bytes | None,
+        datos: dict[str, Any],
+    ) -> None:
+        """Último frame procesado de una corrida, para la vista en vivo (extra #29). Si no hay
+        frame nuevo (latido o cierre) conserva la imagen y el evento anteriores."""
+        previo = self.con.execute(
+            "SELECT event_id, jpeg FROM vivo WHERE run_id=?", (run_id,)
+        ).fetchone()
+        event_id = evento["event_id"] if evento else (previo["event_id"] if previo else None)
+        if jpeg is None and previo is not None:
+            jpeg = previo["jpeg"]
+        self.con.execute(
+            "INSERT OR REPLACE INTO vivo VALUES (?,?,?,?,?,?,?)",
+            (run_id, actualizado_utc, estado, estado_fuente, event_id, jpeg, _dump(datos)),
+        )
+        self.con.commit()
+
+    def vivo(self, run_id: str) -> dict[str, Any] | None:
+        f = self.con.execute(
+            "SELECT run_id, actualizado_utc, estado, estado_fuente, event_id, json, "
+            "jpeg IS NOT NULL AS hay_imagen FROM vivo WHERE run_id=?",
+            (run_id,),
+        ).fetchone()
+        if f is None:
+            return None
+        fila = dict(f)
+        return {**json.loads(fila.pop("json")), **fila}
+
+    def vivo_jpeg(self, run_id: str) -> bytes | None:
+        f = self.con.execute("SELECT jpeg FROM vivo WHERE run_id=?", (run_id,)).fetchone()
+        return f["jpeg"] if f else None
+
+    def corridas_vivo(self) -> list[str]:
+        return [
+            f["run_id"]
+            for f in self.con.execute("SELECT run_id FROM vivo ORDER BY actualizado_utc DESC")
+        ]
+
     def borrar_corrida(self, run_id: str) -> None:
         """Solo para reimportar una corrida desde su exportación (no toca las imágenes)."""
-        for tabla in ("eventos", "capturas", "ventanas", "alertas", "corridas"):
+        for tabla in ("eventos", "capturas", "ventanas", "alertas", "corridas", "vivo"):
             self.con.execute(f"DELETE FROM {tabla} WHERE run_id=?", (run_id,))
         self.con.execute(
             "DELETE FROM alerta_eventos WHERE alert_id NOT IN (SELECT alert_id FROM alertas)"

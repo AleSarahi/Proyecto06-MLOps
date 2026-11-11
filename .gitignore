@@ -48,3 +48,4 @@ datos/p6/video/
 corridas/
 # Base SQLite local del portal (se reconstruye con `python -m monitor importar`).
 datos/p6/monitoreo.sqlite
+datos/p6/monitoreo.sqlite-*

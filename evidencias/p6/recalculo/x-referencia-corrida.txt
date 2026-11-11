@@ -1,0 +1,52 @@
+== evidencias/p6/referencia/corrida
+  OK  X1 ventana 0: recalculado=13.6 guardado=13.6
+  OK  X2 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 0: recalculado=0.09121142693573431 guardado=0.0912
+  OK  X4 ventana 0: recalculado=1172.4609999999993 guardado=1172.46
+  OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 1: recalculado=11.5 guardado=11.5
+  OK  X2 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 1: recalculado=0.0840253682499726 guardado=0.084
+  OK  X4 ventana 1: recalculado=485.0020000000004 guardado=485.0
+  OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 2: recalculado=14.2 guardado=14.2
+  OK  X2 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 2: recalculado=0.13713024765056744 guardado=0.1371
+  OK  X4 ventana 2: recalculado=498.54499999999825 guardado=498.54
+  OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 3: recalculado=21.3 guardado=21.3
+  OK  X2 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 3: recalculado=0.07435452542647397 guardado=0.0744
+  OK  X4 ventana 3: recalculado=902.5970000000016 guardado=902.6
+  OK  X5 ventana 3: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 4: recalculado=29.6 guardado=29.6
+  OK  X2 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 4: recalculado=0.0740372694946496 guardado=0.074
+  OK  X4 ventana 4: recalculado=729.0920000000042 guardado=729.09
+  OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 5: recalculado=31.5 guardado=31.5
+  OK  X2 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 5: recalculado=0.16698959052131038 guardado=0.167
+  OK  X4 ventana 5: recalculado=681.7259999999951 guardado=681.73
+  OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 6: recalculado=24.0 guardado=24.0
+  OK  X2 ventana 6: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 6: recalculado=0.05015642137757971 guardado=0.0502
+  OK  X4 ventana 6: recalculado=1270.4490000000078 guardado=1270.45
+  OK  X5 ventana 6: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 7: recalculado=15.4 guardado=15.4
+  OK  X2 ventana 7: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 7: recalculado=0.09971519534553193 guardado=0.0997
+  OK  X4 ventana 7: recalculado=558.648000000001 guardado=558.65
+  OK  X5 ventana 7: recalculado=1.0 guardado=1.0
+  OK  X1 ventana 8: recalculado=10.4 guardado=10.4
+  OK  X2 ventana 8: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 8: recalculado=0.29932078527627515 guardado=0.2993
+  OK  X4 ventana 8: recalculado=1288.372000000003 guardado=1288.37
+  OK  X5 ventana 8: recalculado=1.0 guardado=1.0
+  OK  X1 corrida: recalculado=19.055555555555557 guardado=19.0556
+  OK  X2 corrida: recalculado=0.0 guardado=0.0
+  OK  X3 corrida: recalculado=0.0 guardado=0.0
+  OK  X4 corrida: recalculado=1101.0540000000037 guardado=1101.05
+  OK  X5 corrida: recalculado=1.0 guardado=1.0
+  resultado: todo coincide
