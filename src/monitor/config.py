@@ -300,15 +300,70 @@ def cargar(ruta: str | Path = RUTA_MONITOREO, *, velocidad: float | None = None)
     )
 
 
+def _tramo(datos: dict[str, Any], t: Any, nombre: str) -> tuple[float, float]:
+    if not isinstance(t, dict) or t.get("video") not in datos["videos"]:
+        valor = t.get("video") if isinstance(t, dict) else t
+        raise ErrorConfig(f"{nombre}.video: no existe {valor!r}")
+    inicio = _num(t.get("inicio_s"), f"{nombre}.inicio_s", minimo=0)
+    fin = _num(t.get("fin_s"), f"{nombre}.fin_s", minimo=0)
+    if not inicio < fin:
+        raise ErrorConfig(f"{nombre}: inicio_s debe ser menor que fin_s")
+    return inicio, fin
+
+
 def cargar_fuentes(ruta: str | Path = RUTA_FUENTES) -> dict[str, Any]:
+    """Lee fuentes.yaml. Un segmento es un tramo de un video (video, inicio_s, fin_s) o una
+    secuencia de tramos (`tramos`) que se reproducen uno tras otro como un solo stream; en ese caso
+    el segmento va de 0 a la suma de las duraciones."""
     datos = leer_yaml(ruta)
     if not isinstance(datos, dict) or not {"videos", "segmentos"} <= set(datos):
         raise ErrorConfig("fuentes: se requieren las secciones videos y segmentos")
     for nombre, seg in datos["segmentos"].items():
-        if seg.get("video") not in datos["videos"]:
-            raise ErrorConfig(f"segmentos.{nombre}.video: no existe {seg.get('video')!r}")
-        inicio = _num(seg.get("inicio_s"), f"segmentos.{nombre}.inicio_s", minimo=0)
-        fin = _num(seg.get("fin_s"), f"segmentos.{nombre}.fin_s", minimo=0)
-        if not inicio < fin:
-            raise ErrorConfig(f"segmentos.{nombre}: inicio_s debe ser menor que fin_s")
+        if "tramos" in seg:
+            if not isinstance(seg["tramos"], list) or not seg["tramos"]:
+                raise ErrorConfig(f"segmentos.{nombre}.tramos: se requiere una lista no vacía")
+            total = 0.0
+            for k, t in enumerate(seg["tramos"]):
+                a, b = _tramo(datos, t, f"segmentos.{nombre}.tramos[{k}]")
+                total += b - a
+            seg["inicio_s"], seg["fin_s"] = 0, total
+        else:
+            _tramo(datos, seg, f"segmentos.{nombre}")
     return datos
+
+
+RUTA_VIGILANCIA = RAIZ / "config" / "p6" / "vigilancia.yaml"
+
+
+def cargar_vigilancia(ruta: str | Path = RUTA_VIGILANCIA) -> dict[str, Any]:
+    """Vigilancia técnica de la fuente (extra #33). Va aparte de monitoreo.yaml para no cambiar el
+    config_ref de la serie de confianza; su identidad es `vigilancia_ref`."""
+    datos = leer_yaml(ruta)
+    if not isinstance(datos, dict) or datos.get("version") != 1:
+        raise ErrorConfig("vigilancia: se requiere version: 1")
+    r = _seccion(
+        datos,
+        "fuente_sin_senal",
+        {
+            "rule_id",
+            "descripcion",
+            "sin_frames_ms",
+            "frames_recuperacion",
+            "severidad",
+            "accion_sugerida",
+        },
+    )
+    if r["severidad"] not in SEVERIDADES:
+        raise ErrorConfig(f"fuente_sin_senal.severidad: debe ser una de {sorted(SEVERIDADES)}")
+    regla = {
+        "rule_id": _texto(r["rule_id"], "fuente_sin_senal.rule_id"),
+        "descripcion": _texto(r["descripcion"], "fuente_sin_senal.descripcion"),
+        "sin_frames_ms": _num(r["sin_frames_ms"], "fuente_sin_senal.sin_frames_ms", minimo=1),
+        "frames_recuperacion": _entero(
+            r["frames_recuperacion"], "fuente_sin_senal.frames_recuperacion"
+        ),
+        "severidad": r["severidad"],
+        "accion_sugerida": _texto(r["accion_sugerida"], "fuente_sin_senal.accion_sugerida"),
+    }
+    efectiva = {"version": 1, "fuente_sin_senal": regla}
+    return {**efectiva, "vigilancia_ref": _hash(efectiva), "ruta": str(ruta)}

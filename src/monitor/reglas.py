@@ -108,8 +108,16 @@ class EvaluadorReglas:
         self.estado = {r.rule_id: _EstadoRegla() for r in self.reglas}
 
     def evaluar(
-        self, indice: int, inicio_ms: float, fin_ms: float, eventos: list[dict[str, Any]]
+        self,
+        indice: int,
+        inicio_ms: float,
+        fin_ms: float,
+        eventos: list[dict[str, Any]],
+        *,
+        otras_activas: int = 0,
     ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """`otras_activas`: alertas abiertas fuera de estas reglas (vigilancia de la fuente), que
+        también cuentan en `alertas_activas` (G7)."""
         ahora = self.reloj_utc()
         resumen = resumen_ventana(eventos, self.cfg.minimo_candidatas)
         datos_ventana = {"indice": indice, "inicio_ms": inicio_ms, "fin_ms": fin_ms, **resumen}
@@ -156,7 +164,8 @@ class EvaluadorReglas:
             "referencia_proporcion_baja": self.referencia,
             "reglas": por_regla,
             "event_ids": [e["event_id"] for e in eventos],
-            "alertas_activas": sum(1 for s in self.estado.values() if s.abierta is not None),
+            "alertas_activas": sum(1 for s in self.estado.values() if s.abierta is not None)
+            + otras_activas,
             "timestamp_utc": ahora,
         }
         return ventana, cambiadas

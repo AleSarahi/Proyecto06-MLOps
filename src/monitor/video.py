@@ -83,20 +83,19 @@ def descargar(nombre: str, video: dict[str, Any]) -> str:
     return sha
 
 
-def extraer(
-    segmento: str, fuentes: dict[str, Any], cada_n_frames: int, *, destino: Path | None = None
-) -> Path:
-    """Escribe <destino>/<segmento>/*.jpg y su manifiesto; no sobrescribe un respaldo existente."""
+def _extraer_tramo(
+    carpeta: Path,
+    video: dict[str, Any],
+    inicio_s: float,
+    fin_s: float,
+    cada_n_frames: int,
+    *,
+    prefijo: str,
+    desfase_ms: float,
+    extra: dict[str, Any],
+) -> tuple[list[dict[str, Any]], float, int]:
+    """Frames muestreados de [inicio_s, fin_s) del video; pos_ms = desfase + (pos - inicio)."""
     import cv2
-
-    seg = fuentes["segmentos"][segmento]
-    nombre_video = seg["video"]
-    video = fuentes["videos"][nombre_video]
-    sha_video = verificar(nombre_video, video)
-    carpeta = (destino or DIR_FRAMES) / segmento
-    if (carpeta / "manifiesto.jsonl").exists():
-        raise ErrorConfig(f"{carpeta} ya tiene un respaldo; bórralo a mano si quieres regenerarlo")
-    carpeta.mkdir(parents=True, exist_ok=True)
 
     cap = cv2.VideoCapture(str(_ruta(video)))
     if not cap.isOpened():
@@ -104,17 +103,20 @@ def extraer(
     fps = cap.get(cv2.CAP_PROP_FPS)
     filas = []
     indice = 0
+    frames_tramo = 0
     try:
         while True:
             if not cap.grab():
                 break
             pos_ms = indice * 1000.0 / fps
-            if pos_ms >= seg["fin_s"] * 1000:
+            if pos_ms >= fin_s * 1000:
                 break
-            if indice % cada_n_frames == 0 and pos_ms >= seg["inicio_s"] * 1000:
+            if pos_ms >= inicio_s * 1000:
+                frames_tramo += 1
+            if indice % cada_n_frames == 0 and pos_ms >= inicio_s * 1000:
                 ok, imagen = cap.retrieve()
                 if ok:
-                    frame_id = f"{segmento}-f{indice:06d}"
+                    frame_id = f"{prefijo}-f{indice:06d}"
                     archivo = carpeta / f"{frame_id}.jpg"
                     if not cv2.imwrite(
                         str(archivo), imagen, [cv2.IMWRITE_JPEG_QUALITY, CALIDAD_RESPALDO]
@@ -126,7 +128,8 @@ def extraer(
                             "archivo": archivo.name,
                             "sha256": sha256_archivo(archivo),
                             "indice_video": indice,
-                            "pos_ms": round(pos_ms, 3),
+                            "pos_ms": round(desfase_ms + pos_ms - inicio_s * 1000, 3),
+                            **({**extra, "pos_video_ms": round(pos_ms, 3)} if extra else {}),
                             "width": int(imagen.shape[1]),
                             "height": int(imagen.shape[0]),
                         }
@@ -134,21 +137,102 @@ def extraer(
             indice += 1
     finally:
         cap.release()
-    cabecera = {
-        "segmento": segmento,
-        "video": nombre_video,
-        "youtube_id": video["youtube_id"],
-        "url": video["url"],
-        "licencia": video["licencia"],
-        "canal": video["canal"],
-        "formato": video["formato"],
-        "video_sha256": sha_video,
-        "fps_video": fps,
-        "cada_n_frames": cada_n_frames,
-        "inicio_s": seg["inicio_s"],
-        "fin_s": seg["fin_s"],
-        "frames": len(filas),
-    }
+    return filas, fps, frames_tramo
+
+
+def extraer(
+    segmento: str, fuentes: dict[str, Any], cada_n_frames: int, *, destino: Path | None = None
+) -> Path:
+    """Escribe <destino>/<segmento>/*.jpg y su manifiesto; no sobrescribe un respaldo existente.
+
+    Un segmento simple conserva el tiempo del video. Una secuencia (`tramos`) concatena los tramos:
+    su tiempo va de 0 a la suma de duraciones y cada fila guarda su video y `pos_video_ms`."""
+    seg = fuentes["segmentos"][segmento]
+    carpeta = (destino or DIR_FRAMES) / segmento
+    if (carpeta / "manifiesto.jsonl").exists():
+        raise ErrorConfig(f"{carpeta} ya tiene un respaldo; bórralo a mano si quieres regenerarlo")
+    if "tramos" not in seg:
+        nombre_video = seg["video"]
+        video = fuentes["videos"][nombre_video]
+        sha_video = verificar(nombre_video, video)
+        carpeta.mkdir(parents=True, exist_ok=True)
+        filas, fps, _ = _extraer_tramo(
+            carpeta,
+            video,
+            seg["inicio_s"],
+            seg["fin_s"],
+            cada_n_frames,
+            prefijo=segmento,
+            desfase_ms=seg["inicio_s"] * 1000,
+            extra={},
+        )
+        cabecera = {
+            "segmento": segmento,
+            "video": nombre_video,
+            "youtube_id": video["youtube_id"],
+            "url": video["url"],
+            "licencia": video["licencia"],
+            "canal": video["canal"],
+            "formato": video["formato"],
+            "video_sha256": sha_video,
+            "fps_video": fps,
+            "cada_n_frames": cada_n_frames,
+            "inicio_s": seg["inicio_s"],
+            "fin_s": seg["fin_s"],
+            "frames": len(filas),
+        }
+    else:
+        carpeta.mkdir(parents=True, exist_ok=True)
+        filas, tramos, desfase, total_video, fps_todos = [], [], 0.0, 0, set()
+        for k, t in enumerate(seg["tramos"]):
+            video = fuentes["videos"][t["video"]]
+            sha_video = verificar(t["video"], video)
+            f, fps, n_video = _extraer_tramo(
+                carpeta,
+                video,
+                t["inicio_s"],
+                t["fin_s"],
+                cada_n_frames,
+                prefijo=f"{segmento}-t{k}",
+                desfase_ms=desfase,
+                extra={"tramo": k, "video": t["video"]},
+            )
+            filas += f
+            fps_todos.add(fps)
+            total_video += n_video
+            tramos.append(
+                {
+                    "tramo": k,
+                    "video": t["video"],
+                    "youtube_id": video["youtube_id"],
+                    "url": video["url"],
+                    "licencia": video["licencia"],
+                    "canal": video["canal"],
+                    "formato": video["formato"],
+                    "video_sha256": sha_video,
+                    "inicio_s": t["inicio_s"],
+                    "fin_s": t["fin_s"],
+                    "inicio_segmento_s": desfase / 1000,
+                    "frames": len(f),
+                }
+            )
+            desfase += (t["fin_s"] - t["inicio_s"]) * 1000
+        if len(fps_todos) != 1:
+            raise ErrorConfig(f"{segmento}: los tramos tienen fps distintos {sorted(fps_todos)}")
+        cabecera = {
+            "segmento": segmento,
+            "secuencia": True,
+            "url": " · ".join(dict.fromkeys(t["url"] for t in tramos)),
+            "licencia": " · ".join(dict.fromkeys(t["licencia"] for t in tramos)),
+            "canal": " · ".join(dict.fromkeys(t["canal"] for t in tramos)),
+            "tramos": tramos,
+            "fps_video": fps_todos.pop(),
+            "cada_n_frames": cada_n_frames,
+            "inicio_s": 0,
+            "fin_s": desfase / 1000,
+            "frames": len(filas),
+            "frames_video": total_video,
+        }
     with (carpeta / "manifiesto.jsonl").open("w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps({"cabecera": cabecera}, ensure_ascii=False) + "\n")
         for fila in filas:

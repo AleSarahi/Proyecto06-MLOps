@@ -37,15 +37,23 @@ class Frame:
     imagen: np.ndarray | None
     jpeg: bytes | None = None
     error: str | None = None
+    # False en un latido de `FuenteInterrumpida`: no llegó frame (la fuente está caída). No es un
+    # evento: solo avanza el reloj del monitoreo para detectar la caída y cerrar ventanas a tiempo.
+    senal: bool = True
 
 
 @dataclass
 class Contadores:
     recibidos: int = 0
     descartes: Counter = field(default_factory=Counter)
+    # Solo con FuenteInterrumpida: intentos de reconexión fallidos y reconexiones logradas.
+    conexion: Counter = field(default_factory=Counter)
 
     def como_dict(self) -> dict[str, Any]:
-        return {"recibidos": self.recibidos, "descartes": dict(self.descartes)}
+        d = {"recibidos": self.recibidos, "descartes": dict(self.descartes)}
+        if self.conexion:
+            d["conexion"] = dict(self.conexion)
+        return d
 
 
 class _Ritmo:
@@ -89,7 +97,9 @@ class FuenteFrames:
         self.contadores = Contadores()
         dur_s = self.cabecera["fin_s"] - self.cabecera["inicio_s"]
         # El muestreo se aplicó al extraer: los demás frames del segmento se descartaron ahí.
-        frames_video = round(dur_s * self.cabecera["fps_video"])
+        frames_video = self.cabecera.get("frames_video") or round(
+            dur_s * self.cabecera["fps_video"]
+        )
         self.contadores.descartes["muestreo"] = max(0, frames_video - len(self.filas))
 
     def descripcion(self) -> dict[str, Any]:
@@ -148,6 +158,8 @@ class FuenteVideo:
     ):
         self.segmento = segmento
         self.seg = fuentes["segmentos"][segmento]
+        if "tramos" in self.seg:
+            raise ErrorConfig(f"{segmento} es una secuencia de tramos: córrela con --modo frames")
         self.video = fuentes["videos"][self.seg["video"]]
         self.sha = verificar(self.seg["video"], self.video)
         self.cada_n = cada_n_frames
@@ -186,3 +198,56 @@ class FuenteVideo:
                 indice += 1
         finally:
             cap.release()
+
+
+class FuenteInterrumpida:
+    """Inyección controlada de una caída de la fuente (escenario adicional, issue #33).
+
+    Envuelve otra fuente y, durante cada corte [desde, hasta) en ms del segmento, no entrega los
+    frames: los pierde, como un stream cuya conexión se cae. El ritmo sigue (el tiempo real pasa) y
+    en lugar de cada frame perdido emite un latido `Frame(senal=False)` con la hora a la que debía
+    llegar, que es lo que el monitor observa: su propio reloj sin frames. Cada latido cuenta como un
+    intento de reconexión fallido; el primer frame después del corte, como una reconexión.
+    """
+
+    def __init__(self, interna: Any, cortes_ms: list[tuple[float, float]], inicio_ms: float):
+        self.interna = interna
+        self.cortes_ms = sorted(cortes_ms)
+        self.inicio_ms = inicio_ms
+        self.modo = getattr(interna, "modo", "frames")
+
+    @property
+    def contadores(self) -> Contadores:
+        return self.interna.contadores
+
+    def descripcion(self) -> dict[str, Any]:
+        return {
+            **self.interna.descripcion(),
+            "inyeccion": {
+                "tipo": "corte_de_fuente",
+                "cortes_s": [[a / 1000, b / 1000] for a, b in self.cortes_ms],
+                "nota": "frames perdidos a propósito durante el corte; no se alteran los demás",
+            },
+        }
+
+    def _en_corte(self, pos_ms: float) -> bool:
+        rel = pos_ms - self.inicio_ms
+        return any(a <= rel < b for a, b in self.cortes_ms)
+
+    def __iter__(self) -> Iterator[Frame]:
+        caida = False
+        c = self.interna.contadores
+        for frame in self.interna:
+            if self._en_corte(frame.video_pos_ms):
+                c.recibidos -= 1  # no llegó
+                c.descartes["sin_senal"] += 1
+                c.conexion["intentos_fallidos"] += 1
+                caida = True
+                yield Frame(
+                    frame.frame_id, frame.video_pos_ms, frame.t_llegada_ms, None, senal=False
+                )
+                continue
+            if caida:
+                c.conexion["reconexiones"] += 1
+                caida = False
+            yield frame

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "p6/alerta_fuente.v1",
+  "title": "Alerta técnica de la fuente: sin señal (Proyecto 6, extra #33)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "alert_id", "rule_id", "run_id", "timestamp_utc", "severidad", "motivo",
+    "accion_sugerida", "config_ref", "vigilancia_ref", "model_ref", "regla", "ultimo_frame",
+    "sin_senal_desde_ms", "detectada_ms", "deteccion_tardia", "frames_perdidos", "ventanas",
+    "recuperacion", "event_ids", "estado", "cerrada_en", "cerrada_por_ventana"
+  ],
+  "properties": {
+    "schema": {"const": "p6.alerta_fuente.v1"},
+    "alert_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,160}$"},
+    "rule_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "severidad": {"enum": ["info", "advertencia", "critica"]},
+    "motivo": {"type": "string", "minLength": 1},
+    "accion_sugerida": {"type": "string", "minLength": 1},
+    "config_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "vigilancia_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model_ref": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "regla": {
+      "type": "object",
+      "required": ["rule_id", "tipo", "descripcion", "sin_frames_ms", "frames_recuperacion"],
+      "properties": {"tipo": {"const": "fuente_sin_senal"}}
+    },
+    "ultimo_frame": {
+      "type": ["object", "null"],
+      "required": ["event_id", "t_llegada_ms", "video_pos_ms"]
+    },
+    "sin_senal_desde_ms": {"type": "number"},
+    "detectada_ms": {"type": "number"},
+    "deteccion_tardia": {"type": "boolean"},
+    "frames_perdidos": {"type": "integer", "minimum": 0},
+    "ventanas": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+    "recuperacion": {
+      "type": ["object", "null"],
+      "required": ["primer_frame_ms", "duracion_sin_senal_ms", "event_ids"],
+      "properties": {
+        "primer_frame_ms": {"type": "number"},
+        "duracion_sin_senal_ms": {"type": "number", "minimum": 0},
+        "event_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "event_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "estado": {"enum": ["abierta", "cerrada"]},
+    "cerrada_en": {"type": ["string", "null"]},
+    "cerrada_por_ventana": {"type": ["integer", "null"]}
+  }
+}

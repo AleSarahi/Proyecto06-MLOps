@@ -1,0 +1,22 @@
+# Proyecto 6 · Vigilancia técnica de la fuente (extra, issue #33). Ver docs/p6/extras.md.
+#
+# Va aparte de monitoreo.yaml a propósito: no decide la confianza del modelo, así que no entra en
+# config_ref y la serie de confianza (referencia, C1, C2) sigue siendo comparable. Su identidad es
+# `vigilancia_ref` (SHA-256 del contenido efectivo), que queda en run.json y en cada alerta de fuente.
+
+version: 1
+
+fuente_sin_senal:
+  rule_id: fuente-sin-senal-v1
+  descripcion: >-
+    No llega ningún frame de la fuente durante más de sin_frames_ms (reloj de la corrida). Se
+    cierra cuando vuelven a llegar frames_recuperacion frames seguidos.
+  # Con muestreo de 1 frame por segundo de video, 5 s sin frames son 5 frames esperados perdidos:
+  # suficiente para no confundir una inferencia lenta (~0.5 s) con una caída de la fuente.
+  sin_frames_ms: 5000
+  frames_recuperacion: 3
+  severidad: critica
+  accion_sugerida: >-
+    Revisar la conexión con la fuente (red, cámara, servidor del stream). Mientras no haya frames,
+    las ventanas de confianza quedan insuficientes: no interpretar su ausencia de alertas como
+    operación sana.
