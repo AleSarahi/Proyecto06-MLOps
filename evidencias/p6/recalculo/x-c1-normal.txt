@@ -4,49 +4,69 @@
   OK  X3 ventana 0: recalculado=0.1819785243951801 guardado=0.182
   OK  X4 ventana 0: recalculado=305.7579999999998 guardado=305.76
   OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 0: recalculado=0.0 guardado=0.0
   OK  X1 ventana 1: recalculado=17.1 guardado=17.1
   OK  X2 ventana 1: recalculado=0.0 guardado=0.0
   OK  X3 ventana 1: recalculado=0.1833952763913849 guardado=0.1834
   OK  X4 ventana 1: recalculado=384.5939999999973 guardado=384.59
   OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 1: recalculado=0.0 guardado=0.0
   OK  X1 ventana 2: recalculado=20.6 guardado=20.6
   OK  X2 ventana 2: recalculado=0.0 guardado=0.0
   OK  X3 ventana 2: recalculado=0.07562608764260458 guardado=0.0756
   OK  X4 ventana 2: recalculado=624.5119999999988 guardado=624.51
   OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 2: recalculado=0.0 guardado=0.0
   OK  X1 ventana 3: recalculado=23.4 guardado=23.4
   OK  X2 ventana 3: recalculado=0.0 guardado=0.0
   OK  X3 ventana 3: recalculado=0.010164551566041369 guardado=0.0102
   OK  X4 ventana 3: recalculado=265.1820000000007 guardado=265.18
   OK  X5 ventana 3: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 3: recalculado=0.0 guardado=0.0
   OK  X1 ventana 4: recalculado=22.6 guardado=22.6
   OK  X2 ventana 4: recalculado=0.0 guardado=0.0
   OK  X3 ventana 4: recalculado=0.07411620238103753 guardado=0.0741
   OK  X4 ventana 4: recalculado=529.1030000000028 guardado=529.1
   OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 4: recalculado=0.0 guardado=0.0
   OK  X1 ventana 5: recalculado=24.9 guardado=24.9
   OK  X2 ventana 5: recalculado=0.0 guardado=0.0
   OK  X3 ventana 5: recalculado=0.04351127590235555 guardado=0.0435
   OK  X4 ventana 5: recalculado=870.9860000000044 guardado=870.99
   OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 5: recalculado=0.0 guardado=0.0
   OK  X1 ventana 6: recalculado=27.8 guardado=27.8
   OK  X2 ventana 6: recalculado=0.0 guardado=0.0
   OK  X3 ventana 6: recalculado=0.03169181299501525 guardado=0.0317
   OK  X4 ventana 6: recalculado=415.86900000000605 guardado=415.87
   OK  X5 ventana 6: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 6: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 6: recalculado=0.0 guardado=0.0
   OK  X1 ventana 7: recalculado=30.8 guardado=30.8
   OK  X2 ventana 7: recalculado=0.0 guardado=0.0
   OK  X3 ventana 7: recalculado=0.12397233279676524 guardado=0.124
   OK  X4 ventana 7: recalculado=573.0460000000021 guardado=573.05
   OK  X5 ventana 7: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 7: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 7: recalculado=0.0 guardado=0.0
   OK  X1 ventana 8: recalculado=29.3 guardado=29.3
   OK  X2 ventana 8: recalculado=0.0 guardado=0.0
   OK  X3 ventana 8: recalculado=0.1300938032665206 guardado=0.1301
   OK  X4 ventana 8: recalculado=748.3950000000041 guardado=748.4
   OK  X5 ventana 8: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 8: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 8: recalculado=0.0 guardado=0.0
   OK  X1 corrida: recalculado=22.77777777777778 guardado=22.7778
   OK  X2 corrida: recalculado=0.0 guardado=0.0
   OK  X3 corrida: recalculado=0.01241569364936495 guardado=0.0124
   OK  X4 corrida: recalculado=624.5119999999988 guardado=624.51
   OK  X5 corrida: recalculado=1.0 guardado=1.0
+  OK  X6 corrida: recalculado=0.0 guardado=0.0
+  OK  X7 corrida: recalculado=0.0 guardado=0.0
   resultado: todo coincide

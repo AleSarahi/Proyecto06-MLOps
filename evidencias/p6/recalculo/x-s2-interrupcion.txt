@@ -4,36 +4,50 @@
   OK  X3 ventana 0: recalculado=0.5300406168227594 guardado=0.53
   OK  X4 ventana 0: recalculado=588.2290000000003 guardado=588.23
   OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 0: recalculado=0.0 guardado=0.0
   OK  X1 ventana 1: recalculado=13.0 guardado=13.0
   OK  X2 ventana 1: recalculado=0.0 guardado=0.0
   OK  X3 ventana 1: recalculado=0.08395795830804177 guardado=0.084
   OK  X4 ventana 1: recalculado=476.5730000000003 guardado=476.57
   OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 1: recalculado=0.0 guardado=0.0
   OK  X1 ventana 2: recalculado=None guardado=None
   OK  X2 ventana 2: recalculado=None guardado=None
   OK  X3 ventana 2: recalculado=None guardado=None
   OK  X4 ventana 2: recalculado=None guardado=None
   OK  X5 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X6 ventana 2: recalculado=None guardado=None
+  OK  X7 ventana 2: recalculado=None guardado=None
   OK  X1 ventana 3: recalculado=None guardado=None
   OK  X2 ventana 3: recalculado=None guardado=None
   OK  X3 ventana 3: recalculado=None guardado=None
   OK  X4 ventana 3: recalculado=None guardado=None
   OK  X5 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X6 ventana 3: recalculado=None guardado=None
+  OK  X7 ventana 3: recalculado=None guardado=None
   OK  X1 ventana 4: recalculado=14.8 guardado=14.8
   OK  X2 ventana 4: recalculado=0.0 guardado=0.0
   OK  X3 ventana 4: recalculado=0.10549638169561014 guardado=0.1055
   OK  X4 ventana 4: recalculado=361.7220000000016 guardado=361.72
   OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 4: recalculado=0.0 guardado=0.0
   OK  X1 ventana 5: recalculado=11.1 guardado=11.1
   OK  X2 ventana 5: recalculado=0.0 guardado=0.0
   OK  X3 ventana 5: recalculado=0.1368527704702608 guardado=0.1369
   OK  X4 ventana 5: recalculado=516.349000000002 guardado=516.35
   OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 5: recalculado=0.0 guardado=0.0
   OK  X1 corrida: recalculado=12.5 guardado=12.5
   OK  X2 corrida: recalculado=0.0 guardado=0.0
   OK  X3 corrida: recalculado=0.1041763385042846 guardado=0.1042
   OK  X4 corrida: recalculado=476.5730000000003 guardado=476.57
   OK  X5 corrida: recalculado=0.6666666666666666 guardado=0.6667
+  OK  X6 corrida: recalculado=0.0 guardado=0.0
+  OK  X7 corrida: recalculado=0.0 guardado=0.0
   OK  s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000 hueco > umbral
   OK  s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000 último frame
   OK  s2-interrupcion-20261111T180638Z-fuente-sin-senal-v1-000 frames perdidos = 20

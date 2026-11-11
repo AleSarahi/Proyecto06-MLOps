@@ -274,6 +274,78 @@
      "numerador": 4
     }
    ]
+  },
+  "X6": {
+   "id": "tasa_errores_inferencia",
+   "nombre": "Tasa de errores de inferencia",
+   "unidad": "fracción de frames procesados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 24,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 4,
+     "numerador": 0
+    }
+   ]
+  },
+  "X7": {
+   "id": "tasa_descarte_saturacion",
+   "nombre": "Tasa de descarte por saturación",
+   "unidad": "fracción de frames llegados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 24,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 0.0,
+     "fin_ms": 10000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 10000.0,
+     "fin_ms": 20000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 20000.0,
+     "fin_ms": 30000.0,
+     "valor": 0.0,
+     "n": 4,
+     "numerador": 0
+    }
+   ]
   }
  }
 }

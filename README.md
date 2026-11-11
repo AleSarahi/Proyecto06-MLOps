@@ -36,7 +36,7 @@ Si `uv` no se reconoce después de instalarlo (por ejemplo en Windows sin permis
 ## Ver el portal con la evidencia entregada (sin correr el modelo)
 
 ```bash
-uv run python -m monitor importar evidencias/p6/referencia/corrida evidencias/p6/escenarios/c1-normal evidencias/p6/escenarios/c2-baja-confianza evidencias/p6/extras/s1-transicion evidencias/p6/extras/s2-interrupcion
+uv run python -m monitor importar evidencias/p6/referencia/corrida evidencias/p6/escenarios/c1-normal evidencias/p6/escenarios/c2-baja-confianza evidencias/p6/extras/s1-transicion evidencias/p6/extras/s2-interrupcion evidencias/p6/extras/s3-error-inferencia evidencias/p6/extras/s4-saturacion
 uv run python -m monitor portal          # http://127.0.0.1:8000  (/eventos, /alertas, /corridas, /vivo, /dashboard)
 ```
 
@@ -87,9 +87,12 @@ Detalle, niveles solicitados y control de doble conteo: [`docs/p6/extras.md`](do
 uv run python -m monitor correr --segmento s1-transicion --salida tmp/s1
 # S2 · la fuente se cae de 20 a 40 s y se recupera (60 s); con el portal abierto, ver /vivo
 uv run python -m monitor correr --segmento s2-interrupcion --corte 20:40 --salida tmp/s2
+# S3 · el modelo falla de 20 a 35 s; S4 · la inferencia tarda 2 s más de 20 a 40 s (60 s cada uno)
+uv run python -m monitor correr --segmento s3-error-inferencia --error-inferencia 20:35 --salida tmp/s3
+uv run python -m monitor correr --segmento s4-saturacion --lentitud 20:40 --lentitud-ms 2000 --salida tmp/s4
 # Verificaciones
-python evidencias/p6/recalcular.py tmp/s1 tmp/s2
-python evidencias/p6/recalcular_extras.py tmp/s1 tmp/s2   # X1-X5 y alertas de fuente (solo stdlib)
+python evidencias/p6/recalcular.py tmp/s1 tmp/s2 tmp/s3 tmp/s4
+python evidencias/p6/recalcular_extras.py tmp/s1 tmp/s2 tmp/s3 tmp/s4   # X1-X7 y alertas técnicas (solo stdlib)
 uv run python -m monitor metricas-extra evidencias/p6/escenarios/c1-normal   # X1-X5 de otra corrida
 ```
 
@@ -101,6 +104,9 @@ uv run python -m monitor metricas-extra evidencias/p6/escenarios/c1-normal   # X
 | M1–M5 · X1–X5 | Candidatas/frame, frames sin detecciones, PSI vs. referencia, latencia e2e, disponibilidad | `metricas_extra.json` de cada corrida |
 | S1 · Cambio sostenido | La regla de 3 ventanas abre en la 3.ª, nada se repite, todo cierra al volver el día | [ficha](evidencias/p6/extras/s1-transicion/README.md) |
 | S2 · Interrupción | Corte de 20 s → alerta de fuente → recuperación → verificación | [ficha](evidencias/p6/extras/s2-interrupcion/README.md) |
+| S3 · Error de inferencia | El modelo falla 15 s → alerta con diagnóstico → recuperación | [ficha](evidencias/p6/extras/s3-error-inferencia/README.md) |
+| S4 · Saturación | Inferencia lenta → cola y descartes → alerta → la cola se vacía | [ficha](evidencias/p6/extras/s4-saturacion/README.md) |
+| M6–M7 · X6–X7 | Tasa de errores de inferencia y tasa de descarte por saturación | `metricas_extra.json` |
 
 ## Arquitectura
 

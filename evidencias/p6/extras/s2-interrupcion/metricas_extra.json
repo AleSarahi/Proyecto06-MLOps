@@ -442,6 +442,126 @@
      "numerador": 10
     }
    ]
+  },
+  "X6": {
+   "id": "tasa_errores_inferencia",
+   "nombre": "Tasa de errores de inferencia",
+   "unidad": "fracción de frames procesados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 40,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "valor": null,
+     "n": 0,
+     "numerador": 0
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "valor": null,
+     "n": 0,
+     "numerador": 0
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    }
+   ]
+  },
+  "X7": {
+   "id": "tasa_descarte_saturacion",
+   "nombre": "Tasa de descarte por saturación",
+   "unidad": "fracción de frames llegados",
+   "corrida": {
+    "valor": 0.0,
+    "n": 40,
+    "numerador": 0
+   },
+   "por_ventana": [
+    {
+     "ventana": 0,
+     "inicio_ms": 240000.0,
+     "fin_ms": 250000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 1,
+     "inicio_ms": 250000.0,
+     "fin_ms": 260000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 2,
+     "inicio_ms": 260000.0,
+     "fin_ms": 270000.0,
+     "valor": null,
+     "n": 0,
+     "numerador": 0
+    },
+    {
+     "ventana": 3,
+     "inicio_ms": 270000.0,
+     "fin_ms": 280000.0,
+     "valor": null,
+     "n": 0,
+     "numerador": 0
+    },
+    {
+     "ventana": 4,
+     "inicio_ms": 280000.0,
+     "fin_ms": 290000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    },
+    {
+     "ventana": 5,
+     "inicio_ms": 290000.0,
+     "fin_ms": 300000.0,
+     "valor": 0.0,
+     "n": 10,
+     "numerador": 0
+    }
+   ]
   }
  }
 }

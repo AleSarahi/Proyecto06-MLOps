@@ -1,10 +1,11 @@
 # Proyecto 6 · Extras (puntos adicionales)
 
-> Issues #29–#33. Ninguna de estas funciones cambia la base: `config/p6/monitoreo.yaml` y su
+> Issues #29–#33 y #37. Ninguna de estas funciones cambia la base: `config/p6/monitoreo.yaml` y su
 > `config_ref c574ee88…ff6c` son los mismos, así que la referencia, C1 y C2 siguen siendo válidos y
 > comparables con los escenarios adicionales. El código de los extras está en el commit
 > `ac12754fb1f0382865da6c0cf5cc92203c69c97e`, el mismo con el que se ejecutaron S1 y S2
-> (`run.json → git`, sin cambios pendientes).
+> (`run.json → git`, sin cambios pendientes). S3, S4, X6 y X7 (#37) se agregaron después, en el commit
+> `5f004fbdc5318ec2ca3d296df633f7c7ae580a1b`, con el que se ejecutaron S3 y S4.
 
 ## Inventario de extras reclamados
 
@@ -20,8 +21,12 @@
 | **M5** (X5) | Métrica | Disponibilidad de la fuente: frames que llegaron / frames que el muestreo esperaba, por ventana | **5** | ídem + S2 (0.0 durante el corte) |
 | **S1** | Escenario | Cambio sostenido de confianza: transición, persistencia de la regla de 3 ventanas y recuperación | **8** | [`evidencias/p6/extras/s1-transicion/`](../../evidencias/p6/extras/s1-transicion/README.md) |
 | **S2** | Escenario | Interrupción de la fuente: fallo, diagnóstico (alerta técnica), recuperación y verificación posterior | **10** | [`evidencias/p6/extras/s2-interrupcion/`](../../evidencias/p6/extras/s2-interrupcion/README.md) |
+| **M6** (X6) | Métrica | Tasa de errores de inferencia por ventana | **5** | `metricas_extra.json` de las 7 corridas + S3 |
+| **M7** (X7) | Métrica | Tasa de descarte por saturación por ventana | **5** | `metricas_extra.json` de las 7 corridas + S4 |
+| **S3** | Escenario | Error de inferencia: el runtime del modelo falla, alerta con diagnóstico (códigos y mensajes), recuperación y verificación posterior | **10** | [`evidencias/p6/extras/s3-error-inferencia/`](../../evidencias/p6/extras/s3-error-inferencia/README.md) |
+| **S4** | Escenario | Saturación: la inferencia se vuelve lenta, la cola crece, se descartan frames, alerta con diagnóstico de cola, la cola se vacía y se recupera | **8** | [`evidencias/p6/extras/s4-saturacion/`](../../evidencias/p6/extras/s4-saturacion/README.md) |
 
-Total solicitado: 35 (F) + 26 (M) + 18 (S) = **79 puntos**, sujeto a lo que el evaluador acredite.
+Total solicitado: 35 (F) + 36 (M) + 36 (S) = **107 puntos**, sujeto a lo que el evaluador acredite.
 
 ## Control de doble conteo
 
@@ -42,6 +47,17 @@ Total solicitado: 35 (F) + 26 (M) + 18 (S) = **79 puntos**, sujeto a lo que el e
 - **M4 frente a G1:** G1 es el p95 de la etapa de inferencia; M4 correlaciona tres etapas por
   frame (cola + inferencia + registro = extremo a extremo, comprobado frame por frame en el
   recálculo). No es otro percentil del mismo histograma.
+- **S2, S3 y S4:** tres fallas distintas con criterios de aceptación distintos. En S2 **no llegan**
+  frames (X5 = 0, ventanas sin frames). En S3 llegan y **no se infieren** (eventos `error`, X6). En S4
+  llegan, **se infieren tarde** y algunos se descartan (X7, cola, X4), mientras X5 se mantiene en 1.0.
+  Usan la misma entrada (los 60 s de día de S2) a propósito: lo único que cambia es la condición
+  probada.
+- **X6 frente a G6, X2 y S3:** G6 compara versiones esperadas y reportadas. X2 cuenta frames inferidos
+  sin candidatas. X6 cuenta frames en los que el modelo no produjo salida. X6 existe en todas las
+  corridas y vale 0 sin fallas.
+- **X7 frente a X5, G2 y S4:** X5 mide lo que entregó la fuente; X7, lo que el procesamiento no
+  alcanzó a inferir de lo que sí llegó. G2 es el throughput. En S4, X5 = 1.0 y X7 = 0.4/0.6: miden
+  cosas distintas.
 - **S1 frente a C2:** C2 prueba una ventana de baja confianza aislada (regla de 1 ventana). S1
   prueba la persistencia: la regla de 3 ventanas solo se abre en la tercera, ninguna alerta se
   repite y las dos se cierran al volver el día.
@@ -109,6 +125,8 @@ biblioteca estándar. Cada una existe por ventana y por corrida. Con cero observ
 | X3 | PSI de scores vs. referencia | Candidatas de la ventana; la ventana debe tener ≥ 20 (si no, `insuficiente`). Referencia: las 1715 candidatas de la corrida de referencia, con el mismo `config_ref` (si no, `sin_referencia`) | 10 bins de 0.1 en [0, 1]; PSI = Σ (p − q) · ln(p / q), con p y q las fracciones por bin y 1e-4 en lugar de 0 |
 | X4 | Latencia extremo a extremo p95 | Frames con evento registrado (reloj monotónico de la corrida) | p95 por rango cercano de `t_fin_registro − t_llegada`; además la mediana de cola, inferencia y registro (= e2e − cola − inferencia) |
 | X5 | Disponibilidad de la fuente | Frames que llegaron (con evento o descartados por saturación); los perdidos en un corte no llegaron | llegados / esperados, con esperados = traslape de la ventana con el segmento × (fps del video / 30) |
+| X6 | Tasa de errores de inferencia | Frames con evento (todos los estados) | frames `error` / frames con evento |
+| X7 | Tasa de descarte por saturación | Frames que llegaron (con evento + descartados por saturación) | descartados por saturación / llegados |
 
 Resultados por corrida (`metricas_extra.json`):
 
@@ -119,6 +137,11 @@ Resultados por corrida (`metricas_extra.json`):
 | C2 baja confianza | 5.88 | 0.0 | 2.021 | 608.51 | 1.0 |
 | S1 transición | 14.58 | 0.0 | 0.066 | 362.39 | 1.0 |
 | S2 interrupción | 12.5 | 0.0 | 0.104 | 476.57 | 0.667 |
+| S3 error de inferencia | 12.78 | 0.0 | 0.096 | 908.46 | 1.0 |
+| S4 saturación | 12.62 | 0.0 | 0.092 | 4803.71 | 1.0 |
+
+X6 y X7 por corrida: 0 en la referencia, C1, C2, S1 y S2. En S3, X6 = 0.25 (por ventana 0, 0, 1.0,
+0.5, 0, 0). En S4, X7 = 0.1667 (por ventana 0, 0, 0.4, 0.6, 0, 0).
 
 \* La referencia se corrió sin esperas (`--velocidad 0`): los frames llegan todos al inicio y se
 acumulan en cola. Esa X4 mide la cola de una carga en lote, no la de un stream.
@@ -146,6 +169,30 @@ Límites y supuestos:
 - **S2 · Interrupción de la fuente** (#33). El segmento `s2-interrupcion` (60 s de día) se corre con
   `--corte 20:40`: la fuente pierde los frames de 20 a 40 s. Ficha:
   [`evidencias/p6/extras/s2-interrupcion/README.md`](../../evidencias/p6/extras/s2-interrupcion/README.md).
+
+- **S3 · Error de inferencia** (#37). Mismos 60 s que S2 con `--error-inferencia 20:35`. Ficha:
+  [`evidencias/p6/extras/s3-error-inferencia/README.md`](../../evidencias/p6/extras/s3-error-inferencia/README.md).
+- **S4 · Saturación** (#37). Mismos 60 s con `--lentitud 20:40 --lentitud-ms 2000`. Ficha:
+  [`evidencias/p6/extras/s4-saturacion/README.md`](../../evidencias/p6/extras/s4-saturacion/README.md).
+
+### Reglas técnicas por ventana (S3, S4)
+
+`errores-inferencia-v1` (crítica, umbral 0.5) y `saturacion-v1` (advertencia, umbral 0.2) están en
+`config/p6/vigilancia.yaml`. Ambas se evalúan al cerrar cada ventana de 10 s y exigen al menos 5
+frames: con menos, la ventana es insuficiente y no abre ni cierra la alerta. Abren en la primera
+ventana que cumple, no se repiten y cierran en la primera ventana suficiente por debajo del umbral.
+El contrato de sus alertas es
+[`alerta_tecnica.v1`](../../config/p6/contratos/alerta_tecnica.v1.schema.json) e incluye un
+`diagnostico`:
+- para los errores: códigos, ejemplos con mensaje y frames sanos;
+- para la saturación: cola máxima y mediana, y mediana de inferencia.
+
+El resultado de cada ventana queda en `observaciones.jsonl` (`tipo: ventana_tecnica`). Las fallas
+se inyectan con [`src/monitor/fallas.py`](../../src/monitor/fallas.py) y quedan declaradas en
+`run.json → modelo.inyeccion`.
+
+Al agregar estas dos reglas cambió `vigilancia_ref`: S2 registra el anterior (`run.json →
+vigilancia`), con la misma regla `fuente-sin-senal-v1`.
 
 ### Fuentes que agregan los extras
 

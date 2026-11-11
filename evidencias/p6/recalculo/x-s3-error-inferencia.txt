@@ -1,0 +1,52 @@
+== evidencias/p6/extras/s3-error-inferencia
+  OK  X1 ventana 0: recalculado=11.1 guardado=11.1
+  OK  X2 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 0: recalculado=0.5300406168227594 guardado=0.53
+  OK  X4 ventana 0: recalculado=642.7610000000022 guardado=642.76
+  OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 1: recalculado=13.0 guardado=13.0
+  OK  X2 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 1: recalculado=0.08395795830804177 guardado=0.084
+  OK  X4 ventana 1: recalculado=1455.7030000000013 guardado=1455.7
+  OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 2: recalculado=None guardado=None
+  OK  X2 ventana 2: recalculado=None guardado=None
+  OK  X3 ventana 2: recalculado=None guardado=None
+  OK  X4 ventana 2: recalculado=482.22000000000116 guardado=482.22
+  OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X7 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 3: recalculado=15.0 guardado=15.0
+  OK  X2 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 3: recalculado=0.09579594435039146 guardado=0.0958
+  OK  X4 ventana 3: recalculado=1008.7930000000051 guardado=1008.79
+  OK  X5 ventana 3: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 3: recalculado=0.5 guardado=0.5
+  OK  X7 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 4: recalculado=14.8 guardado=14.8
+  OK  X2 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 4: recalculado=0.10549638169561014 guardado=0.1055
+  OK  X4 ventana 4: recalculado=954.0879999999888 guardado=954.09
+  OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 5: recalculado=11.1 guardado=11.1
+  OK  X2 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 5: recalculado=0.1368527704702608 guardado=0.1369
+  OK  X4 ventana 5: recalculado=885.1359999999986 guardado=885.14
+  OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X1 corrida: recalculado=12.777777777777779 guardado=12.7778
+  OK  X2 corrida: recalculado=0.0 guardado=0.0
+  OK  X3 corrida: recalculado=0.09552270835502452 guardado=0.0955
+  OK  X4 corrida: recalculado=908.4550000000017 guardado=908.46
+  OK  X5 corrida: recalculado=1.0 guardado=1.0
+  OK  X6 corrida: recalculado=0.25 guardado=0.25
+  OK  X7 corrida: recalculado=0.0 guardado=0.0
+  OK  s3-error-inferencia-20261111T183922Z-errores-inferencia-v1-v002 abre en 2 (tasa 1.0) y cierra en 4
+  resultado: todo coincide

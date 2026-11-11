@@ -1,0 +1,27 @@
+== evidencias/p6/extras/s4-saturacion
+  OK  ventana 0 candidatas: recalculado=111 guardado=111
+  OK  ventana 0 proporcion_baja: recalculado=0.23423423423423423 guardado=0.23423423423423423
+  OK  G4 ventana 0: recalculado=0.2342 guardado=0.2342
+  OK  ventana 1 candidatas: recalculado=130 guardado=130
+  OK  ventana 1 proporcion_baja: recalculado=0.3076923076923077 guardado=0.3076923076923077
+  OK  G4 ventana 1: recalculado=0.3077 guardado=0.3077
+  OK  ventana 2 candidatas: recalculado=77 guardado=77
+  OK  ventana 2 proporcion_baja: recalculado=0.3116883116883117 guardado=0.3116883116883117
+  OK  G4 ventana 2: recalculado=0.3117 guardado=0.3117
+  OK  ventana 3 candidatas: recalculado=54 guardado=54
+  OK  ventana 3 proporcion_baja: recalculado=0.2777777777777778 guardado=0.2777777777777778
+  OK  G4 ventana 3: recalculado=0.2778 guardado=0.2778
+  OK  ventana 4 candidatas: recalculado=148 guardado=148
+  OK  ventana 4 proporcion_baja: recalculado=0.2635135135135135 guardado=0.2635135135135135
+  OK  G4 ventana 4: recalculado=0.2635 guardado=0.2635
+  OK  ventana 5 candidatas: recalculado=111 guardado=111
+  OK  ventana 5 proporcion_baja: recalculado=0.2972972972972973 guardado=0.2972972972972973
+  OK  G4 ventana 5: recalculado=0.2973 guardado=0.2973
+  OK  G1 p95 ms: recalculado=2117.366 guardado=2117.37
+  OK  G2 fps: recalculado=0.8458877025539431 guardado=0.8459
+  OK  G3 RAM MiB: recalculado=386.0 guardado=386.0
+  OK  G4 corrida: recalculado=0.2805071315372425 guardado=0.2805
+  OK  G5 imágenes vinculadas: recalculado=1.0 guardado=1.0
+  OK  G6 versión: recalculado=1.0 guardado=1.0
+  OK  G7 máx. alertas activas: recalculado=1 guardado=1
+  resultado: todo coincide

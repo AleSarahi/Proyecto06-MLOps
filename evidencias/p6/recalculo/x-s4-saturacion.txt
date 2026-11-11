@@ -1,0 +1,52 @@
+== evidencias/p6/extras/s4-saturacion
+  OK  X1 ventana 0: recalculado=11.1 guardado=11.1
+  OK  X2 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 0: recalculado=0.5300406168227594 guardado=0.53
+  OK  X4 ventana 0: recalculado=408.78999999999905 guardado=408.79
+  OK  X5 ventana 0: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 0: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 1: recalculado=13.0 guardado=13.0
+  OK  X2 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 1: recalculado=0.08395795830804177 guardado=0.084
+  OK  X4 ventana 1: recalculado=246.70000000000073 guardado=246.7
+  OK  X5 ventana 1: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 1: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 2: recalculado=12.833333333333334 guardado=12.8333
+  OK  X2 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 2: recalculado=0.2765377255459688 guardado=0.2765
+  OK  X4 ventana 2: recalculado=5868.695 guardado=5868.69
+  OK  X5 ventana 2: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 2: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 2: recalculado=0.4 guardado=0.4
+  OK  X1 ventana 3: recalculado=13.5 guardado=13.5
+  OK  X2 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 3: recalculado=0.13522183483282063 guardado=0.1352
+  OK  X4 ventana 3: recalculado=4674.794000000002 guardado=4674.79
+  OK  X5 ventana 3: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 3: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 3: recalculado=0.6 guardado=0.6
+  OK  X1 ventana 4: recalculado=14.8 guardado=14.8
+  OK  X2 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 4: recalculado=0.10549638169561014 guardado=0.1055
+  OK  X4 ventana 4: recalculado=2826.537000000004 guardado=2826.54
+  OK  X5 ventana 4: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 4: recalculado=0.0 guardado=0.0
+  OK  X1 ventana 5: recalculado=11.1 guardado=11.1
+  OK  X2 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X3 ventana 5: recalculado=0.1368527704702608 guardado=0.1369
+  OK  X4 ventana 5: recalculado=186.7630000000063 guardado=186.76
+  OK  X5 ventana 5: recalculado=1.0 guardado=1.0
+  OK  X6 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X7 ventana 5: recalculado=0.0 guardado=0.0
+  OK  X1 corrida: recalculado=12.62 guardado=12.62
+  OK  X2 corrida: recalculado=0.0 guardado=0.0
+  OK  X3 corrida: recalculado=0.0916400742981424 guardado=0.0916
+  OK  X4 corrida: recalculado=4803.7119999999995 guardado=4803.71
+  OK  X5 corrida: recalculado=1.0 guardado=1.0
+  OK  X6 corrida: recalculado=0.0 guardado=0.0
+  OK  X7 corrida: recalculado=0.16666666666666666 guardado=0.1667
+  OK  s4-saturacion-20261111T184104Z-saturacion-v1-v002 abre en 2 (tasa 0.4) y cierra en 4
+  resultado: todo coincide
